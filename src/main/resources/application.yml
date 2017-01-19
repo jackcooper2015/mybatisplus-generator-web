@@ -1,0 +1,12 @@
+server:
+  port: 8088
+  display-name: code-generator
+
+spring:
+  mvc:
+   view:
+    prefix: /templates/
+    suffix: .ftl
+  freemarker:
+      cache: false
+      request-context-attribute: request
