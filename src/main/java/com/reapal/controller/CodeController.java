@@ -41,14 +41,6 @@ public class CodeController extends BaseController{
 	@Autowired
 	private CodeService codeService;
 
-	/**
-	 * 初始化
-	 */
-	@RequestMapping(value="/init",method=RequestMethod.GET)
-	public String init(Model model){
-
-		return "code_init";
-	}
 
 	/**
 	 * 显示Table列表
