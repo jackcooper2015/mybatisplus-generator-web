@@ -23,6 +23,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+    <link rel="alternate icon" type="image/png" href="${base}/static/icon/favicon.png">
     <link rel="apple-touch-icon-precomposed" href="assets/i/app-icon72x72@2x.png">
     <!-- Tile icon for Win8 (144x144 + tile color) -->
     <meta name="msapplication-TileImage" content="assets/i/app-icon72x72@2x.png">
@@ -41,12 +42,13 @@
 <![endif]-->
 <header class="am-topbar am-topbar-inverse admin-header">
     <div class="am-topbar-brand">
-        <strong>Reapal</strong> <small>代码生成工具</small><span class="am-badge am-badge-warning" id="env">beta</span>
+        <strong>Reapal</strong> <small>mybatisplus代码生成工具</small><span class="am-badge am-badge-warning" id="env">beta</span>
     </div>
     <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only" data-am-collapse="{target: '#topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
     <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
         <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list">
             <li class="am-hide-sm-only"><a href="${base}/index" ><span class=""></span> <span class="am-icon-arrow-up">首页</span></a></li>
+            <li class="am-hide-sm-only"><a href="${base}/logout" ><span class=""></span> <span class="am-icon-power-off">退出</span></a></li>
             <li class="am-hide-sm-only"><a href="javascript:;" id="admin-fullscreen"><span class="am-icon-arrows-alt"></span> <span class="admin-fullText">开启全屏</span></a></li>
         </ul>
     </div>
@@ -73,7 +75,7 @@
 
                 <div class="am-u-sm-14 am-u-md-1">
                     <div class="am-input-group am-input-group-sm">
-                        <a class="am-btn am-btn-default am-btn-xs am-hide-sm-only" href="${base}/edit"><span class="am-icon-pencil-square-o"></span>新增</a>
+                        <a class="am-btn am-btn-default am-btn-xs am-hide-sm-only" href="${base}/edit"><span class="am-icon-plus"></span>新增</a>
                     </div>
                 </div>
             </div>
@@ -89,6 +91,7 @@
                                 <th class="table-title">数据库</th>
                                 <th class="table-type">类型</th>
                                 <th class="table-author am-hide-sm-only">操作</th>
+                                <th class="table-author am-hide-sm-only">选中</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -104,11 +107,12 @@
                                     <div class="am-btn-toolbar">
                                         <div class="am-btn-group am-btn-group-xs">
                                             <a class="am-btn am-btn-default am-btn-xs am-hide-sm-only" href="${base}/edit?url=${dbConfig.url!}&driver=${dbConfig.driver!}&username=${dbConfig.username!}&password=${dbConfig.password!}&schema=${dbConfig.schema!}"><span class="am-icon-pencil-square-o"></span>编辑</a>
-                                            <a class="am-btn am-btn-default am-btn-xs am-hide-sm-only" href="${base}/tablelist?url=${dbConfig.url!}&driver=${dbConfig.driver!}&username=${dbConfig.username!}&password=${dbConfig.password!}&schema=${dbConfig.schema!}"><span class="am-icon-copy"></span>选定</a>
                                             <a class="am-btn am-btn-default am-btn-xs am-hide-sm-only" href="${base}/delete?url=${dbConfig.url!}&driver=${dbConfig.driver!}&username=${dbConfig.username!}&password=${dbConfig.password!}&schema=${dbConfig.schema!}"><span class="am-icon-trash-o"></span>删除</a>
                                         </div>
                                     </div>
-
+                                </td>
+                                <td>
+                                    <a class="am-btn-sm am-btn-danger am-radius" href="${base}/tablelist?url=${dbConfig.url!}&driver=${dbConfig.driver!}&username=${dbConfig.username!}&password=${dbConfig.password!}&schema=${dbConfig.schema!}">选定</a>
                                 </td>
                             </tr>
                             </#list>
@@ -127,7 +131,7 @@
 
         <footer class="admin-content-footer">
             <hr>
-            <p class="am-padding-left">© 2014 AllMobilize, Inc. Licensed under MIT license.</p>
+            <p class="am-padding-horizontal">© jack-cooper  &nbsp;&nbsp;&nbsp; 当前时间：${.now?string("yyyy-MM-dd HH:mm:ss")}  </p>
         </footer>
 
     </div>

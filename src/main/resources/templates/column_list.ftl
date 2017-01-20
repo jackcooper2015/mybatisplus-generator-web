@@ -23,6 +23,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+    <link rel="alternate icon" type="image/png" href="${base}/static/icon/favicon.png">
     <link rel="apple-touch-icon-precomposed" href="assets/i/app-icon72x72@2x.png">
     <!-- Tile icon for Win8 (144x144 + tile color) -->
     <meta name="msapplication-TileImage" content="assets/i/app-icon72x72@2x.png">
@@ -41,12 +42,13 @@
 <![endif]-->
 <header class="am-topbar am-topbar-inverse admin-header">
     <div class="am-topbar-brand">
-        <strong>Reapal</strong> <small>代码生成工具</small><span class="am-badge am-badge-warning" id="env">beta</span>
+        <strong>Reapal</strong> <small>mybatisplus代码生成工具</small><span class="am-badge am-badge-warning" id="env">beta</span>
     </div>
     <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only" data-am-collapse="{target: '#topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
     <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
         <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list">
             <li class="am-hide-sm-only"><a href="${base}/index" ><span class=""></span> <span class="am-icon-arrow-up">首页</span></a></li>
+            <li class="am-hide-sm-only"><a href="${base}/logout" ><span class=""></span> <span class="am-icon-power-off">退出</span></a></li>
             <li class="am-hide-sm-only"><a href="javascript:;" id="admin-fullscreen"><span class="am-icon-arrows-alt"></span> <span class="admin-fullText">开启全屏</span></a></li>
         </ul>
     </div>
@@ -55,7 +57,7 @@
 <div class="am-cf admin-main">
     <!-- content start -->
     <div class="admin-content">
-    <form action="${base}/columnsave" method="post" name="listForm" id="listForm">
+    <form action="${base}/columnsave" method="post" name="listForm" id="listForm" data-am-validator>
         <input type="hidden" name="_method" id="_method" value=""/>
         <input type="hidden" name="url" id="url" value="<#if (dbConfig.url)??>${dbConfig.url}</#if>"/>
         <input type="hidden" name="driver" id="driver" value="<#if (dbConfig.driver)??>${dbConfig.driver}</#if>"/>
@@ -83,13 +85,12 @@
                 </div>
 
                 <div class="am-u-sm-6 am-u-md-6">
-                        模块名称：com.reapal.<input type="text" name="comments" id="comments" value="<#if (tableInfo.comments)??><#if (tableInfo.comments)?index_of("#") &gt; -1 >${(tableInfo.comments)?substring((tableInfo.comments)?index_of("#")+1)}<#else>${tableInfo.comments}test</#if></#if>">
+                        模块名称：com.reapal.<input type="text" required name="comments" id="comments" value="<#if (tableInfo.comments)??><#if (tableInfo.comments)?index_of("#") &gt; -1 >${(tableInfo.comments)?substring((tableInfo.comments)?index_of("#")+1)}<#else>${tableInfo.comments}test</#if></#if>">
                 </div>
             </div>
 
             <div class="am-g">
                 <div class="am-u-sm-12">
-                    <form class="am-form">
                         <table class="am-table am-table-striped am-table-hover table-main">
                             <thead>
                             <tr>
@@ -110,7 +111,7 @@
                                 <td>${column_index+1}</td>
                                 <td><#if (column.colName)??>${column.colName}</#if></td>
                                 <td><#if (column.colType)??>${column.colType}</#if></td>
-                                <td><input type="text" name="remark" id="remark_${column_index+1}" value="<#if (column.comments)??><#if (column.comments)?index_of("#") &gt; 0 >${(column.comments)?substring(0,(column.comments)?index_of("#"))}<#else>${column.comments}</#if></#if>"></td>
+                                <td><input type="text" required name="remark" id="remark_${column_index+1}" value="<#if (column.comments)??><#if (column.comments)?index_of("#") &gt; 0 >${(column.comments)?substring(0,(column.comments)?index_of("#"))}<#else>${column.comments}</#if></#if>"></td>
                             </tr>
                             </#list>
 
@@ -119,7 +120,6 @@
                         </table>
                         <hr>
                         <p>注：请完善备注信息，请确保表有主键ID</p>
-                    </form>
                 </div>
 
             </div>
@@ -127,7 +127,7 @@
     </form>
         <footer class="admin-content-footer">
             <hr>
-            <p class="am-padding-left">© 2014 AllMobilize, Inc. Licensed under MIT license.</p>
+            <p class="am-padding-horizontal">© jack-cooper  &nbsp;&nbsp;&nbsp; 当前时间：${.now?string("yyyy-MM-dd HH:mm:ss")}  </p>
         </footer>
 
     </div>
@@ -167,6 +167,7 @@
                 $("#remarks_"+i).val(note);
                 //alert(note)
             }
+            $('#listForm').action("${base}/columnsave");
             $('#listForm').submit();
         });
 

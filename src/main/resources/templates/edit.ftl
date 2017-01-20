@@ -23,6 +23,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+    <link rel="alternate icon" type="image/png" href="${base}/static/icon/favicon.png">
     <link rel="apple-touch-icon-precomposed" href="assets/i/app-icon72x72@2x.png">
     <!-- Tile icon for Win8 (144x144 + tile color) -->
     <meta name="msapplication-TileImage" content="assets/i/app-icon72x72@2x.png">
@@ -41,12 +42,13 @@
 <![endif]-->
 <header class="am-topbar am-topbar-inverse admin-header">
     <div class="am-topbar-brand">
-        <strong>Reapal</strong> <small>代码生成工具</small><span class="am-badge am-badge-warning" id="env">beta</span>
+        <strong>Reapal</strong> <small>mybatisplus代码生成工具</small><span class="am-badge am-badge-warning" id="env">beta</span>
     </div>
     <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only" data-am-collapse="{target: '#topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
     <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
         <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list">
             <li class="am-hide-sm-only"><a href="${base}/index" ><span class=""></span> <span class="am-icon-arrow-up">首页</span></a></li>
+            <li class="am-hide-sm-only"><a href="${base}/logout" ><span class=""></span> <span class="am-icon-power-off">退出</span></a></li>
             <li class="am-hide-sm-only"><a href="javascript:;" id="admin-fullscreen"><span class="am-icon-arrows-alt"></span> <span class="admin-fullText">开启全屏</span></a></li>
         </ul>
     </div>
@@ -68,28 +70,33 @@
                 </div>
 
                 <div class="am-u-sm-12 am-u-md-8 am-u-md-pull-4">
-                    <form class="am-form am-form-horizontal" action="${base}/save" method="post">
-
-                        <div class="am-form-group">
-                            <label for="url" class="am-u-sm-3 am-form-label">URL</label>
-                            <div class="am-u-sm-9">
-                                <input type="text" id="url" name="url" value="${dbConfig.url!}" placeholder="输入数据库的url">
-                                <small>如:jdbc:mysql://10.168.16.116:3306/test</small>
-                            </div>
-                        </div>
+                    <form class="am-form am-form-horizontal" action="${base}/save" method="post" data-am-validator>
 
                         <div class="am-form-group">
                             <label for="driver" class="am-u-sm-3 am-form-label">driver</label>
                             <div class="am-u-sm-9">
-                                <input type="text" id="driver" name="driver" value="${dbConfig.driver!}" placeholder="输入数据库的driver">
-                                <small>如:com.mysql.jdbc.Driver</small>
+                                <select name="driver" id="driver" required data-am-selected="{btnSize: 'sm'}" >
+                                    <option></option>
+                                    <option <#if (dbConfig.driver?? && dbConfig.driver=='com.mysql.jdbc.Driver')>selected</#if> value="com.mysql.jdbc.Driver">mysql</option>
+                                    <option <#if (dbConfig.driver?? && dbConfig.driver=='oracle.jdbc.driver.OracleDriver')>selected</#if> value="oracle.jdbc.driver.OracleDriver">oracle</option>
+                                </select>
                             </div>
                         </div>
+
+
+                        <div class="am-form-group">
+                            <label for="url" class="am-u-sm-3 am-form-label">URL</label>
+                            <div class="am-u-sm-9">
+                                <input type="text" id="url" required name="url" value="${dbConfig.url!}" placeholder="输入数据库的url">
+                                <small>如:mysql(jdbc:mysql://10.168.16.116:3306/test)   oracle(jdbc:oracle:thin:@10.168.16.210:1521:devps)</small>
+                            </div>
+                        </div>
+
 
                         <div class="am-form-group">
                             <label for="username" class="am-u-sm-3 am-form-label">username</label>
                             <div class="am-u-sm-9">
-                                <input type="text" id="username" name="username" value="${dbConfig.username!}" placeholder="输入数据库的driver">
+                                <input type="text" id="username" required name="username" value="${dbConfig.username!}" placeholder="输入数据库的用户名">
                                 <small></small>
                             </div>
                         </div>
@@ -97,7 +104,7 @@
                         <div class="am-form-group">
                             <label for="password" class="am-u-sm-3 am-form-label">password</label>
                             <div class="am-u-sm-9">
-                                <input type="password" id="password" name="password" value="${dbConfig.password!}" placeholder="输入数据库的driver">
+                                <input type="password" id="password" required name="password" value="${dbConfig.password!}" placeholder="输入数据库的密码">
                                 <small></small>
                             </div>
                         </div>
@@ -105,7 +112,7 @@
                         <div class="am-form-group">
                             <label for="schema" class="am-u-sm-3 am-form-label">schema</label>
                             <div class="am-u-sm-9">
-                                <input type="text" id="schema" name="schema" value="${dbConfig.schema!}" placeholder="输入数据库的driver">
+                                <input type="text" id="schema" required name="schema" value="${dbConfig.schema!}" placeholder="输入数据库的schema">
                                 <small></small>
                             </div>
                         </div>-
@@ -122,7 +129,7 @@
 
         <footer class="admin-content-footer">
             <hr>
-            <p class="am-padding-left">© 2014 AllMobilize, Inc. Licensed under MIT license.</p>
+            <p class="am-padding-horizontal">© jack-cooper  &nbsp;&nbsp;&nbsp; 当前时间：${.now?string("yyyy-MM-dd HH:mm:ss")}  </p>
         </footer>
 
     </div>

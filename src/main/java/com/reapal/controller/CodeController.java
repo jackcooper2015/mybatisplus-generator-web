@@ -105,7 +105,7 @@ public class CodeController extends BaseController{
 	/**
 	 * 显示字段列表编辑页面
 	 */
-	@RequestMapping(value="/{tableName}", method =RequestMethod.GET)
+	@RequestMapping(value="/column/{tableName}", method =RequestMethod.GET)
 	public String itemList(Model model,DbConfig dbConfig,@PathVariable String tableName){
 		TableInfo tableInfo = codeService.getAllColumns(tableName,dbConfig);
 		model.addAttribute("tableInfo", tableInfo);

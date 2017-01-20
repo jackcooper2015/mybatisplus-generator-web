@@ -23,6 +23,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+    <link rel="alternate icon" type="image/png" href="${base}/static/icon/favicon.png">
     <link rel="apple-touch-icon-precomposed" href="assets/i/app-icon72x72@2x.png">
     <!-- Tile icon for Win8 (144x144 + tile color) -->
     <meta name="msapplication-TileImage" content="assets/i/app-icon72x72@2x.png">
@@ -41,12 +42,13 @@
 <![endif]-->
 <header class="am-topbar am-topbar-inverse admin-header">
     <div class="am-topbar-brand">
-        <strong>Reapal</strong> <small>代码生成工具</small><span class="am-badge am-badge-warning" id="env">beta</span>
+        <strong>Reapal</strong> <small>mybatisplus代码生成工具</small><span class="am-badge am-badge-warning" id="env">beta</span>
     </div>
     <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only" data-am-collapse="{target: '#topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
     <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
         <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list">
             <li class="am-hide-sm-only"><a href="${base}/index" ><span class=""></span> <span class="am-icon-arrow-up">首页</span></a></li>
+            <li class="am-hide-sm-only"><a href="${base}/logout" ><span class=""></span> <span class="am-icon-power-off">退出</span></a></li>
             <li class="am-hide-sm-only"><a href="javascript:;" id="admin-fullscreen"><span class="am-icon-arrows-alt"></span> <span class="admin-fullText">开启全屏</span></a></li>
         </ul>
     </div>
@@ -88,7 +90,7 @@
                                 <td><#if (table.tableName)??>${table.tableName}</#if></td>
                                 <td><#if (table.comments)??>${table.comments}</#if></td>
                                 <td>
-                                    <a href="${base}/<#if (table.tableName)??>${table.tableName}</#if>?url=<#if (dbConfig.url)??>${dbConfig.url}</#if>&driver=<#if (dbConfig.driver)??>${dbConfig.driver}</#if>&username=<#if (dbConfig.username)??>${dbConfig.username}</#if>&password=<#if (dbConfig.password)??>${dbConfig.password}</#if>&schema=<#if (dbConfig.schema)??>${dbConfig.schema}</#if>">修改</a>
+                                    <a href="${base}/column/<#if (table.tableName)??>${table.tableName}</#if>?url=<#if (dbConfig.url)??>${dbConfig.url}</#if>&driver=<#if (dbConfig.driver)??>${dbConfig.driver}</#if>&username=<#if (dbConfig.username)??>${dbConfig.username}</#if>&password=<#if (dbConfig.password)??>${dbConfig.password}</#if>&schema=<#if (dbConfig.schema)??>${dbConfig.schema}</#if>">修改</a>
                                 </td>
                             </tr>
                             </#list>
@@ -106,7 +108,7 @@
 
         <footer class="admin-content-footer">
             <hr>
-            <p class="am-padding-left">© 2014 AllMobilize, Inc. Licensed under MIT license.</p>
+            <p class="am-padding-horizontal">© jack-cooper  &nbsp;&nbsp;&nbsp; 当前时间：${.now?string("yyyy-MM-dd HH:mm:ss")}  </p>
         </footer>
 
     </div>
