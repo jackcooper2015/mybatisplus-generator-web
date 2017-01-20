@@ -22,6 +22,7 @@ import com.reapal.model.ColumnInfo;
 import com.reapal.model.DbConfig;
 import com.reapal.model.TableInfo;
 import com.reapal.service.CodeService;
+import com.reapal.utils.DbConfigUtils;
 import com.reapal.utils.FileUtils;
 import com.reapal.utils.ZipFileUtils;
 import org.apache.tools.zip.ZipOutputStream;
@@ -31,21 +32,31 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
+import org.springframework.web.servlet.ModelAndView;
 
 
 @Controller
-@RequestMapping("code")
+@RequestMapping
 public class CodeController extends BaseController{
 
 	@Autowired
 	private CodeService codeService;
 
+	@RequestMapping("/index")
+	public String init(Model model){
+		ClassLoader classLoader = getClass().getClassLoader();
+		File file = new File(classLoader.getResource("database.properties").getFile());
+
+		DbConfigUtils dbConfigUtils = new DbConfigUtils(file);
+		List<DbConfig> dbConfigList = dbConfigUtils.getAllDbconfig();
+		model.addAttribute("dbConfigList",dbConfigList);
+		return "index";
+	}
 
 	/**
 	 * 显示Table列表
 	 */
-	@RequestMapping(method=RequestMethod.GET)
+	@RequestMapping(value = "/tablelist",method=RequestMethod.GET)
 	public String tablelist(Model model,DbConfig dbConfig){
 
 		List<TableInfo> tableList = codeService.getAllTables(dbConfig);
@@ -54,6 +65,42 @@ public class CodeController extends BaseController{
 
 		return "table_list";
 	}
+
+	/**
+	 * 显示Table列表
+	 */
+	@RequestMapping(value = "/edit",method=RequestMethod.GET)
+	public String edit(Model model,DbConfig dbConfig){
+		model.addAttribute("dbConfig", dbConfig);
+		return "edit";
+	}
+
+	/**
+	 * 显示Table列表
+	 */
+	@RequestMapping(value = "/save",method=RequestMethod.POST)
+	public String save(Model model,DbConfig dbConfig){
+		ClassLoader classLoader = getClass().getClassLoader();
+		File file = new File(classLoader.getResource("database.properties").getFile());
+
+		DbConfigUtils dbConfigUtils = new DbConfigUtils(file);
+		dbConfigUtils.addDbconfig(dbConfig);
+		return "redirect:/index";
+	}
+
+	/**
+	 * 显示Table列表
+	 */
+	@RequestMapping(value = "/delete",method=RequestMethod.GET)
+	public String delete(Model model,DbConfig dbConfig){
+		ClassLoader classLoader = getClass().getClassLoader();
+		File file = new File(classLoader.getResource("database.properties").getFile());
+
+		DbConfigUtils dbConfigUtils = new DbConfigUtils(file);
+		dbConfigUtils.deleteDbconfig(dbConfig.getUrl());
+		return "redirect:/index";
+	}
+
 
 	/**
 	 * 显示字段列表编辑页面
@@ -70,7 +117,7 @@ public class CodeController extends BaseController{
 	/**
 	 * 保存配置信息
 	 */
-	@RequestMapping(method=RequestMethod.POST)
+	@RequestMapping(value = "/columnsave",method=RequestMethod.POST)
 	public String save(Model model,DbConfig dbConfig,TableInfo tableInfo){
 		String[] arrRemark = request.getParameterValues("remarks");
 		List<ColumnInfo> listItem = new ArrayList<ColumnInfo>();
@@ -86,7 +133,7 @@ public class CodeController extends BaseController{
 		tableInfo.setListColumn(listItem);
 		codeService.saveComment(tableInfo,dbConfig);
 
-		return "redirect:/code/"+tableInfo.getTableName()+"?url="+dbConfig.getUrl()+"&driver="+dbConfig.getDriver()+"&username="+dbConfig.getUsername()+"&password="+dbConfig.getPassword()+"&schema="+dbConfig.getSchema();
+		return "redirect:/"+tableInfo.getTableName()+"?url="+dbConfig.getUrl()+"&driver="+dbConfig.getDriver()+"&username="+dbConfig.getUsername()+"&password="+dbConfig.getPassword()+"&schema="+dbConfig.getSchema();
 	}
 
 	/**
@@ -113,7 +160,7 @@ public class CodeController extends BaseController{
 		// gc.setControllerName("%sAction");
 		mpg.setGlobalConfig(gc);
 		DataSourceConfig dsc = new DataSourceConfig();
-		dsc.setDbType(DbType.MYSQL);
+		dsc.setDbType(dbConfig.getDriver().indexOf("mysql")>-1?DbType.MYSQL:DbType.ORACLE);
 		dsc.setDriverName(dbConfig.getDriver());
 		dsc.setUsername(dbConfig.getUsername());
 		dsc.setPassword(dbConfig.getPassword());
@@ -147,7 +194,7 @@ public class CodeController extends BaseController{
 		// 包配置
 		PackageConfig pc = new PackageConfig();
 		pc.setParent("com.reapal");
-		pc.setModuleName("com.reapal."+model);
+		pc.setModuleName(model);
 		mpg.setPackageInfo(pc);
 		// 注入自定义配置，可以在 VM 中使用 cfg.abc 设置的值
 		InjectionConfig cfg = new InjectionConfig() {
@@ -181,7 +228,6 @@ public class CodeController extends BaseController{
 		try {
 			ZipFileUtils zip = new ZipFileUtils();
 			ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
-			//zip.zip(request.getSession().getServletContext().getRealPath("/")+"/WEB-INF/upload/src",request.getSession().getServletContext().getRealPath("/")+"/WEB-INF/upload/src.zip");
 			String fileName = request.getSession().getServletContext().getRealPath("/")+"/WEB-INF/upload/"+request.getSession().getId();
 			File ff = new File(fileName);
 			if(!ff.exists()){
@@ -194,7 +240,6 @@ public class CodeController extends BaseController{
 
 			//删除目录
 			FileUtils.DeleteFolder(request.getSession().getServletContext().getRealPath("/")+"/WEB-INF/upload/"+request.getSession().getId());
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -10,3 +10,6 @@ spring:
   freemarker:
       cache: false
       request-context-attribute: request
+logging:
+  level: debug
+

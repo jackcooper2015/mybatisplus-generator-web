@@ -30,12 +30,6 @@ public class LoginController extends BaseController{
         return mv;
     }
 
-    @RequestMapping(value = "/index",method = RequestMethod.GET)
-    public ModelAndView index() {
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("index");
-        return mv;
-    }
 
 
 }

@@ -57,7 +57,7 @@
     <div class="admin-content">
         <div class="admin-content-body">
             <div class="am-cf am-padding am-padding-bottom-0">
-                <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">表格</strong> / <small>Table</small></div>
+                <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">数据库列表</strong>  <small></small></div>
             </div>
 
             <hr>
@@ -66,20 +66,14 @@
                 <div class="am-u-sm-12 am-u-md-6">
                     <div class="am-btn-toolbar">
                         <div class="am-btn-group am-btn-group-xs">
-                            <button type="button" class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新增</button>
-                            <button type="button" class="am-btn am-btn-default"><span class="am-icon-save"></span> 保存</button>
-                            <button type="button" class="am-btn am-btn-default"><span class="am-icon-archive"></span> 审核</button>
-                            <button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> 删除</button>
+
                         </div>
                     </div>
                 </div>
 
-                <div class="am-u-sm-12 am-u-md-3">
+                <div class="am-u-sm-14 am-u-md-1">
                     <div class="am-input-group am-input-group-sm">
-                        <input type="text" class="am-form-field">
-                        <span class="am-input-group-btn">
-                            <button class="am-btn am-btn-default" type="button">搜索</button>
-                        </span>
+                        <a class="am-btn am-btn-default am-btn-xs am-hide-sm-only" href="${base}/edit"><span class="am-icon-pencil-square-o"></span>新增</a>
                     </div>
                 </div>
             </div>
@@ -98,22 +92,33 @@
                             </tr>
                             </thead>
                             <tbody>
+                            <#if (dbConfigList)?? >
+
+                            <#list dbConfigList as dbConfig >
                             <tr>
                                 <td><input type="checkbox"></td>
-                                <td>1</td>
-                                <td><a href="#">10.168.16.116:3306/test</a></td>
-                                <td>mysql</td>
+                                <td>${dbConfig_index+1}</td>
+                                <td><a href="#"><#if (dbConfig.url)??>${dbConfig.url}</#if></a></td>
+                                <td>${dbConfig.driver!}</td>
                                 <td>
-                                    <a href="${base}/code?url=jdbc:mysql://10.168.16.116:3306/test&driver=com.mysql.jdbc.Driver&username=root&password=devApp2013&schema=test">选定</a>
+                                    <div class="am-btn-toolbar">
+                                        <div class="am-btn-group am-btn-group-xs">
+                                            <a class="am-btn am-btn-default am-btn-xs am-hide-sm-only" href="${base}/edit?url=${dbConfig.url!}&driver=${dbConfig.driver!}&username=${dbConfig.username!}&password=${dbConfig.password!}&schema=${dbConfig.schema!}"><span class="am-icon-pencil-square-o"></span>编辑</a>
+                                            <a class="am-btn am-btn-default am-btn-xs am-hide-sm-only" href="${base}/tablelist?url=${dbConfig.url!}&driver=${dbConfig.driver!}&username=${dbConfig.username!}&password=${dbConfig.password!}&schema=${dbConfig.schema!}"><span class="am-icon-copy"></span>选定</a>
+                                            <a class="am-btn am-btn-default am-btn-xs am-hide-sm-only" href="${base}/delete?url=${dbConfig.url!}&driver=${dbConfig.driver!}&username=${dbConfig.username!}&password=${dbConfig.password!}&schema=${dbConfig.schema!}"><span class="am-icon-trash-o"></span>删除</a>
+                                        </div>
+                                    </div>
+
                                 </td>
                             </tr>
-
+                            </#list>
+                            </#if>
 
 
                             </tbody>
                         </table>
                         <hr>
-                        <p>注：.....</p>
+                        <p>注：请不要随意删除</p>
                     </form>
                 </div>
 

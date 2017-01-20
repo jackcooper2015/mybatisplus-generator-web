@@ -57,50 +57,66 @@
     <div class="admin-content">
         <div class="admin-content-body">
             <div class="am-cf am-padding am-padding-bottom-0">
-                <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">表格</strong> / <small>Table</small></div>
+                <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">数据库</strong> / <small>${dbConfig.url!}</small></div>
             </div>
 
             <hr>
 
             <div class="am-g">
+                <div class="am-u-sm-12 am-u-md-4 am-u-md-push-8">
 
-            </div>
-
-            <div class="am-g">
-                <div class="am-u-sm-12">
-                    <form class="am-form">
-                        <table class="am-table am-table-striped am-table-hover table-main">
-                            <thead>
-                            <tr>
-                                <th class="table-check"><input type="checkbox"></th>
-                                <th class="table-id">ID</th>
-                                <th class="table-title">表名</th>
-                                <th class="table-type">注解</th>
-                                <th class="table-author am-hide-sm-only">操作</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            <#list tableList as table >
-                            <tr>
-                                <td><input type="checkbox"></td>
-                                <td>${table_index+1}</td>
-                                <td><#if (table.tableName)??>${table.tableName}</#if></td>
-                                <td><#if (table.comments)??>${table.comments}</#if></td>
-                                <td>
-                                    <a href="${base}/<#if (table.tableName)??>${table.tableName}</#if>?url=<#if (dbConfig.url)??>${dbConfig.url}</#if>&driver=<#if (dbConfig.driver)??>${dbConfig.driver}</#if>&username=<#if (dbConfig.username)??>${dbConfig.username}</#if>&password=<#if (dbConfig.password)??>${dbConfig.password}</#if>&schema=<#if (dbConfig.schema)??>${dbConfig.schema}</#if>">修改</a>
-                                </td>
-                            </tr>
-                            </#list>
-
-                            
-                            </tbody>
-                        </table>
-                        <hr>
-                        <p>注：.....</p>
-                    </form>
                 </div>
 
+                <div class="am-u-sm-12 am-u-md-8 am-u-md-pull-4">
+                    <form class="am-form am-form-horizontal" action="${base}/save" method="post">
+
+                        <div class="am-form-group">
+                            <label for="url" class="am-u-sm-3 am-form-label">URL</label>
+                            <div class="am-u-sm-9">
+                                <input type="text" id="url" name="url" value="${dbConfig.url!}" placeholder="输入数据库的url">
+                                <small>如:jdbc:mysql://10.168.16.116:3306/test</small>
+                            </div>
+                        </div>
+
+                        <div class="am-form-group">
+                            <label for="driver" class="am-u-sm-3 am-form-label">driver</label>
+                            <div class="am-u-sm-9">
+                                <input type="text" id="driver" name="driver" value="${dbConfig.driver!}" placeholder="输入数据库的driver">
+                                <small>如:com.mysql.jdbc.Driver</small>
+                            </div>
+                        </div>
+
+                        <div class="am-form-group">
+                            <label for="username" class="am-u-sm-3 am-form-label">username</label>
+                            <div class="am-u-sm-9">
+                                <input type="text" id="username" name="username" value="${dbConfig.username!}" placeholder="输入数据库的driver">
+                                <small></small>
+                            </div>
+                        </div>
+
+                        <div class="am-form-group">
+                            <label for="password" class="am-u-sm-3 am-form-label">password</label>
+                            <div class="am-u-sm-9">
+                                <input type="password" id="password" name="password" value="${dbConfig.password!}" placeholder="输入数据库的driver">
+                                <small></small>
+                            </div>
+                        </div>
+
+                        <div class="am-form-group">
+                            <label for="schema" class="am-u-sm-3 am-form-label">schema</label>
+                            <div class="am-u-sm-9">
+                                <input type="text" id="schema" name="schema" value="${dbConfig.schema!}" placeholder="输入数据库的driver">
+                                <small></small>
+                            </div>
+                        </div>-
+
+                        <div class="am-form-group">
+                            <div class="am-u-sm-9 am-u-sm-push-3">
+                                <button type="submit" class="am-btn am-btn-primary">保存修改</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
 
