@@ -137,8 +137,4 @@ public class DbConfigUtils {
     }
 
 
-    public static void main(String[] args) throws IOException {
-
-    }
-
 }

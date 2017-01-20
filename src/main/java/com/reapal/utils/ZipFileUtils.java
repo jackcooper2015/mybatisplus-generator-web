@@ -166,16 +166,7 @@ public class ZipFileUtils {
       
         private static final int BUFFEREDSIZE = 1024;   
            
-        public static void main(String[] args) {      
-        	ZipFileUtils bean = new ZipFileUtils();      
-            try {
-                bean.zip("d:/temp", "d:/test.zip");      
-         
-                bean.unzip("d:/test.zip", "d:/out/temp");      
-            } catch (IOException e) {      
-                e.printStackTrace();      
-            }      
-        } 
+
 
 
 }
