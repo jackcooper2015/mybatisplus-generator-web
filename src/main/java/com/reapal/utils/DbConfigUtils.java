@@ -11,10 +11,17 @@ import java.util.*;
 public class DbConfigUtils {
 
     private static Properties properties ;
-    private static File file;
+    private static File file  = new File("database.properties");
 
-    public DbConfigUtils(File file){
-        this.file = file;
+    static{
+        if(!file.exists()) try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public DbConfigUtils(){
         properties = new Properties();
     }
 

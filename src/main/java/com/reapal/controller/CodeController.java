@@ -32,7 +32,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 
 
 @Controller
@@ -44,10 +43,7 @@ public class CodeController extends BaseController{
 
 	@RequestMapping("/index")
 	public String init(Model model){
-		ClassLoader classLoader = getClass().getClassLoader();
-		File file = new File(classLoader.getResource("database.properties").getFile());
-
-		DbConfigUtils dbConfigUtils = new DbConfigUtils(file);
+		DbConfigUtils dbConfigUtils = new DbConfigUtils();
 		List<DbConfig> dbConfigList = dbConfigUtils.getAllDbconfig();
 		model.addAttribute("dbConfigList",dbConfigList);
 		return "index";
@@ -83,7 +79,7 @@ public class CodeController extends BaseController{
 		ClassLoader classLoader = getClass().getClassLoader();
 		File file = new File(classLoader.getResource("database.properties").getFile());
 
-		DbConfigUtils dbConfigUtils = new DbConfigUtils(file);
+		DbConfigUtils dbConfigUtils = new DbConfigUtils();
 		dbConfigUtils.addDbconfig(dbConfig);
 		return "redirect:/index";
 	}
@@ -94,9 +90,7 @@ public class CodeController extends BaseController{
 	@RequestMapping(value = "/delete",method=RequestMethod.GET)
 	public String delete(Model model,DbConfig dbConfig){
 		ClassLoader classLoader = getClass().getClassLoader();
-		File file = new File(classLoader.getResource("database.properties").getFile());
-
-		DbConfigUtils dbConfigUtils = new DbConfigUtils(file);
+		DbConfigUtils dbConfigUtils = new DbConfigUtils();
 		dbConfigUtils.deleteDbconfig(dbConfig.getUrl());
 		return "redirect:/index";
 	}
