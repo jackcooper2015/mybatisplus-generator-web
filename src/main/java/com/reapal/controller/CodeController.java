@@ -76,9 +76,6 @@ public class CodeController extends BaseController{
 	 */
 	@RequestMapping(value = "/save",method=RequestMethod.POST)
 	public String save(Model model,DbConfig dbConfig){
-		ClassLoader classLoader = getClass().getClassLoader();
-		File file = new File(classLoader.getResource("database.properties").getFile());
-
 		DbConfigUtils dbConfigUtils = new DbConfigUtils();
 		dbConfigUtils.addDbconfig(dbConfig);
 		return "redirect:/index";
