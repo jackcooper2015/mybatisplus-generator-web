@@ -16,7 +16,7 @@
 * 密  码：admin
 
 
-##使用说明[https://github.com/jackcooper2015/mybatisplus-generator-web/blob/master/doc/](详细)
+##使用说明
 1. 从doc目录找到jar文件，运行命令 nohup java -jar code-*.jar &
 2. 访问ip:8088
 2. 登录之后默认进入数据库列表页面，如果没有你需要的，请新增数据源
