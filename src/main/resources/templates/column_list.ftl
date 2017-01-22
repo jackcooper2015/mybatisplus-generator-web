@@ -80,25 +80,10 @@
     <!-- content end -->
 </div>
 
-
+<#include "footer.ftl">
 
 <script type="text/javascript">
-    <!--
     $(function () {
-
-        //提交，最终验证。
-        $('#send').click(function(){
-            $("form :input").trigger('blur');
-            var numError = $('form .onError').length;
-
-            if(numError){
-                return false;
-            }
-            else{
-                $('#listForm').submit();
-            }
-        });
-
 
         //保存
         $("#saveButton").click(function(){
@@ -113,7 +98,7 @@
                 $("#remarks_"+i).val(note);
                 //alert(note)
             }
-            $('#listForm').action("${base}/columnsave");
+            $('#listForm').attr("action","${base}/columnsave");
             $('#listForm').submit();
         });
 
@@ -130,7 +115,4 @@
 
 
     });
-
-    //-->
 </script>
-<#include "footer.ftl">

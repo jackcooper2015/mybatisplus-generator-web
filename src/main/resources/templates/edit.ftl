@@ -19,7 +19,15 @@
                     <form class="am-form am-form-horizontal" action="${base}/save" method="post" data-am-validator>
 
                         <div class="am-form-group">
-                            <label for="driver" class="am-u-sm-3 am-form-label">driver</label>
+                            <label for="dbName" class="am-u-sm-3 am-form-label">名称（唯一）</label>
+                            <div class="am-u-sm-9">
+                                <input type="text" id="dbName" required name="dbName" value="${dbConfig.dbName!}" placeholder="输入链接名">
+                                <small>如：210Base</small>
+                            </div>
+                        </div>
+
+                        <div class="am-form-group">
+                            <label for="driver" class="am-u-sm-3 am-form-label">数据库类型</label>
                             <div class="am-u-sm-9">
                                 <select name="driver" id="driver" required data-am-selected="{btnSize: 'sm'}" >
                                     <option></option>
@@ -40,7 +48,7 @@
 
 
                         <div class="am-form-group">
-                            <label for="username" class="am-u-sm-3 am-form-label">username</label>
+                            <label for="username" class="am-u-sm-3 am-form-label">用户名</label>
                             <div class="am-u-sm-9">
                                 <input type="text" id="username" required name="username" value="${dbConfig.username!}" placeholder="输入数据库的用户名">
                                 <small></small>
@@ -48,7 +56,7 @@
                         </div>
 
                         <div class="am-form-group">
-                            <label for="password" class="am-u-sm-3 am-form-label">password</label>
+                            <label for="password" class="am-u-sm-3 am-form-label">密码</label>
                             <div class="am-u-sm-9">
                                 <input type="password" id="password" required name="password" value="${dbConfig.password!}" placeholder="输入数据库的密码">
                                 <small></small>

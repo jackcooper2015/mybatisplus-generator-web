@@ -23,6 +23,7 @@ public class DbConfigUtils {
 
     public DbConfigUtils(){
         properties = new Properties();
+        System.out.println("database.properties路径==================> " + file.getAbsolutePath());
     }
 
     /**
@@ -43,12 +44,12 @@ public class DbConfigUtils {
     public boolean addDbconfig(DbConfig dbConfig) {
         try {
             this.init(this.file);
-            boolean b = properties.containsKey(dbConfig.getUrl());
+            boolean b = properties.containsKey(dbConfig.getDbName());
             if (b) {
                 //修改
                 return modifyDbconfig(dbConfig);
             }
-            properties.put(dbConfig.getUrl(), dbConfig.getDriver() + "|" + dbConfig.getUsername() + "|" + dbConfig.getPassword() + "|" + dbConfig.getSchema());
+            properties.put(dbConfig.getDbName(),dbConfig.getUrl()+"|"+ dbConfig.getDriver() + "|" + dbConfig.getUsername() + "|" + dbConfig.getPassword() + "|" + dbConfig.getSchema());
             properties.store(new FileOutputStream(file), new Date().toString());
             return true;
         }catch(IOException e){
@@ -64,9 +65,9 @@ public class DbConfigUtils {
      */
     public boolean modifyDbconfig(DbConfig dbConfig) throws IOException {
         this.init(file);
-        boolean b = properties.containsKey(dbConfig.getUrl());
+        boolean b = properties.containsKey(dbConfig.getDbName());
         if(b){
-            properties.setProperty(dbConfig.getUrl(),dbConfig.getDriver()+"|"+dbConfig.getUsername()+"|"+dbConfig.getPassword()+"|"+dbConfig.getSchema());
+            properties.setProperty(dbConfig.getDbName(),dbConfig.getUrl()+"|"+dbConfig.getDriver()+"|"+dbConfig.getUsername()+"|"+dbConfig.getPassword()+"|"+dbConfig.getSchema());
             properties.store(new FileOutputStream(file),new Date().toString());
             return true;
         }else {
@@ -94,7 +95,7 @@ public class DbConfigUtils {
 
     /**
      * 查询所有配置信息
-     * @param
+     * @param key dbName
      * @return
      */
     public DbConfig getDbconfigByKey(String key) throws IOException {
@@ -103,11 +104,12 @@ public class DbConfigUtils {
         if(null != str && !"".equals(str)) {
             String[] splits = str.split("\\|");
             DbConfig dc = new DbConfig();
-            dc.setUrl(key);
-            dc.setDriver(splits[0]);
-            dc.setUsername(splits[1]);
-            dc.setPassword(splits[2]);
-            dc.setSchema(splits[3]);
+            dc.setDbName(key);
+            dc.setUrl(splits[0]);
+            dc.setDriver(splits[1]);
+            dc.setUsername(splits[2]);
+            dc.setPassword(splits[3]);
+            dc.setSchema(splits[4]);
             return dc;
         }
         return null;
@@ -127,13 +129,14 @@ public class DbConfigUtils {
             Set<Map.Entry<Object, Object>> entries = properties.entrySet();
             for (Map.Entry<Object, Object> temp : entries) {
                 DbConfig dc = new DbConfig();
-                dc.setUrl((String) temp.getKey());
+                dc.setDbName((String) temp.getKey());
                 String value = (String) temp.getValue();
                 String[] splits = value.split("\\|");
-                dc.setDriver(splits[0]);
-                dc.setUsername(splits[1]);
-                dc.setPassword(splits[2]);
-                dc.setSchema(splits[3]);
+                dc.setUrl(splits[0]);
+                dc.setDriver(splits[1]);
+                dc.setUsername(splits[2]);
+                dc.setPassword(splits[3]);
+                dc.setSchema(splits[4]);
                 list.add(dc);
             }
             return list;

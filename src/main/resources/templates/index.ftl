@@ -34,6 +34,7 @@
                             <tr>
                                 <th class="table-check"><input type="checkbox"></th>
                                 <th class="table-id">ID</th>
+                                <th class="table-id">名称</th>
                                 <th class="table-title">数据库</th>
                                 <th class="table-type">类型</th>
                                 <th class="table-author am-hide-sm-only">操作</th>
@@ -47,18 +48,19 @@
                             <tr>
                                 <td><input type="checkbox"></td>
                                 <td>${dbConfig_index+1}</td>
+                                <td>${dbConfig.dbName!}</td>
                                 <td><a href="#"><#if (dbConfig.url)??>${dbConfig.url}</#if></a></td>
                                 <td>${dbConfig.driver!}</td>
                                 <td>
                                     <div class="am-btn-toolbar">
                                         <div class="am-btn-group am-btn-group-xs">
-                                            <a class="am-btn am-btn-default am-btn-xs am-hide-sm-only" href="${base}/edit?url=${dbConfig.url!}&driver=${dbConfig.driver!}&username=${dbConfig.username!}&password=${dbConfig.password!}&schema=${dbConfig.schema!}"><span class="am-icon-pencil-square-o"></span>编辑</a>
-                                            <a class="am-btn am-btn-default am-btn-xs am-hide-sm-only" href="${base}/delete?url=${dbConfig.url!}&driver=${dbConfig.driver!}&username=${dbConfig.username!}&password=${dbConfig.password!}&schema=${dbConfig.schema!}"><span class="am-icon-trash-o"></span>删除</a>
+                                            <a class="am-btn am-btn-default am-btn-xs am-hide-sm-only" href="${base}/edit?dbName=${dbConfig.dbName}&url=${dbConfig.url!}&driver=${dbConfig.driver!}&username=${dbConfig.username!}&password=${dbConfig.password!}&schema=${dbConfig.schema!}"><span class="am-icon-pencil-square-o"></span>编辑</a>
+                                            <a class="am-btn am-btn-default am-btn-xs am-hide-sm-only" href="${base}/delete?dbName=${dbConfig.dbName}&url=${dbConfig.url!}&driver=${dbConfig.driver!}&username=${dbConfig.username!}&password=${dbConfig.password!}&schema=${dbConfig.schema!}"><span class="am-icon-trash-o"></span>删除</a>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <a class="am-btn-sm am-btn-danger am-radius" href="${base}/tablelist?url=${dbConfig.url!}&driver=${dbConfig.driver!}&username=${dbConfig.username!}&password=${dbConfig.password!}&schema=${dbConfig.schema!}">选定</a>
+                                    <a class="am-btn-sm am-btn-danger am-radius" href="${base}/tablelist?dbName=${dbConfig.dbName}&url=${dbConfig.url!}&driver=${dbConfig.driver!}&username=${dbConfig.username!}&password=${dbConfig.password!}&schema=${dbConfig.schema!}">选定</a>
                                 </td>
                             </tr>
                             </#list>

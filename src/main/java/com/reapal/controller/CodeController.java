@@ -88,7 +88,7 @@ public class CodeController extends BaseController{
 	public String delete(Model model,DbConfig dbConfig){
 		ClassLoader classLoader = getClass().getClassLoader();
 		DbConfigUtils dbConfigUtils = new DbConfigUtils();
-		dbConfigUtils.deleteDbconfig(dbConfig.getUrl());
+		dbConfigUtils.deleteDbconfig(dbConfig.getDbName());
 		return "redirect:/index";
 	}
 

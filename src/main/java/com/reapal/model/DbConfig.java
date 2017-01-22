@@ -6,6 +6,7 @@ public class DbConfig implements Serializable {
     private static final long serialVersionUID = 3148176768559230877L;
     
 	/** 数据库 */
+	private String dbName;
 	private String url="";
 	private String driver="";	//com.mysql.jdbc.Driver
 	private String username="";
@@ -56,7 +57,13 @@ public class DbConfig implements Serializable {
 	public void setDbType(String dbType) {
 		this.dbType = dbType;
 	}
-	
-	
+
+	public String getDbName() {
+		return dbName;
+	}
+
+	public void setDbName(String dbName) {
+		this.dbName = dbName;
+	}
 }
 
