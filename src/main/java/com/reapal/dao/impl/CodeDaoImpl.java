@@ -25,7 +25,7 @@ public class CodeDaoImpl implements CodeDao {
 	    		stmt.executeUpdate(strSql);
 		    	//stmt.executeUpdate("use information_schema;");
 		    	for(ColumnInfo item : tableInfo.getListColumn()){
-		    		strSql = "ALTER TABLE "+tableInfo.getTableName()+" MODIFY COLUMN "+item.getColName()+" "+item.getColType()+" COMMENT '"+item.getComments()+"'; ";
+		    		strSql = "ALTER TABLE "+tableInfo.getTableName()+" MODIFY "+item.getColName()+" "+item.getColType()+" COMMENT '"+item.getComments()+"'; ";
 		    		System.out.println(">>>>>>>>>>>"+strSql);
 		    		//strSql = "update information_schema.COLUMNS t set t.column_comment='"+item.getComments()+"' where t.TABLE_SCHEMA='数据库名' and t.table_name='"+tableInfo.getTableName()+"' and t.COLUMN_NAME='"+item.getColName()+"';"); 
 		    		stmt.executeUpdate(strSql); 
@@ -127,7 +127,7 @@ public class CodeDaoImpl implements CodeDao {
 	    	
 	    	//得到字段注解
 	    	if(dbConfig.getUrl().indexOf("mysql")>0){
-	    		strSql = "select column_name,column_comment,data_type from Information_schema.columns where table_Name = '"+tableName+"'";	    	
+	    		strSql = "select column_name,column_comment,data_type,CHARACTER_MAXIMUM_LENGTH from Information_schema.columns where table_Name = '"+tableName+"'";
 	    	}
 	    	else{
 	    		strSql = "select z.COLUMN_NAME,c.comments,z.data_type from user_tab_columns z,user_col_comments c where z.TABLE_NAME=c.table_name and z.COLUMN_NAME=c.column_name and z.Table_Name='"+tableName+"'";
@@ -136,9 +136,13 @@ public class CodeDaoImpl implements CodeDao {
 	    	rs = stmt.executeQuery(strSql);
 	    	while(rs.next()){
 	    		ColumnInfo colInfo = new ColumnInfo();
-	    		colInfo.setColName(rs.getString(1));    
-	    		colInfo.setComments(rs.getString(2));
-	    		colInfo.setColType(rs.getString(3)); 
+	    		colInfo.setColName(rs.getString(1));
+				colInfo.setComments(rs.getString(2));
+				if(dbConfig.getUrl().indexOf("mysql")>0 && "varchar".equalsIgnoreCase(rs.getString(3))) {
+					colInfo.setColType(rs.getString(3)+"("+rs.getString(4)+")");
+				}else{
+					colInfo.setColType(rs.getString(3));
+				}
 	    		colList.add(colInfo);
 	        }
 	    	tableInfo.setListColumn(colList);

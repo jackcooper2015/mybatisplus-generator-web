@@ -50,9 +50,7 @@
 
                             <#list tableInfo.listColumn as column>
                             <input type="hidden" name="remarks" id="remarks_${column_index+1}" value="<#if (column.colName)??>${column.colName}</#if>">
-                            <input type="hidden" name="itemType" id="itemType_${column_index+1}" value="<#if (column.sqlTypeName)??>${column.sqlTypeName}</#if>">
-                            <input type="hidden" name="itemSize" id="itemSize_${column_index+1}" value="<#if (column.size)??>${column.size}</#if>">
-                            <input type="hidden" name="itemDecimalDigits" id="itemDecimalDigits_${column_index+1}" value="<#if (column.decimalDigits)??>${column.decimalDigits}</#if>">
+                            <input type="hidden" name="itemType" id="itemType_${column_index+1}" value="<#if (column.colType)??>${column.colType}</#if>">
                             <tr>
                                 <td>${column_index+1}</td>
                                 <td><#if (column.colName)??>${column.colName}</#if></td>
