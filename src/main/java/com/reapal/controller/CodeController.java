@@ -124,7 +124,7 @@ public class CodeController extends BaseController{
 		tableInfo.setListColumn(listItem);
 		codeService.saveComment(tableInfo,dbConfig);
 
-		return "redirect:/"+tableInfo.getTableName()+"?url="+dbConfig.getUrl()+"&driver="+dbConfig.getDriver()+"&username="+dbConfig.getUsername()+"&password="+dbConfig.getPassword()+"&schema="+dbConfig.getSchema();
+		return "redirect:/column/"+tableInfo.getTableName()+"?url="+dbConfig.getUrl()+"&driver="+dbConfig.getDriver()+"&username="+dbConfig.getUsername()+"&password="+dbConfig.getPassword()+"&schema="+dbConfig.getSchema();
 	}
 
 	/**
