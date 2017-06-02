@@ -115,7 +115,7 @@ public class CodeDaoImpl implements CodeDao {
 	    	String strSql = "";
 	    	//得到表注解
 	    	if(dbConfig.getUrl().indexOf("mysql")>0){
-	    		strSql = "select TABLE_COMMENT from information_schema.tables where table_name='"+tableName+"' and table_schema='"+dbConfig.getSchema()+"'";	    	
+	    		strSql = "select TABLE_COMMENT from information_schema.tables where table_name='"+tableName+"' and table_schema='"+dbConfig.getSchema()+"'";
 	    	}
 	    	else{
 	    		strSql = "select comments from user_tab_comments where table_name='"+tableName+"'";
@@ -127,8 +127,8 @@ public class CodeDaoImpl implements CodeDao {
 	    	
 	    	//得到字段注解
 	    	if(dbConfig.getUrl().indexOf("mysql")>0){
-	    		strSql = "select column_name,column_comment,data_type,CHARACTER_MAXIMUM_LENGTH from Information_schema.columns where table_Name = '"+tableName+"'";
-	    	}
+	    		strSql = "select column_name,column_comment,data_type,CHARACTER_MAXIMUM_LENGTH from Information_schema.columns where table_Name = '"+tableName+"' and table_schema='"+dbConfig.getSchema()+"'";
+			}
 	    	else{
 	    		strSql = "select z.COLUMN_NAME,c.comments,z.data_type from user_tab_columns z,user_col_comments c where z.TABLE_NAME=c.table_name and z.COLUMN_NAME=c.column_name and z.Table_Name='"+tableName+"'";
 	    	}

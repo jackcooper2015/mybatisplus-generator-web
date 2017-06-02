@@ -31,7 +31,7 @@
                 </div>
 
                 <div class="am-u-sm-6 am-u-md-6">
-                        模块名称：com.reapal.<input type="text" required name="comments" id="comments" value="<#if (tableInfo.comments)??><#if (tableInfo.comments)?index_of("#") &gt; -1 >${(tableInfo.comments)?substring((tableInfo.comments)?index_of("#")+1)}<#else>${tableInfo.comments}test</#if></#if>">
+                        模块名称：com.<input type="text" required name="comments" id="comments" value="<#if (tableInfo.comments)??><#if (tableInfo.comments)?index_of("#") &gt; -1 >${(tableInfo.comments)?substring((tableInfo.comments)?index_of("#")+1)}<#else>${tableInfo.comments}</#if></#if>">
                 </div>
             </div>
 
