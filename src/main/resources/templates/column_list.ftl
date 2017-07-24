@@ -30,6 +30,19 @@
                     </div>
                 </div>
 
+
+                <div class="am-u-sm-6 am-u-md-6">
+                    <div class="am-form-group">
+                        <label>去掉前缀： </label>
+                        <label class="am-radio-inline">
+                            <input type="radio"  value="1" name="flag" required> 是
+                        </label>
+                        <label class="am-radio-inline">
+                            <input type="radio" value="0" name="flag"> 否
+                        </label>
+                    </div>
+                 </div>
+
                 <div class="am-u-sm-6 am-u-md-6">
                         模块名称：com.<input type="text" required name="comments" id="comments" value="<#if (tableInfo.comments)??><#if (tableInfo.comments)?index_of("#") &gt; -1 >${(tableInfo.comments)?substring((tableInfo.comments)?index_of("#")+1)}<#else>${tableInfo.comments}</#if></#if>">
                 </div>

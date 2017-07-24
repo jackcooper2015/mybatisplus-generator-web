@@ -130,7 +130,7 @@ public class CodeController extends BaseController{
 	 * 生成代码
 	 */
 	@RequestMapping(value="/generate",method=RequestMethod.POST)
-	public String generate(DbConfig dbConfig, TableInfo tableInfo, CodeConfig codeConfig, HttpServletResponse response){
+	public String generate(DbConfig dbConfig, TableInfo tableInfo, CodeConfig codeConfig,boolean flag, HttpServletResponse response){
 		String model = tableInfo.getComments().substring(tableInfo.getComments().indexOf("#")+1);
 		AutoGenerator mpg = new AutoGenerator();
 		// 全局配置
@@ -158,8 +158,13 @@ public class CodeController extends BaseController{
 		mpg.setDataSource(dsc);
 		// 策略配置
 		StrategyConfig strategy = new StrategyConfig();
-//        strategy.setTablePrefix("gw_");// 此处可以修改为您的表前缀
-		strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
+		if(flag && tableInfo.getTableName().indexOf("_")>0 && tableInfo.getTableName().lastIndexOf("_")!=tableInfo.getTableName().length()-1) {
+			String prefix = tableInfo.getTableName().substring(0,tableInfo.getTableName().indexOf("_")+1);
+			strategy.setTablePrefix(prefix);// 此处可以修改为您的表前缀
+			strategy.setNaming(NamingStrategy.remove_prefix_and_camel);// 表名生成策略
+		}else{
+			strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
+		}
 		strategy.setInclude(new String[] { tableInfo.getTableName() }); // 需要生成的表
 		// strategy.setExclude(new String[]{"test"}); // 排除生成的表
 		// 字段名生成策略
