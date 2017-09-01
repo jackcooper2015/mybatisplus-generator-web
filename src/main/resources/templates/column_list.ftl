@@ -15,7 +15,7 @@
 
             <div class="admin-content-body">
             <div class="am-cf am-padding am-padding-bottom-0">
-                <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">表详情</strong> / <small>Table</small></div>
+                <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">表详情</strong> / <small>列名</small></div>
             </div>
 
             <hr>
@@ -35,10 +35,10 @@
                     <div class="am-form-group">
                         <label>去掉前缀： </label>
                         <label class="am-radio-inline">
-                            <input type="radio"  value="1" name="flag" required> 是
+                            <input type="radio"  value="1" name="flag" data-am-ucheck> 是
                         </label>
                         <label class="am-radio-inline">
-                            <input type="radio" value="0" name="flag"> 否
+                            <input type="radio" value="0" data-am-ucheck checked name="flag"> 否
                         </label>
                     </div>
                  </div>
@@ -76,7 +76,7 @@
                             </tbody>
                         </table>
                         <hr>
-                        <p>注：请完善备注信息，请确保表有主键ID</p>
+                        <p>注：请完善备注信息，请确保表有主键ID。</p>
                 </div>
 
             </div>

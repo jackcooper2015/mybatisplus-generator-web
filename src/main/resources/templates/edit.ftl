@@ -16,7 +16,7 @@
                 </div>
 
                 <div class="am-u-sm-12 am-u-md-8 am-u-md-pull-4">
-                    <form class="am-form am-form-horizontal" action="${base}/save" method="post" data-am-validator>
+                    <form class="am-form am-form-horizontal" id="tableForm" action="${base}/save" method="post" data-am-validator>
 
                         <div class="am-form-group">
                             <label for="dbName" class="am-u-sm-3 am-form-label">名称（唯一）</label>
@@ -69,13 +69,23 @@
                                 <input type="text" id="schema" required name="schema" value="${dbConfig.schema!}" placeholder="输入数据库的schema">
                                 <small></small>
                             </div>
-                        </div>-
+                        </div>
 
                         <div class="am-form-group">
                             <div class="am-u-sm-9 am-u-sm-push-3">
-                                <button type="submit" class="am-btn am-btn-primary">保存修改</button>
+                                <button type="button" id="test-db" class="am-btn am-btn-default am-radius">测试</button>
+                                <button type="submit" class="am-btn am-btn-primary">保存</button>
                             </div>
                         </div>
+
+                        <div class="am-form-group">
+                            <label for="result" class="am-u-sm-3 am-form-label">测试结果</label>
+                            <div class="am-u-sm-9">
+                                <textarea class="" id="result" rows="5" id="doc-ta-1"></textarea>
+                            </div>
+                        </div>
+
+
                     </form>
                 </div>
             </div>
@@ -87,6 +97,27 @@
         </footer>
 
     </div>
+
+    <script type="application/javascript">
+        $(function () {
+            $("#test-db").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "${base}/test",
+                    data: $("#tableForm").serialize(),
+                    async: false,
+                    dataType:"text",
+                    success: function(data){
+                        if(data == null || data == ''){
+                            $("#result").text("数据库连接成功，请保存");
+                        }else{
+                            $("#result").text("数据库连接失败:"+data);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
     <!-- content end -->
 </div>
 <#include "footer.ftl">

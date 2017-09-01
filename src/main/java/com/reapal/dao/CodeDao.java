@@ -15,4 +15,6 @@ public interface CodeDao {
 	
 	public TableInfo getAllColumns(String tableName, DbConfig dbConfig);
 
+	public String testConnection(DbConfig dbConfig);
+
 }

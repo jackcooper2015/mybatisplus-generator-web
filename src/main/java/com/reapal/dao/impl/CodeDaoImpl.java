@@ -171,17 +171,33 @@ public class CodeDaoImpl implements CodeDao {
 	}
 	
 	/* 获取数据库连接的函数*/  
-    private Connection getConnection(DbConfig dbConfig) {  
+    private Connection getConnection(DbConfig dbConfig) {
         Connection con = null;  //创建用于连接数据库的Connection对象   
         try {  
             Class.forName(dbConfig.getDriver());// 加载Mysql数据驱动       
             con = DriverManager.getConnection(dbConfig.getUrl(), dbConfig.getUsername(), dbConfig.getPassword());// 创建数据连接  
               
         } catch (Exception e) {  
-            System.out.println("数据库连接失败" + e.getMessage());  
+            System.out.println("数据库连接失败" + e.getMessage());
         }  
         return con; //返回所建立的数据库连接   
-    }  
+    }
 
-	
+	/* 获取数据库连接的函数*/
+	public String testConnection(DbConfig dbConfig) {
+		Connection con = null;  //创建用于连接数据库的Connection对象
+		try {
+			Class.forName(dbConfig.getDriver());// 加载Mysql数据驱动
+			con = DriverManager.getConnection(dbConfig.getUrl(), dbConfig.getUsername(), dbConfig.getPassword());// 创建数据连接
+			if(con == null){
+				return "数据库连接失败";
+			}
+		} catch (Exception e) {
+			System.out.println("数据库连接失败：" + e.getMessage());
+			return e.getMessage();
+		}
+		return null;
+	}
+
+
 }

@@ -1,6 +1,5 @@
 package com.reapal.service.impl;
 
-import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
 import com.reapal.dao.CodeDao;
 import com.reapal.model.DbConfig;
 import com.reapal.model.TableInfo;
@@ -8,7 +7,6 @@ import com.reapal.service.CodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
 
 
@@ -30,6 +28,9 @@ public class CodeServiceImpl implements CodeService {
 	public void saveComment(TableInfo tableInfo,DbConfig dbConfig){
 		codeDao.saveComment(tableInfo,dbConfig);
 	}
-	
+
+	public String testConnection(DbConfig dbConfig){
+		return codeDao.testConnection(dbConfig);
+	}
 
 }

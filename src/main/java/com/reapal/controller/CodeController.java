@@ -23,6 +23,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -68,6 +69,16 @@ public class CodeController extends BaseController{
 	public String edit(Model model,DbConfig dbConfig){
 		model.addAttribute("dbConfig", dbConfig);
 		return "edit";
+	}
+
+	/**
+	 * 测试数据库配置
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/test",method=RequestMethod.POST)
+	public String test(Model model,DbConfig dbConfig){
+		String result = codeService.testConnection(dbConfig);
+		return result;
 	}
 
 	/**

@@ -19,7 +19,9 @@ public class CommonInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object o, ModelAndView modelAndView) throws Exception {
-        request.getSession().setAttribute("base",request.getContextPath());
+        String appContext = request.getContextPath();
+        String base = request.getScheme()+"://"+request.getServerName()+":"+ request.getServerPort() + appContext;
+        request.getSession().setAttribute("base",base);
     }
 
     @Override
