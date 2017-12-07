@@ -56,6 +56,7 @@
                                 <th class="table-author am-hide-sm-only">序号</th>
                                 <th class="table-author am-hide-sm-only">字段名</th>
                                 <th class="table-author am-hide-sm-only">类型</th>
+                                <th class="table-author am-hide-sm-only">主键自增</th>
                                 <th class="table-author am-hide-sm-only">备注</th>
                             </tr>
                             </thead>
@@ -64,10 +65,12 @@
                             <#list tableInfo.listColumn as column>
                             <input type="hidden" name="remarks" id="remarks_${column_index+1}" value="<#if (column.colName)??>${column.colName}</#if>">
                             <input type="hidden" name="itemType" id="itemType_${column_index+1}" value="<#if (column.colType)??>${column.colType}</#if>">
+                            <input type="hidden" name="extra" id="extra_${column_index+1}" value="<#if (column.extra)??>${column.extra}</#if>">
                             <tr>
                                 <td>${column_index+1}</td>
                                 <td><#if (column.colName)??>${column.colName}</#if></td>
                                 <td><#if (column.colType)??>${column.colType}</#if></td>
+                                <td><#if (column.colType)??>${column.extra}</#if></td>
                                 <td><input type="text" required name="remark" id="remark_${column_index+1}" value="<#if (column.comments)??><#if (column.comments)?index_of("#") &gt; 0 >${(column.comments)?substring(0,(column.comments)?index_of("#"))}<#else>${column.comments}</#if></#if>"></td>
                             </tr>
                             </#list>
@@ -106,6 +109,7 @@
                 var note = $("#remarks_"+i).val();
                 note += "@"+$("#itemType_"+i).val();
                 note += "@"+$("#remark_"+i).val();
+                note += "@"+$("#extra_"+i).val();
                 $("#remarks_"+i).val(note);
                 //alert(note)
             }

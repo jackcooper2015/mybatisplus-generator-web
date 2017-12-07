@@ -4,6 +4,7 @@ import com.reapal.dao.CodeDao;
 import com.reapal.model.ColumnInfo;
 import com.reapal.model.DbConfig;
 import com.reapal.model.TableInfo;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -25,7 +26,11 @@ public class CodeDaoImpl implements CodeDao {
 	    		stmt.executeUpdate(strSql);
 		    	//stmt.executeUpdate("use information_schema;");
 		    	for(ColumnInfo item : tableInfo.getListColumn()){
-		    		strSql = "ALTER TABLE "+tableInfo.getTableName()+" MODIFY "+item.getColName()+" "+item.getColType()+" COMMENT '"+item.getComments()+"'; ";
+		    		if (StringUtils.isEmpty(item.getExtra())) {
+						strSql = "ALTER TABLE "+tableInfo.getTableName()+" MODIFY "+item.getColName()+" "+item.getColType()+" COMMENT '"+item.getComments()+"'; ";
+					} else {
+						strSql = "ALTER TABLE " + tableInfo.getTableName() + " MODIFY " + item.getColName() + " " + item.getColType() + " "+item.getExtra()+" "+"COMMENT '" + item.getComments() + "'; ";
+					}
 		    		System.out.println(">>>>>>>>>>>"+strSql);
 		    		//strSql = "update information_schema.COLUMNS t set t.column_comment='"+item.getComments()+"' where t.TABLE_SCHEMA='数据库名' and t.table_name='"+tableInfo.getTableName()+"' and t.COLUMN_NAME='"+item.getColName()+"';"); 
 		    		stmt.executeUpdate(strSql); 
@@ -127,7 +132,7 @@ public class CodeDaoImpl implements CodeDao {
 	    	
 	    	//得到字段注解
 	    	if(dbConfig.getUrl().indexOf("mysql")>0){
-	    		strSql = "select column_name,column_comment,data_type,CHARACTER_MAXIMUM_LENGTH from Information_schema.columns where table_Name = '"+tableName+"' and table_schema='"+dbConfig.getSchema()+"'";
+	    		strSql = "select column_name,column_comment,data_type,CHARACTER_MAXIMUM_LENGTH,extra from Information_schema.columns where table_Name = '"+tableName+"' and table_schema='"+dbConfig.getSchema()+"'";
 			}
 	    	else{
 	    		strSql = "select z.COLUMN_NAME,c.comments,z.data_type from user_tab_columns z,user_col_comments c where z.TABLE_NAME=c.table_name and z.COLUMN_NAME=c.column_name and z.Table_Name='"+tableName+"'";
@@ -142,6 +147,11 @@ public class CodeDaoImpl implements CodeDao {
 					colInfo.setColType(rs.getString(3)+"("+rs.getString(4)+")");
 				}else{
 					colInfo.setColType(rs.getString(3));
+				}
+				if (!StringUtils.isEmpty(rs.getString(5))) {
+					colInfo.setExtra(rs.getString(5));
+				} else {
+					colInfo.setExtra("");
 				}
 	    		colList.add(colInfo);
 	        }

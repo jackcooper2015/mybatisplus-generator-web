@@ -8,6 +8,16 @@ public class ColumnInfo implements Serializable {
 	private String colName;
 	private String colType;
 	private String comments;
+	//是否是主键自增
+	private String extra;
+
+	public String getExtra() {
+		return extra;
+	}
+
+	public void setExtra(String extra) {
+		this.extra = extra;
+	}
 
 	public String getColName() {
 		return colName;

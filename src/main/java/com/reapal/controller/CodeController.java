@@ -129,6 +129,9 @@ public class CodeController extends BaseController{
 			item.setColName(mark[0]);
 			item.setColType(mark[1]);
 			item.setComments(mark[2]);
+			if (mark.length ==4) {
+				item.setExtra(mark[3]);
+			}
 			listItem.add(item);
 		}
 		tableInfo.setListColumn(listItem);
