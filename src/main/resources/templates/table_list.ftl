@@ -19,10 +19,10 @@
                         <table class="am-table am-table-striped am-table-hover table-main">
                             <thead>
                             <tr>
-                                <th class="table-check"><input type="checkbox"></th>
+                                <#--<th class="table-check"><input type="checkbox"></th>-->
                                 <th class="table-id">ID</th>
                                 <th class="table-title">表名</th>
-                                <th class="table-type">注解</th>
+                                <th class="table-type">表注释</th>
                                 <th class="table-author am-hide-sm-only">操作</th>
                             </tr>
                             </thead>
@@ -30,7 +30,7 @@
 
                             <#list tableList as table >
                             <tr>
-                                <td><input type="checkbox"></td>
+                                <#--<td><input type="checkbox"></td>-->
                                 <td>${table_index+1}</td>
                                 <td><#if (table.tableName)??>${table.tableName}</#if></td>
                                 <td><#if (table.comments)??>${table.comments}</#if></td>

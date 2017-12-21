@@ -32,7 +32,7 @@
                         <table class="am-table am-table-striped am-table-hover table-main">
                             <thead>
                             <tr>
-                                <th class="table-check"><input type="checkbox"></th>
+                                <#--<th class="table-check"><input type="checkbox"></th>-->
                                 <th class="table-id">ID</th>
                                 <th class="table-id">名称</th>
                                 <th class="table-title">数据库</th>
@@ -46,7 +46,7 @@
 
                             <#list dbConfigList as dbConfig >
                             <tr>
-                                <td><input type="checkbox"></td>
+                                <#--<td><input type="checkbox"></td>-->
                                 <td>${dbConfig_index+1}</td>
                                 <td>${dbConfig.dbName!}</td>
                                 <td><a href="#"><#if (dbConfig.url)??>${dbConfig.url}</#if></a></td>
