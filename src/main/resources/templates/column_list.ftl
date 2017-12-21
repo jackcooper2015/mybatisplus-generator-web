@@ -15,7 +15,7 @@
 
             <div class="admin-content-body">
             <div class="am-cf am-padding am-padding-bottom-0">
-                <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">表详情</strong> / <small>列名</small></div>
+                <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">表名</strong> : <small>${tableName}</small></div>
             </div>
 
             <hr>

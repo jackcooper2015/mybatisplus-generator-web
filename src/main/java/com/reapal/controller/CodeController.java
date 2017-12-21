@@ -111,6 +111,7 @@ public class CodeController extends BaseController{
 		TableInfo tableInfo = codeService.getAllColumns(tableName,dbConfig);
 		model.addAttribute("tableInfo", tableInfo);
 		model.addAttribute("dbConfig", dbConfig);
+		model.addAttribute("tableName", tableName);
 		return "column_list";
 	}
 
