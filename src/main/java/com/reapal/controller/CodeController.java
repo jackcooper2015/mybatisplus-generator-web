@@ -1,12 +1,12 @@
 package com.reapal.controller;
 
+import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
 import com.baomidou.mybatisplus.generator.config.GlobalConfig;
 import com.baomidou.mybatisplus.generator.config.PackageConfig;
 import com.baomidou.mybatisplus.generator.config.StrategyConfig;
-import com.baomidou.mybatisplus.generator.config.rules.DbType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.reapal.model.CodeConfig;
 import com.reapal.model.ColumnInfo;
@@ -176,14 +176,14 @@ public class CodeController extends BaseController{
 		if(flag && tableInfo.getTableName().indexOf("_")>0 && tableInfo.getTableName().lastIndexOf("_")!=tableInfo.getTableName().length()-1) {
 			String prefix = tableInfo.getTableName().substring(0,tableInfo.getTableName().indexOf("_")+1);
 			strategy.setTablePrefix(prefix);// 此处可以修改为您的表前缀
-			strategy.setNaming(NamingStrategy.remove_prefix_and_camel);// 表名生成策略
+			NamingStrategy.removePrefix(tableInfo.getTableName(),prefix);// 表名生成策略
 		}else{
 			strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
 		}
 		strategy.setInclude(new String[] { tableInfo.getTableName() }); // 需要生成的表
 		// strategy.setExclude(new String[]{"test"}); // 排除生成的表
 		// 字段名生成策略
-		strategy.setFieldNaming(NamingStrategy.underline_to_camel);
+		strategy.setNaming(NamingStrategy.underline_to_camel);
 		// 自定义实体，公共字段
 		// strategy.setSuperEntityColumns(new String[] { "test_id", "age" });
 		// 自定义 mapper 父类
