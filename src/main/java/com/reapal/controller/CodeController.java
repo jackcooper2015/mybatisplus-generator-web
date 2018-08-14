@@ -3,10 +3,7 @@ package com.reapal.controller;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
-import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
-import com.baomidou.mybatisplus.generator.config.GlobalConfig;
-import com.baomidou.mybatisplus.generator.config.PackageConfig;
-import com.baomidou.mybatisplus.generator.config.StrategyConfig;
+import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.reapal.model.CodeConfig;
 import com.reapal.model.ColumnInfo;
@@ -46,7 +43,7 @@ public class CodeController extends BaseController{
 		DbConfigUtils dbConfigUtils = new DbConfigUtils();
 		List<DbConfig> dbConfigList = dbConfigUtils.getAllDbconfig();
 		model.addAttribute("dbConfigList",dbConfigList);
-		return "index";
+		return "/views/index";
 	}
 
 	/**
@@ -59,7 +56,7 @@ public class CodeController extends BaseController{
 		model.addAttribute("dbConfig", dbConfig);
 		model.addAttribute("tableList", tableList);
 
-		return "table_list";
+		return "/views/table_list";
 	}
 
 	/**
@@ -68,7 +65,7 @@ public class CodeController extends BaseController{
 	@RequestMapping(value = "/edit",method=RequestMethod.GET)
 	public String edit(Model model,DbConfig dbConfig){
 		model.addAttribute("dbConfig", dbConfig);
-		return "edit";
+		return "/views/edit";
 	}
 
 	/**
@@ -112,7 +109,7 @@ public class CodeController extends BaseController{
 		model.addAttribute("tableInfo", tableInfo);
 		model.addAttribute("dbConfig", dbConfig);
 		model.addAttribute("tableName", tableName);
-		return "column_list";
+		return "/views/column_list";
 	}
 
 
@@ -156,7 +153,7 @@ public class CodeController extends BaseController{
 		gc.setEnableCache(false);// XML 二级缓存
 		gc.setBaseResultMap(true);// XML ResultMap
 		gc.setBaseColumnList(false);// XML columList
-		gc.setAuthor("jackcooper");
+		gc.setAuthor("Auto-generator");
 		// 自定义文件命名，注意 %s 会自动填充表实体属性！
 		// gc.setMapperName("%sDao");
 		// gc.setXmlName("%sDao");
@@ -204,6 +201,7 @@ public class CodeController extends BaseController{
 		// 包配置
 		PackageConfig pc = new PackageConfig();
 		pc.setParent("com");
+		pc.setEntity("domain");
 		pc.setModuleName(model);
 		mpg.setPackageInfo(pc);
 		// 注入自定义配置，可以在 VM 中使用 cfg.abc 设置的值
@@ -212,20 +210,22 @@ public class CodeController extends BaseController{
 			public void initMap() {
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("abc", this.getConfig().getGlobalConfig().getAuthor() + "-mp");
+				map.put("entityLombokModel",true);
+				map.put("restControllerStyle",true);
 				this.setMap(map);
 			}
 		};
 		mpg.setCfg(cfg);
 		// 自定义模板配置，可以 copy 源码 mybatis-plus/src/main/resources/template 下面内容修改，
 		// 放置自己项目的 src/main/resources/template 目录下, 默认名称一下可以不配置，也可以自定义模板名称
-		// TemplateConfig tc = new TemplateConfig();
-		// tc.setController("...");
-		// tc.setEntity("...");
-		// tc.setMapper("...");
-		// tc.setXml("...");
-		// tc.setService("...");
-		// tc.setServiceImpl("...");
-		// mpg.setTemplate(tc);
+		 TemplateConfig tc = new TemplateConfig();
+		 tc.setController("/templates/gen-template/controller.java.vm");
+		 tc.setEntity("/templates/gen-template/entity.java.vm");
+		 tc.setMapper("/templates/gen-template/mapper.java.vm");
+		 tc.setXml("/templates/gen-template/mapper.xml.vm");
+		 tc.setService("/templates/gen-template/service.java.vm");
+		 tc.setServiceImpl("/templates/gen-template/serviceImpl.java.vm");
+		 mpg.setTemplate(tc);
 		// 执行生成
 		mpg.execute();
 		// 打印注入设置
@@ -234,7 +234,6 @@ public class CodeController extends BaseController{
 		//打包下载
 		response.setContentType("APPLICATION/OCTET-STREAM");
 		response.setHeader("Content-Disposition","attachment; filename=src.zip");
-		System.out.println("in BatchDownload................");
 		try {
 			ZipFileUtils zip = new ZipFileUtils();
 			ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());

@@ -1,0 +1,100 @@
+package ${package.Controller};
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import ${package.Service}.${table.serviceName};
+import ${package.Entity}.${entity};
+import java.util.*;
+
+#if(${cfg.restControllerStyle})
+#else
+import org.springframework.stereotype.Controller;
+#end
+#if(${superControllerClassPackage})
+import ${superControllerClassPackage};
+#end
+
+/**
+ * <p>
+ * $!{table.comment} 前端控制器
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+#if(${cfg.restControllerStyle})
+@RestController
+#else
+@Controller
+#end
+@RequestMapping("#if(${package.ModuleName})/${package.ModuleName}#end/#if(${controllerMappingHyphenStyle})${controllerMappingHyphen}#else${table.entityPath}#end")
+#if(${kotlin})
+class ${table.controllerName}#if(${superControllerClass}) : ${superControllerClass}()#end
+
+#else
+#if(${superControllerClass})
+public class ${table.controllerName} extends ${superControllerClass} {
+#else
+public class ${table.controllerName} {
+#end
+
+    #set($lowerCaseServiceName = $table.serviceName.substring(0,1).toLowerCase() + $table.serviceName.substring(1,$table.serviceName.length()))
+
+    @Autowired
+    private ${table.serviceName} ${lowerCaseServiceName};
+
+    #set($lowrEntity = $table.entityName.substring(0,1).toLowerCase() + $table.entityName.substring(1,$table.entityName.length()))
+
+    /**
+    * 新增
+    */
+    @PostMapping
+    public boolean save(${table.entityName} ${lowrEntity}){
+        return ${lowerCaseServiceName}.save(${lowrEntity});
+    }
+
+    /**
+    * 通过id删除
+    */
+    @DeleteMapping
+    public boolean delete(${table.entityName} ${lowrEntity}){
+        return ${lowerCaseServiceName}.removeById(${lowrEntity}.getId()());
+    }
+
+    /**
+    * 修改
+    */
+    @PutMapping
+    public boolean updateById(${table.entityName} ${lowrEntity}){
+        return ${lowerCaseServiceName}.updateById(${lowrEntity});
+    }
+
+
+    /**
+    * 查询列表
+    */
+    @GetMapping("/list")
+    public List<${table.entityName}> list(${table.entityName} ${lowrEntity} ){
+        QueryWrapper<${table.entityName}> wp = new QueryWrapper<>();
+        //todo init wp
+        return ${lowerCaseServiceName}.list(wp);
+    }
+
+    /**
+    * 分页查询
+    */
+    @GetMapping("/page")
+    public IPage<${table.entityName}> page(Page<${table.entityName}> page,${table.entityName} ${lowrEntity}){
+        QueryWrapper<${table.entityName}> wp = new QueryWrapper<>();
+        //todo init wp
+        return ${lowerCaseServiceName}.page(page,wp);
+    }
+
+
+}
+
+#end

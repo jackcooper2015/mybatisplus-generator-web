@@ -26,7 +26,7 @@ public class LoginController extends BaseController{
         // 添加模型数据 可以是任意的POJO对象
         mv.addObject("message", "welcome login repal.com");
         // 设置逻辑视图名，视图解析器会根据该名字解析到具体的视图页面
-        mv.setViewName("login");
+        mv.setViewName("views/login");
         return mv;
     }
 
