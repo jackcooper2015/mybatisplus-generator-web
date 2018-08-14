@@ -5,11 +5,11 @@
 
 	<groupId>com.reapal</groupId>
 	<artifactId>code-generator</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>code-generator</name>
-	<description>Demo project for Spring Boot</description>
+	<description>mybatisplus代码生成工具</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -82,6 +82,12 @@
 			<groupId>org.apache.ant</groupId>
 			<artifactId>ant</artifactId>
 			<version>1.9.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.16</version>
 		</dependency>
 
 
