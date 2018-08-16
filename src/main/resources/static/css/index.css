@@ -1,0 +1,207 @@
+@charset "UTF-8";
+a {
+    outline: 0;
+    text-decoration: none;
+}
+
+a, input, select, textarea {
+    color: inherit;
+}
+
+body, button, input, select, textarea {
+    font-size: 14px;
+    font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+    line-height: 1.5;
+}
+
+.header {
+    height: 47px;
+    border-top: 3px solid #ffff01;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #282b32;
+}
+
+.logo {
+    display: block;
+    height: 47px;
+    line-height: 47px;
+    width: 200px;
+    text-align: center;
+}
+
+.logo img {
+    width: 28px;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    top: -2px;
+}
+
+.logo span {
+    font-size: 16px;
+    color: #acacac;
+    margin-left: 8px;
+}
+
+.header-login {
+    line-height: 47px;
+    position: absolute;
+    right: 35px;
+    top: 0;
+    color: #fff;
+}
+
+.header-login a:hover {
+    text-decoration: underline;
+}
+
+.header-login-content {
+    display: block;
+    color: #fff;
+    cursor: pointer;
+}
+
+.header-login-content img {
+    margin-right: 8px;
+    vertical-align: middle;
+    margin-top: -3px;
+}
+
+.header-login-content .el-icon-arrow-down {
+    margin-left: 5px;
+    font-size: 12px;
+}
+
+.header-username {
+    margin-right: 18px;
+    margin-left: 6px;
+}
+
+.header-login-photo {
+    width: 21px;
+}
+
+.menu {
+    position: absolute;
+    left: 200px;
+    top: 0;
+    margin-left: 45px;
+}
+
+.menu .el-menu-item {
+    font-size: 16px;
+    line-height: 47px;
+    height: 47px;
+}
+
+.menu .el-menu--dark {
+    background-color: #282b32;
+}
+
+.menu .el-menu--horizontal.el-menu--dark .el-submenu .el-menu-item.is-active, .menu .el-menu-item.is-active {
+    color: #fff;
+}
+
+.menu .el-menu--dark .el-menu-item:hover {
+    background-color: #282b32;
+}
+
+.nav {
+    background-color: #eef1f6;
+    border-right: solid 1px #e6e6e6;
+    width: 200px;
+    position: absolute;
+    left: 0;
+    top: 50px;
+    bottom: 32px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-transition: width ease .2s;
+    transition: width ease .2s;
+}
+
+.nav .el-icon-arrow-right {
+    display: none
+}
+
+.nav .el-menu {
+    border-right: 0;
+}
+
+.nav .el-menu-item a {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%
+}
+
+.main {
+    position: absolute;
+    top: 50px;
+    left: 200px;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+    -webkit-transition: left ease .2s;
+    transition: left ease .2s;
+}
+
+.main > iframe {
+    width: 100%;
+    height: 100%
+}
+
+.el-dropdown-menu a, .el-menu-item a {
+    display: block;
+}
+
+.nav-collapse {
+    position: fixed;
+    bottom: 0;
+    width: 200px;
+    -webkit-transition: width ease .2s;
+    transition: width ease .2s;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    background-color: #e4e8f1;
+    border-right: solid 1px #e6e6e6;
+    cursor: pointer;
+}
+
+.nav-collapse i {
+    font-size: 12px
+}
+
+body.collapsed .nav {
+    width: 52px;
+    overflow: hidden
+}
+
+body.collapsed .nav .el-icon-arrow-right {
+    display: inline-block
+}
+
+body.collapsed .nav .el-icon-arrow-left {
+    display: none
+}
+
+body.collapsed .nav .el-menu i {
+    margin-right: 200px
+}
+
+body.collapsed .nav .el-submenu .el-menu-item {
+    visibility: hidden
+}
+
+body.collapsed .main {
+    left: 52px
+}
+
+body.collapsed .nav-collapse {
+    width: 52px
+}

@@ -1,0 +1,44 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorator="/layouts/default">
+<th:block layout:fragment="title">
+    数据库列表
+</th:block>
+<!-- head -->
+<th:block layout:fragment="head">
+    <!--页面自定义样式-->
+    <style>
+        /** style */
+    </style>
+</th:block>
+<!-- content -->
+<th:block layout:fragment="content">
+
+
+    <el-collapse v-model="data_group.active" class="ui-collapse">
+        <el-collapse-item title="查询结果" name="active">
+            <el-row class="fn-clear">
+                <el-col class="fn-tal" :span="18">
+                    <el-button @click="download" type="primary" plain>生成代码</el-button>
+                </el-col>
+            </el-row>
+
+            <el-table fixed class="fn-mt10" :data="data_group.list" border highlight-current-row @selection-change="onSelectionChange">
+                <el-table-column type="index" width="50"></el-table-column>
+                <el-table-column  prop="colName" label="列名" align="center" min-width="5%" show-overflow-tooltip="true"></el-table-column>
+                <el-table-column  prop="colType" label="类型" align="center" min-width="15%" show-overflow-tooltip="true"></el-table-column>
+                <el-table-column  prop="comments" label="注释" align="center" min-width="15%" show-overflow-tooltip="true"></el-table-column>
+                <el-table-column  prop="extra" label="主键" align="center" min-width="15%" show-overflow-tooltip="true"></el-table-column>
+            </el-table>
+        </el-collapse-item>
+    </el-collapse>
+
+
+</th:block>
+
+<!-- js -->
+<th:block layout:fragment="js">
+<!--页面js-->
+    <script th:src="@{/js/code/column.js}"></script>
+
+
+</th:block>
+</html>

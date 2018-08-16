@@ -3,13 +3,12 @@ server:
   display-name: code-generator
 
 spring:
-  mvc:
-   view:
-    prefix: /templates/
-    suffix: .ftl
-  freemarker:
-      cache: false
-      request-context-attribute: request
+  application:
+    name: mybatisplus-generator-web
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates
+    mode: LEGACYHTML5
+    suffix: .html
 logging:
   level: debug
-

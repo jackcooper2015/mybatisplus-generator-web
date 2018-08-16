@@ -1,0 +1,42 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorator="/layouts/default">
+<th:block layout:fragment="title">
+    数据库列表
+</th:block>
+<!-- head -->
+<th:block layout:fragment="head">
+    <!--页面自定义样式-->
+    <style>
+        /** style */
+    </style>
+</th:block>
+<!-- content -->
+<th:block layout:fragment="content">
+
+
+    <el-collapse v-model="data_group.active" class="ui-collapse">
+        <el-collapse-item title="查询结果" name="active">
+
+            <el-table fixed class="fn-mt10" :data="data_group.list" border highlight-current-row @selection-change="onSelectionChange">
+                <el-table-column type="index" width="50"></el-table-column>
+                <el-table-column  prop="tableName" label="表名" align="center" min-width="5%" show-overflow-tooltip="true"></el-table-column>
+                <el-table-column  prop="comments" label="备注" align="center" min-width="15%" show-overflow-tooltip="true"></el-table-column>
+                <el-table-column align="center" min-width="5%">
+                    <template scope="scope" >
+                        <el-button @click="showColumns(scope.row.tableName)" type="text" size="small">查看表详情</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </el-collapse-item>
+    </el-collapse>
+
+
+</th:block>
+
+<!-- js -->
+<th:block layout:fragment="js">
+<!--页面js-->
+    <script th:src="@{/js/code/tables.js}"></script>
+
+
+</th:block>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>AmpMind System</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="renderer" content="webkit"/>
+    <meta name="viewport" content="width=1200"/>
+    <link rel="stylesheet" th:href="@{/css/element-ui.css}"/>
+    <link rel="stylesheet" th:href="@{/css/util.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}"/>
+</head>
+<body>
+<div id="app" v-cloak v-loading="loading">
+    <div class="header">
+        <a href="#" class="logo">
+            <img th:src="@{/img/logo.png}">
+            <span>MybatisPlus</span>
+        </a>
+        <div id="header" v-cloak>
+            <div class="menu">
+                <el-menu theme="dark" :default-active="header.activeMenuId" mode="horizontal" @select="onHeaderSelect"
+                        background-color="#282b32" text-color="#fff" active-text-color="#ffd04b">
+                    <el-menu-item v-for="item in header.menuItems" :index="item.menuId" :title="header.activeMenuId==item.menuId?'':item.menuName">
+                        {{item.menuName}}
+                    </el-menu-item>
+                </el-menu>
+            </div>
+            <div class="header-login">
+                <el-dropdown>
+                    <span class="header-login-content">
+                        <img class="header-login-photo" th:src="@{/img/photo.png}"/>{{header.userName}}<i class="el-icon-arrow-down"></i>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item><a href="#">修改密码</a></el-dropdown-item>
+                        <el-dropdown-item><a th:href="@{/logout}">退出</a></el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+            </div>
+        </div>
+    </div>
+    <div class="nav">
+        <!--<el-menu id="menu" :default-active="menu.activeMenuId" v-cloak background-color="#eef1f6" :default-openeds="[menu.menuItems[0].menuId]">-->
+        <el-menu id="menu" :default-active="menu.activeMenuId" v-cloak background-color="#eef1f6">
+            <template v-for="item in menu.menuItems">
+                <el-menu-item v-if="!item.subMenuItems" :index="item.menuId"><i :class="item.iconClass"></i>{{item.menuName}}<a :href="item.href" target="content"></a></el-menu-item>
+                <el-submenu v-else :index="item.menuId">
+                    <template slot="title"><i :class="item.iconClass"></i>{{item.menuName}}</template>
+                    <template v-for="item in item.subMenuItems">
+                        <el-menu-item v-if="!item.subMenuItems" :index="item.menuId">{{item.menuName}}<a :href="item.href" target="content"></a></el-menu-item>
+                        <template v-else>
+                            <el-submenu :index="item.menuId">
+                                <template slot="title">{{item.menuName}}</template>
+                                <el-menu-item :key="item.menuId" v-for="item in item.subMenuItems" :index="item.menuId">{{item.menuName}}<a :href="item.href" target="content"></a></el-menu-item>
+                            </el-submenu>
+                        </template>
+                    </template>
+                </el-submenu>
+            </template>
+        </el-menu>
+        <div id="navCollapse" class="nav-collapse">
+            <i class="el-icon-arrow-right"></i><i class="el-icon-arrow-left"></i>
+        </div>
+    </div>
+    <div class="main">
+        <iframe id="content" frameborder="0" name="content"></iframe>
+    </div>
+</div>
+
+<script th:src="@{/js/util/jquery.js}"></script>
+<script th:src="@{/js/util/vue.js}"></script>
+<script th:src="@{/js/util/vue-resource.js}"></script>
+<script th:src="@{/js/util/element-ui.js}"></script>
+<script th:src="@{/js/util/util-core.js}"></script>
+
+<script th:inline="javascript">
+    $UC = {
+        ctxPath: /*[[${#httpServletRequest.getContextPath()}]]*/ null,
+        ctxStatic: /*[[${#httpServletRequest.getContextPath()}]]*/ null
+    };
+    var userName = /*[[${userName}]]*/ null;
+</script>
+<script th:inline="javascript">
+    new Vue({
+        el: '#app',
+        data: function () {
+            var header = {
+                activeMenuId: 'menu1',
+                menuItems: [
+                    {menuId: 'menu1', menuName: '代码生成工具', menuNameAbbreviate: 'demo', href: '#'}
+                ],
+                userName: 'Admin'
+            };
+
+            var menus = {
+                menu1: {
+                    activeMenuId: '',
+                    menuItems: [
+                        {
+                            menuId: '01', menuName: '数据库列表', href: '#', iconClass: 'el-icon-menu',
+                            subMenuItems: [
+                                {menuId: '012', menuName: '代码生成中心', href: $UC.ctxPath + '/database-list'}
+                            ]
+                        }
+                    ]
+                },/*
+                menu2: {
+                    activeMenuId: '',
+                    menuItems: [
+                        {
+                            menuId: '10', menuName: '系统管理', href: '#', iconClass: 'el-icon-menu',
+                            subMenuItems: [
+                                {menuId: '101', menuName: '系统管理1', href: $UC.ctxPath + '#'},
+                                {menuId: '102', menuName: '系统管理2', href: $UC.ctxPath + '#'}
+                            ]
+                        },
+                        {
+                            menuId: '11', menuName: '菜单管理', href: '#', iconClass: 'el-icon-menu',
+                            subMenuItems: [
+                                {menuId: '111', menuName: '菜单管理1', href: $UC.ctxPath + '#'},
+                                {menuId: '112', menuName: '菜单管理2', href: $UC.ctxPath + '#'}
+                            ]
+                        }
+                    ]
+                },
+                menu3:{}*/
+            };
+
+            return {
+                loading: false,
+                header: header,
+                menus: menus,
+                menu: menus[header.activeMenuId]
+            };
+        },
+        created: function(){
+            this.init()
+        },
+        methods: {
+            onHeaderSelect: function (index) {
+                this.menu = this.menus[index];
+            },
+            init: function(){
+                this.menus.menu1.activeMenuId=this.menus.menu1.menuItems[0].subMenuItems[0].menuId;
+                document.getElementById("content").src = $UC.ctxPath + this.menus.menu1.menuItems[0].subMenuItems[0].href;
+            }
+        }
+
+    });
+
+    (function () {
+        var t = document.getElementById("navCollapse");
+        if (t) {
+            var e = document.body, n = t.parentElement;
+            t.onclick = function (t) {
+                e.className = -1 == e.className.indexOf(" collapsed") ? e.className + " collapsed" : e.className.replace(" collapsed", ""), t.stopPropagation()
+            }, n.onclick = function () {
+                -1 != e.className.indexOf(" collapsed") && (e.className = e.className.replace(" collapsed", ""))
+            }
+        }
+    })();
+</script>
+</body>
+
+</html>

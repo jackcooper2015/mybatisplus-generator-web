@@ -1,5 +1,6 @@
 package com.reapal.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
@@ -17,10 +18,8 @@ import org.apache.tools.zip.ZipOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -38,34 +37,46 @@ public class CodeController extends BaseController{
 	@Autowired
 	private CodeService codeService;
 
+	private static DbConfigUtils dbConfigUtils = new DbConfigUtils();
+
 	@RequestMapping("/index")
-	public String init(Model model){
-		DbConfigUtils dbConfigUtils = new DbConfigUtils();
+	public String init(){
+		if(request.getSession().getAttribute("user") == null){
+			return "redirect:/login";
+		}
+		return "/views/index/index";
+	}
+
+	@GetMapping("/getDbList")
+	@ResponseBody
+	public JSONObject getDbList(Model model){
 		List<DbConfig> dbConfigList = dbConfigUtils.getAllDbconfig();
-		model.addAttribute("dbConfigList",dbConfigList);
-		return "/views/index";
+		return respJson(0,null,dbConfigList);
+	}
+
+	@GetMapping("/getByDbName")
+	@ResponseBody
+	public JSONObject getByDbName(DbConfig dbConfig) throws IOException {
+		dbConfig = dbConfigUtils.getDbconfigByKey(dbConfig.getDbName());
+		return respJson(0, "", dbConfig);
 	}
 
 	/**
 	 * 显示Table列表
 	 */
-	@RequestMapping(value = "/tablelist",method=RequestMethod.GET)
-	public String tablelist(Model model,DbConfig dbConfig){
-
-		List<TableInfo> tableList = codeService.getAllTables(dbConfig);
-		model.addAttribute("dbConfig", dbConfig);
-		model.addAttribute("tableList", tableList);
-
-		return "/views/table_list";
+	@RequestMapping(value = "/database-list",method=RequestMethod.GET)
+	public String databaseList(Model model,DbConfig dbConfig){
+		return "/views/db/database_list";
 	}
 
 	/**
 	 * 显示Table列表
 	 */
-	@RequestMapping(value = "/edit",method=RequestMethod.GET)
-	public String edit(Model model,DbConfig dbConfig){
-		model.addAttribute("dbConfig", dbConfig);
-		return "/views/edit";
+	@RequestMapping(value = "/edit",method=RequestMethod.PUT)
+	@ResponseBody
+	public JSONObject edit(@RequestBody DbConfig dbConfig){
+		dbConfigUtils.addDbconfig(dbConfig);
+		return respJson(0, "修改成功", true);
 	}
 
 	/**
@@ -73,43 +84,59 @@ public class CodeController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/test",method=RequestMethod.POST)
-	public String test(Model model,DbConfig dbConfig){
+	public JSONObject test( DbConfig dbConfig){
 		String result = codeService.testConnection(dbConfig);
-		return result;
+		if(StringUtils.isEmpty(result)){
+			return respJson(0,"测试成功",result);
+		}else{
+			return respJson(1,"数据库链接失败",result);
+		}
 	}
 
 	/**
 	 * 显示Table列表
 	 */
 	@RequestMapping(value = "/save",method=RequestMethod.POST)
-	public String save(Model model,DbConfig dbConfig){
-		DbConfigUtils dbConfigUtils = new DbConfigUtils();
+	@ResponseBody
+	public JSONObject save(@RequestBody DbConfig dbConfig){
 		dbConfigUtils.addDbconfig(dbConfig);
-		return "redirect:/index";
+		return respJson(0,"添加成功",true);
 	}
 
 	/**
 	 * 显示Table列表
 	 */
 	@RequestMapping(value = "/delete",method=RequestMethod.GET)
-	public String delete(Model model,DbConfig dbConfig){
-		ClassLoader classLoader = getClass().getClassLoader();
-		DbConfigUtils dbConfigUtils = new DbConfigUtils();
+	@ResponseBody
+	public JSONObject delete(Model model,DbConfig dbConfig){
 		dbConfigUtils.deleteDbconfig(dbConfig.getDbName());
-		return "redirect:/index";
+		return respJson(0, "删除成功", true);
 	}
 
+	@GetMapping("/to-table-list")
+	public String toTableList(Model model) throws IOException {
+		return "/views/db/tables_list";
+	}
 
-	/**
-	 * 显示字段列表编辑页面
-	 */
-	@RequestMapping(value="/column/{tableName}", method =RequestMethod.GET)
-	public String itemList(Model model,DbConfig dbConfig,@PathVariable String tableName){
+	@GetMapping("/table-list")
+	@ResponseBody
+	public JSONObject tableList(String dbName) throws IOException {
+		DbConfig dbConfig = dbConfigUtils.getDbconfigByKey(dbName);
+		List<TableInfo> tableList = codeService.getAllTables(dbConfig);
+		return respJson(0, "succ", tableList);
+	}
+
+	@GetMapping("/to-column-list")
+	public String toColumnList(){
+		return "/views/db/column_list";
+	}
+
+	@GetMapping("/column-list")
+	@ResponseBody
+	public JSONObject columnList(String tableName,String dbName) throws IOException {
+		DbConfig dbConfig = dbConfigUtils.getDbconfigByKey(dbName);
 		TableInfo tableInfo = codeService.getAllColumns(tableName,dbConfig);
-		model.addAttribute("tableInfo", tableInfo);
-		model.addAttribute("dbConfig", dbConfig);
-		model.addAttribute("tableName", tableName);
-		return "/views/column_list";
+		return respJson(0, "succ", tableInfo);
 	}
 
 
@@ -141,8 +168,10 @@ public class CodeController extends BaseController{
 	/**
 	 * 生成代码
 	 */
-	@RequestMapping(value="/generate",method=RequestMethod.POST)
-	public String generate(DbConfig dbConfig, TableInfo tableInfo, CodeConfig codeConfig,boolean flag, HttpServletResponse response){
+	@RequestMapping(value="/generate",method=RequestMethod.GET)
+	public String generate(String tableName,String dbName, boolean flag, HttpServletResponse response) throws IOException {
+		DbConfig dbConfig = dbConfigUtils.getDbconfigByKey(dbName);
+		TableInfo tableInfo = codeService.getAllColumns(tableName,dbConfig);
 		String model = tableInfo.getComments().substring(tableInfo.getComments().indexOf("#")+1);
 		AutoGenerator mpg = new AutoGenerator();
 		// 全局配置
@@ -255,5 +284,6 @@ public class CodeController extends BaseController{
 
 		return null;
 	}
+
 }
 

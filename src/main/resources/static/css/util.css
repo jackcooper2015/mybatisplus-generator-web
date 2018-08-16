@@ -1,0 +1,696 @@
+/**
+ * @version: v1.0.3
+ * @date:    2018-05-02 14:55:55
+ */
+/*重置样式begin*/
+/* 防止用户自定义背景颜色对网页的影响，添加让用户可以自定义字体 */
+html {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+
+/* 链接样式 */
+a {
+    outline: none;
+}
+
+/* 内外边距通常让各个浏览器样式的表现位置不同 */
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, textarea, p, blockquote, th, td, hr, button, article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+    margin: 0;
+    padding: 0;
+}
+
+/* 重设 HTML5 标签, IE 需要在 js 中 createElement(TAG) */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+
+/* HTML5 媒体文件跟 img 保持一致 */
+audio, canvas, video {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+}
+
+/* 要注意表单元素并不继承父级 font 的问题 */
+body, button, input, select, textarea {
+    font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+    /*line-height: 1.5;*/
+}
+
+input, select, textarea {
+    font-size: 100%;
+    outline: none;
+}
+
+/* IE bug fixed: th 不继承 text-align*/
+th {
+    text-align: inherit;
+}
+
+/* 去除默认边框 */
+fieldset, img {
+    border: 0;
+}
+
+/* ie6 7 8(q) bug 显示为行内表现 */
+iframe {
+    display: block;
+}
+
+/* 去掉 firefox 下此元素的边框 */
+abbr, acronym {
+    border: 0;
+    font-variant: normal;
+}
+
+/* 一致的 del 样式 */
+del {
+    text-decoration: line-through;
+}
+
+address, caption, cite, code, dfn, em, th, var {
+    font-style: normal;
+    font-weight: 500;
+}
+
+/* 去掉列表前的标识, li 会继承 */
+ol, ul {
+    list-style: none;
+}
+
+/* 对齐是排版最重要的因素, 别让什么都居中 */
+caption, th {
+    text-align: left;
+}
+
+/* 来自yahoo, 让标题都自定义, 适应多个系统应用 */
+h1, h2, h3, h4, h5, h6 {
+    font-size: 100%;
+    font-weight: 500;
+}
+
+p {
+    line-height: 160%;
+}
+
+.fn-extra-large {
+    font-size: 20px;
+}
+
+.fn-large {
+    font-size: 18px;
+}
+
+.fn-medium {
+    font-size: 16px;
+}
+
+.fn-small {
+    font-size: 14px;
+}
+
+.fn-extra-small {
+    font-size: 13px;
+}
+
+.fn-bold{
+    font-weight: bold;
+}
+
+.fn-extra-extra-small {
+    font-size: 12px;
+}
+
+.fn-clear {
+    zoom: 1;
+    clear: both;
+    /* for IE6 IE7 */
+}
+
+/* 清理浮动 */
+.fn-clear:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+}
+
+/* 隐藏, 通常用来与 JS 配合 */
+.fn-hide {
+    display: none;
+}
+
+.fn-vis-hidden {
+    visibility: hidden;
+}
+
+/* 设置内联, 减少浮动带来的bug */
+.fn-left, .fn-right {
+    display: inline;
+}
+
+.fn-left {
+    float: left;
+}
+
+.fn-right {
+    float: right;
+}
+
+.fn-red {
+    color: #ff2600;
+}
+
+.fn-gray {
+    color: #a0a0a0;
+}
+
+.fn-blue {
+    color: #2899f8;
+}
+
+.fn-mb5 {
+    margin-bottom: 5px;
+}
+
+.fn-mb10 {
+    margin-bottom: 10px;
+}
+
+.fn-mb15 {
+    margin-bottom: 15px;
+}
+
+.fn-mb20 {
+    margin-bottom: 20px;
+}
+
+.fn-mb25 {
+    margin-bottom: 25px;
+}
+
+.fn-mb30 {
+    margin-bottom: 30px;
+}
+
+.fn-mt5 {
+    margin-top: 5px;
+}
+
+.fn-mt10 {
+    margin-top: 10px;
+}
+
+.fn-mt15 {
+    margin-top: 15px;
+}
+
+.fn-mt20 {
+    margin-top: 20px;
+}
+
+.fn-mt25 {
+    margin-top: 25px;
+}
+
+.fn-mt30 {
+    margin-top: 30px;
+}
+
+.fn-mt40 {
+    margin-top: 40px;
+}
+
+.fn-mt50 {
+    margin-top: 50px;
+}
+
+.fn-mb50 {
+    margin-bottom: 50px;
+}
+
+.fn-ml5 {
+    margin-left: 5px;
+}
+
+.fn-ml10 {
+    margin-left: 10px;
+}
+
+.fn-ml15 {
+    margin-left: 15px;
+}
+
+.fn-ml20 {
+    margin-left: 20px;
+}
+
+.fn-ml25 {
+    margin-left: 25px;
+}
+
+.fn-ml30 {
+    margin-left: 30px;
+}
+
+.fn-mr5 {
+    margin-right: 5px;
+}
+
+.fn-mr10 {
+    margin-right: 10px;
+}
+
+.fn-mr15 {
+    margin-right: 15px;
+}
+
+.fn-mr20 {
+    margin-right: 20px;
+}
+
+.fn-mr25 {
+    margin-right: 25px;
+}
+
+.fn-mr30 {
+    margin-right: 30px;
+}
+
+.fn-mr40 {
+    margin-right: 40px;
+}
+
+.fn-mr50 {
+    margin-right: 50px;
+}
+
+.fn-mr60 {
+    margin-right: 80px;
+}
+
+.fn-ml11p {
+    margin-left: 11%;
+}
+
+.fn-pl5 {
+    padding-left: 5px;
+}
+
+.fn-pl10 {
+    padding-left: 10px;
+}
+
+.fn-pl15 {
+    padding-left: 15px;
+}
+
+.fn-pl20 {
+    padding-left: 20px;
+}
+
+.fn-pl25 {
+    padding-left: 25px;
+}
+
+.fn-pl30 {
+    padding-left: 30px;
+}
+
+.fn-pt5 {
+    padding-top: 5px;
+}
+
+.fn-pt10 {
+    padding-top: 10px;
+}
+
+.fn-pt20 {
+    padding-top: 20px;
+}
+
+.fn-pr20 {
+    padding-right: 20px;
+}
+
+.fn-pb5 {
+    padding-bottom: 5px;
+}
+
+.fn-pb10 {
+    padding-bottom: 10px;
+}
+
+.fn-pb20 {
+    padding-bottom: 20px;
+}
+
+.fn-inline {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.fn-tal {
+    text-align: left;
+}
+
+.fn-tac {
+    text-align: center;
+}
+
+.fn-tar {
+    text-align: right;
+}
+
+.fn-white {
+    color: #fff;
+}
+
+.fn-pointer {
+    cursor: pointer;
+}
+
+.fn-wp100 {
+    width: 100%;
+}
+
+.fn-w100 {
+    width: 100px;
+}
+.fn-w140 {
+    width: 140px;
+}
+
+.fn-w150 {
+    width: 150px;
+}
+
+
+.fn-w193 {
+    width: 193px;
+}
+
+.fn-w200 {
+    width: 200px;
+}
+.fn-w220 {
+    width: 220px;
+}
+
+.fn-w300 {
+    width: 300px;
+}
+
+.fn-w400 {
+    width: 400px;
+}
+
+/** 布局样式 */
+.ui-content {
+    min-width: 1020px;
+    padding: 0 20px 20px 20px;
+}
+
+.ui-content:first-child {
+    margin-top: 20px;
+}
+
+.ui-line {
+    border: 1px solid #eef1f6;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/** 自定义扩展表格 start */
+.ui-table {
+    border-collapse: inherit;
+    border-spacing: 0;
+    border: 0;
+    table-layout: fixed;
+}
+
+.ui-table td {
+    padding: 8px;
+}
+
+.ui-table td.t-left {
+    text-align: left;
+}
+
+.ui-table td.t-center {
+    text-align: center;
+}
+
+.ui-table td.noborder-r {
+    border-right: 0;
+}
+
+.ui-table td.noborder-b {
+    border-bottom: 0;
+}
+
+.ui-table td.border-r5 {
+    border-right: solid 5px #dfe6ec;
+}
+
+.ui-table td.border-r10 {
+    border-right: solid 10px #dfe6ec;
+}
+
+.ui-table td.border-b2 {
+    border-right: solid 2px #dfe6ec;
+}
+
+.ui-table td.header {
+    font-weight: 500;
+    background-color: #f5f7fa;
+}
+
+/** 支持 form 表单 inline 布局 */
+.ui-form-line {
+    zoom: 1;
+}
+
+.ui-form-line .ui-form-title {
+    width: 100%;
+    text-align: left;
+    vertical-align: middle;
+    float: left;
+    font-size: 14px;
+    color: #606266;
+    line-height: 40px;
+    padding: 0 12px 0 0;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    border-bottom: 1px solid #ebeef5;
+    margin-bottom: 22px;
+}
+
+.ui-form-line:after {
+    content: "\0020";
+    display: block;
+    height: 0;
+    clear: both;
+}
+
+.ui-form-line .el-form-item {
+    float: left;
+}
+
+/** start collapse 组件hack样式 */
+
+.ui-collapse .el-collapse-item__header {
+    /*background: #dfe6ec;*/
+    font-size: 16px;
+    height: 48px;
+    line-height: 48px;
+}
+
+.ui-collapse .el-collapse-item__header .el-collapse-item__arrow {
+    line-height: 48px;
+}
+
+.ui-collapse .el-collapse-item__content {
+    /*padding-top: 25px;*/
+}
+
+/** start el-form 改变的改装的search组件 */
+.ui-container-search .el-form-item, .ui-container-search2 .el-form-item {
+    margin-right: 20px;
+    margin-bottom: 12px;
+}
+
+.ui-container-search .el-form-item .el-form-item__label, .ui-container-search2 .el-form-item .el-form-item__label {
+    padding-right: 2px;
+}
+
+.ui-container-search .el-form-item .el-form-item__content {
+    width: 200px;
+}
+
+.ui-container-search .el-form-item .el-form-item__content .el-input {
+    width: 193px;
+}
+
+/** 表单验证类 start */
+
+.ui-is-error .el-input__inner, .ui-is-error .el-textarea__inner {
+    border-color: #ff4949;
+}
+
+.ui-item__error {
+    display: none;
+}
+
+.ui-is-error .ui-item__error {
+    /*color: #ff4949;*/
+    /*font-size: 12px;*/
+    /*line-height: 1;*/
+    /*padding-top: 4px;*/
+    /*display: inline-block;*/
+    color: #ff4949;
+    font-size: 12px;
+    line-height: 1;
+    padding-top: 4px;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    display: inline-block;
+}
+.ui-is-error .ui-item__error__textarea {
+    /*color: #ff4949;*/
+    /*font-size: 12px;*/
+    /*line-height: 1;*/
+    /*padding-top: 4px;*/
+    /*display: inline-block;*/
+    color: #ff4949;
+    font-size: 12px;
+    line-height: 1;
+    padding-top: 4px;
+    /*position: absolute;*/
+    top: 100%;
+    left: 0;
+    display: inline-block;
+}
+
+/** 表单验证类 end */
+
+.ui-box-card {
+    margin-top: 10px;
+}
+
+/** 自定义扩展表格 end */
+
+/** loading start */
+.ui-loading {
+    position: absolute;
+    z-index: 10000;
+    background-color: rgba(255, 255, 255, .9);
+    margin: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    -webkit-transition: opacity .3s;
+    transition: opacity .3s;
+}
+
+.ui-loading-container {
+    position: absolute;
+    /*绝对定位*/
+    top: 50%;
+    /*距顶部50%*/
+    left: 50%;
+    margin: -32px 0 0 -32px;
+    /*设定这个div的margin-top的负值为自身的高度的一半,margin-left的值也是自身的宽度的一半的负值.(感觉在绕口令)*/
+    height: 16px;
+    /*高为200那么margin-left为-100px;*/
+    width: 64px;
+    z-index: 99;
+    /*浮动在最上层*/
+}
+
+.ui-loading-circular {
+    background-color: #5FB7FF;
+    float: left;
+    width: 15px;
+    height: 15px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-animation-name: bounce_circular;
+    -webkit-animation-duration: 0.7s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-direction: linear;
+}
+
+.ui-loading-circular_1 {
+    margin-top: 25px;
+    -webkit-animation-delay: .3s;
+}
+
+.ui-loading-circular_2 {
+    margin-left: -8px;
+    margin-top: 9px;
+    -webkit-animation-delay: .4s;
+}
+
+.ui-loading-circular_3 {
+    margin-top: 1px;
+    -webkit-animation-delay: .5s;
+}
+
+.ui-loading-circular_4 {
+    margin-left: 0;
+    margin-top: 9px;
+    -webkit-animation-delay: .6s;
+}
+
+.ui-loading-circular_5 {
+    margin-left: -8px;
+    margin-top: 25px;
+    -webkit-animation-delay: .7s;
+}
+
+.ui-loading-circular_6 {
+    margin-left: -22px;
+    margin-top: 40px;
+    -webkit-animation-delay: .8s;
+}
+
+.ui-loading-circular_7 {
+    margin-left: -37px;
+    margin-top: 48px;
+    -webkit-animation-delay: .9s;
+}
+
+.ui-loading-circular_8 {
+    margin-left: -53px;
+    margin-top: 41px;
+    -webkit-animation-delay: 1s;
+}
+
+.exportOption .el-checkbox{
+    margin-left: 0;
+    width: 25%;
+}
+
+@-webkit-keyframes bounce_circular {
+    0% {
+        -webkit-transform: scale(1);
+    }
+    100% {
+        -webkit-transform: scale(.3);
+    }
+}
+
+/** loading end */
+
+/** vue start */
+[v-cloak] {
+    display: none;
+}
+
+/** vue end */

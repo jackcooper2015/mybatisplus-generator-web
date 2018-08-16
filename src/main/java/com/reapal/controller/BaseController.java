@@ -1,5 +1,6 @@
 package com.reapal.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -30,6 +31,22 @@ public class BaseController {
         this.session=request.getSession();
     }
 
+    /**
+     * 封装响应结果
+     * @param code
+     * @param msg
+     * @param data
+     * @return
+     */
+    public static JSONObject respJson(int code,String msg,Object data){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code", code);
+        jsonObject.put("msg", msg);
+        if(data != null){
+            jsonObject.put("data",data);
+        }
+        return jsonObject;
+    }
 
 
 }
