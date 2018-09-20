@@ -124,7 +124,7 @@ $UU.init({
                     }
                 });
         },
-        openDialog: function (type,dbName) {
+        openDialog: function (type,id) {
             var _this = this;
             if (type === 'new') {
                 _this.dialogFormVisible = true;
@@ -143,7 +143,7 @@ $UU.init({
             } else if (type === 'edit') {
                 _this.dialogFormVisible = true;
                 _this.dialogTitle = "编辑";
-                var id = dbName;
+                var id = id;
                 _this.getById(id);
             } else if (type === 'delete') {
                 if (_this.data_group.multipleSelection.length === 0) {
@@ -199,7 +199,7 @@ $UU.init({
             var _this = this;
             //请求参数
             var req = {};
-            $UU.http.get("/getByDbName?dbName=" + id,
+            $UU.http.get("/getByDbId?id=" + id,
                 req
                 , function (response) {
                     //获取回调数据
@@ -224,7 +224,7 @@ $UU.init({
             }).then(function () {
                 //请求参数
                 var req = {};
-                $UU.http.get("/delete?dbName=" + row.dbName,
+                $UU.http.get("/delete?id=" + row.id,
                     req
                     , function (response) {
                         //获取回调数据
@@ -297,7 +297,7 @@ $UU.init({
             }
         },
         showTables: function (id) {
-            window.parent.document.getElementById("content").src = $UC.ctxPath +"/to-table-list?dbName="+id;
+            window.parent.document.getElementById("content").src = $UC.ctxPath +"/to-table-list?id="+id;
         }
     }
 });

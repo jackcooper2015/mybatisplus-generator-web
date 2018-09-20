@@ -6,8 +6,8 @@ $UU.init({
         importFormVisible: false,
         dialogTitle: "",
         search_group: {
-            dbName: null,
-            tableName:null
+            id:'',
+            tableName:''
         },
         data_group: {
             active: 'active',
@@ -29,38 +29,34 @@ $UU.init({
             catalog: null,
             dbType:null
         },
-        rules: {
-            dbName: [
-                { required: true, message: '请输入应用名', trigger: 'blur' }
-            ],
-            url: [
-                { required: true, message: '请输入事件id', trigger: 'blur' }
-            ],
-            driver: [
-                { required: true, message: '请输入事件名称', trigger: 'blur' }
-            ],
-            username: [
-                { required: true, message: '请输入事件内容', trigger: 'blur' }
-            ],
-            password: [
-                { required: true, message: '请输入异常信息', trigger: 'blur' }
-            ],
-            schema: [
-                { required: true, message: '请选择发生时间', trigger: 'blur' }
-            ],
-            catalog: [
-                { required: true, message: '请输入在哪发生的(ip:port)', trigger: 'blur' }
-            ],
-            dbType: [
-                { required: true, message: '请输入是否已传播出去0否1是', trigger: 'blur' }
-            ],
+        columnForm:{
+            id:'',
+            tableName:'',
+            comments:'',
+            remarks:[],
+            dbId:null,
+            prefix:null,
+            modelName:null,
+            author:null,
+            entityName:null,
+            mapperName:null,
+            xmlName:null,
+            serviceName:null,
+            serviceImplName:null,
+            controllerName:null,
+            entityPackage:null,
+            servicePackage:null,
+            serviceImplPackage:null,
+            mapperPackage:null,
+            controllerPackage:null,
         }
     },
     created: function () {
-        this.search_group.dbName = $UF.getUrlParam("dbName");
+        this.search_group.id = $UF.getUrlParam("id");
         this.search_group.tableName = $UF.getUrlParam("tableName");
         console.log("314314321",this.form)
         this.query();
+        this.queryTableStrategy();
     },
     mounted: function () {
         console.log("vue mounted");
@@ -91,7 +87,13 @@ $UU.init({
             _this.data_group.pagination.size=size;
             this.query();
         },
-        query: function () {
+        queryTableStrategy: function(){
+            var _this = this;
+            $UU.http.get("/get-table-strategy",{id:_this.search_group.id,tableName:_this.search_group.tableName},function (response) {
+                _this.columnForm = response.data.data;
+            });
+        },
+       query: function () {
            var _this = this;
             //请求参数
             var req = _this.search_group;
@@ -103,7 +105,7 @@ $UU.init({
                     _this.data_group.list = response.data.data.listColumn;
                     _this.data_group.comments=response.data.data.comments;
                     _this.data_group.tableName=_this.search_group.tableName;
-                    _this.data_group.dbName=_this.search_group.dbName;
+                    _this.data_group.id=_this.search_group.id;
                 }, {
                     requestBody: true,
                     before: function () {
@@ -114,7 +116,7 @@ $UU.init({
                     }
                 });
         },
-        openDialog: function (type,dbName) {
+        openDialog: function (type,id) {
             var _this = this;
             if (type === 'new') {
                 _this.dialogFormVisible = true;
@@ -133,7 +135,7 @@ $UU.init({
             } else if (type === 'edit') {
                 _this.dialogFormVisible = true;
                 _this.dialogTitle = "编辑";
-                var id = dbName;
+                var id = id;
                 _this.getById(id);
             } else if (type === 'delete') {
                 if (_this.data_group.multipleSelection.length === 0) {
@@ -170,6 +172,42 @@ $UU.init({
                 }
             });
         },
+        submitColForm: function (formName) {
+            var _this = this;
+            _this.$refs[formName].validate(function (valid) {
+                if (valid) {
+                    _this.$confirm('确定操作吗?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(function () {
+                        _this.columnForm.id = _this.search_group.id;
+                        _this.columnForm.tableName = _this.search_group.tableName;
+                        _this.columnForm.comments = '';
+                        _this.data_group.list.forEach(function (e) {
+                            var remark = e.colName+'@'+e.colType+'@'+e.comments+'@'+e.extra;
+                            _this.columnForm.remarks.push(remark);
+                        });
+                        console.log(7777, _this.columnForm);
+                        $UU.http.post("/columnsave", _this.columnForm, function (response) {
+                            if(response.data.code === 0){
+                                _this.$message.success(response.data.msg);
+                            }else{
+                                _this.$message.error(response.data.msg);
+                            }
+                        }, {
+                            before: function () {
+                                _this.btn_disabled = true;
+                            },
+                            after: function () {
+                                _this.btn_disabled = false;
+                            }
+                        });
+                    }).catch(function () {
+                    });
+                }
+            });
+        },
         onSelectionChange: function (val) {
             this.data_group.multipleSelection = val;
         },
@@ -189,7 +227,7 @@ $UU.init({
             var _this = this;
             //请求参数
             var req = {};
-            $UU.http.get("/getByDbName?dbName=" + id,
+            $UU.http.get("/getByDbId?id=" + id,
                 req
                 , function (response) {
                     //获取回调数据
@@ -214,7 +252,7 @@ $UU.init({
             }).then(function () {
                 //请求参数
                 var req = {};
-                $UU.http.get("/delete?dbName=" + row.dbName,
+                $UU.http.get("/delete?id=" + row.id,
                     req
                     , function (response) {
                         //获取回调数据
@@ -289,7 +327,10 @@ $UU.init({
         download: function () {
             var _this = this;
             // window.location.href=$UC.ctxPath+"/generate?tableName="+_this.data_group.tableName+"&dbName="+_this.data_group.dbName;
-            window.open($UC.ctxPath+"/generate?tableName="+_this.data_group.tableName+"&dbName="+_this.data_group.dbName);
+            window.open($UC.ctxPath+"/generate?tableName="+_this.data_group.tableName+"&id="+_this.data_group.id);
+        },
+        saveForm: function () {
+            
         }
     }
 });

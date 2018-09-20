@@ -15,6 +15,7 @@ import java.util.List;
 public class CodeDaoImpl implements CodeDao {
 
 	
+	@Override
 	public void saveComment(TableInfo tableInfo, DbConfig dbConfig){
 		Connection conn = getConnection(dbConfig);
 	    try{
@@ -26,6 +27,9 @@ public class CodeDaoImpl implements CodeDao {
 	    		stmt.executeUpdate(strSql);
 		    	//stmt.executeUpdate("use information_schema;");
 		    	for(ColumnInfo item : tableInfo.getListColumn()){
+		    		if(StringUtils.isEmpty(item.getComments())){
+						continue;
+					}
 		    		if (StringUtils.isEmpty(item.getExtra())) {
 						strSql = "ALTER TABLE "+tableInfo.getTableName()+" MODIFY "+item.getColName()+" "+item.getColType()+" COMMENT '"+item.getComments()+"'; ";
 					} else {
@@ -65,6 +69,7 @@ public class CodeDaoImpl implements CodeDao {
 	    }
 	};
 
+	@Override
 	public List<TableInfo> getAllTables(DbConfig dbConfig){
 		List<TableInfo> tableList = new ArrayList<TableInfo>();
 		
@@ -110,7 +115,8 @@ public class CodeDaoImpl implements CodeDao {
 		return tableList;
 	}
 	
-	public TableInfo getAllColumns(String tableName,DbConfig dbConfig){
+	@Override
+	public TableInfo getAllColumns(String tableName, DbConfig dbConfig){
 		TableInfo tableInfo = new TableInfo();
 		tableInfo.setTableName(tableName);
 		
@@ -194,6 +200,7 @@ public class CodeDaoImpl implements CodeDao {
     }
 
 	/* 获取数据库连接的函数*/
+	@Override
 	public String testConnection(DbConfig dbConfig) {
 		Connection con = null;  //创建用于连接数据库的Connection对象
 		try {

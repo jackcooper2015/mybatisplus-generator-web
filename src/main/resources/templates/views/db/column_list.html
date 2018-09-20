@@ -1,4 +1,5 @@
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorator="/layouts/default">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorator="/layouts/default">
 <th:block layout:fragment="title">
     数据库列表
 </th:block>
@@ -17,17 +18,32 @@
         <el-collapse-item title="查询结果" name="active">
             <el-row class="fn-clear">
                 <el-col class="fn-tal" :span="18">
+                    <el-button @click="submitColForm('columnForm')" type="warning" plain>保存</el-button>
                     <el-button @click="download" type="primary" plain>生成代码</el-button>
                 </el-col>
             </el-row>
-
-            <el-table fixed class="fn-mt10" :data="data_group.list" border highlight-current-row @selection-change="onSelectionChange">
-                <el-table-column type="index" width="50"></el-table-column>
-                <el-table-column  prop="colName" label="列名" align="center" min-width="5%" show-overflow-tooltip="true"></el-table-column>
-                <el-table-column  prop="colType" label="类型" align="center" min-width="15%" show-overflow-tooltip="true"></el-table-column>
-                <el-table-column  prop="comments" label="注释" align="center" min-width="15%" show-overflow-tooltip="true"></el-table-column>
-                <el-table-column  prop="extra" label="主键" align="center" min-width="15%" show-overflow-tooltip="true"></el-table-column>
-            </el-table>
+            <el-form :model="columnForm" ref="columnForm">
+                <el-table fixed class="fn-mt10" :data="data_group.list" border highlight-current-row
+                          @selection-change="onSelectionChange">
+                    <el-table-column type="index" width="50"></el-table-column>
+                    <el-table-column prop="colName" label="列名" align="center" min-width="5%"
+                                     show-overflow-tooltip="true">
+                    </el-table-column>
+                    <el-table-column prop="colType" label="类型" align="center" min-width="15%"
+                                     show-overflow-tooltip="true">
+                    </el-table-column>
+                    <el-table-column prop="comments" label="注释" align="center" min-width="15%"
+                                     show-overflow-tooltip="true">
+                        <template scope="scope">
+                            <el-form-item>
+                                <el-input v-model="scope.row.comments" placeholder="请填写注释" :rules="{required: true, message: '注释不能为空', trigger: 'blur'}"></el-input>
+                            </el-form-item>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="extra" label="主键" align="center" min-width="15%"
+                                     show-overflow-tooltip="true"></el-table-column>
+                </el-table>
+            </el-form>
         </el-collapse-item>
     </el-collapse>
 
@@ -36,7 +52,7 @@
 
 <!-- js -->
 <th:block layout:fragment="js">
-<!--页面js-->
+    <!--页面js-->
     <script th:src="@{/js/code/column.js}"></script>
 
 

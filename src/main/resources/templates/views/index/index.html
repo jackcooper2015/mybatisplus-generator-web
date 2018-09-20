@@ -96,33 +96,18 @@
                     activeMenuId: '',
                     menuItems: [
                         {
-                            menuId: '01', menuName: '数据库列表', href: '#', iconClass: 'el-icon-menu',
+                            menuId: '01', menuName: '系统管理', href: '#', iconClass: 'el-icon-menu',
                             subMenuItems: [
-                                {menuId: '012', menuName: '代码生成中心', href: $UC.ctxPath + '/database-list'}
+                                {menuId: '012', menuName: '数据源管理', href: $UC.ctxPath + '/database-list'}
+                            ]
+                        },{
+                            menuId: '02', menuName: '数据库列表', href: '#', iconClass: 'el-icon-menu',
+                            subMenuItems: [
+                                {menuId: '022', menuName: '数据源管理', href: $UC.ctxPath + '/database-list'}
                             ]
                         }
                     ]
-                },/*
-                menu2: {
-                    activeMenuId: '',
-                    menuItems: [
-                        {
-                            menuId: '10', menuName: '系统管理', href: '#', iconClass: 'el-icon-menu',
-                            subMenuItems: [
-                                {menuId: '101', menuName: '系统管理1', href: $UC.ctxPath + '#'},
-                                {menuId: '102', menuName: '系统管理2', href: $UC.ctxPath + '#'}
-                            ]
-                        },
-                        {
-                            menuId: '11', menuName: '菜单管理', href: '#', iconClass: 'el-icon-menu',
-                            subMenuItems: [
-                                {menuId: '111', menuName: '菜单管理1', href: $UC.ctxPath + '#'},
-                                {menuId: '112', menuName: '菜单管理2', href: $UC.ctxPath + '#'}
-                            ]
-                        }
-                    ]
-                },
-                menu3:{}*/
+                }
             };
 
             return {
@@ -134,6 +119,7 @@
         },
         created: function(){
             this.init()
+            this.loadMenus();
         },
         methods: {
             onHeaderSelect: function (index) {
@@ -142,6 +128,32 @@
             init: function(){
                 this.menus.menu1.activeMenuId=this.menus.menu1.menuItems[0].subMenuItems[0].menuId;
                 document.getElementById("content").src = $UC.ctxPath + this.menus.menu1.menuItems[0].subMenuItems[0].href;
+            },
+            loadMenus: function () {
+                var _this = this;
+                $UU.http.get("/getDbList",
+                    {}
+                    , function (response) {
+                        //获取回调数据
+                        console.log(response.data);
+                        var dbMenus = [];
+                        response.data.data.forEach(function (e) {
+                            var menu = {};
+                            menu['menuId']= e.id;
+                            menu['menuName']= e.dbName;
+                            menu['href']= $UC.ctxPath +'/to-table-list?id='+e.id;
+                            dbMenus.push(menu);
+                        });
+                        _this.menus.menu1.menuItems[1].subMenuItems = dbMenus;
+                    }, {
+                        requestBody: true,
+                        before: function () {
+                            _this.btn_disabled = true;
+                        },
+                        after: function () {
+                            _this.btn_disabled = false;
+                        }
+                    });
             }
         }
 

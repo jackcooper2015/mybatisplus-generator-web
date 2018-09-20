@@ -6,15 +6,17 @@ import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
-import com.reapal.model.CodeConfig;
+import com.reapal.dao.DbConfigDao;
+import com.reapal.dao.TableStrategyConfigDao;
 import com.reapal.model.ColumnInfo;
 import com.reapal.model.DbConfig;
 import com.reapal.model.TableInfo;
+import com.reapal.model.TableStrategyConfig;
 import com.reapal.service.CodeService;
-import com.reapal.utils.DbConfigUtils;
 import com.reapal.utils.FileUtils;
 import com.reapal.utils.ZipFileUtils;
 import org.apache.tools.zip.ZipOutputStream;
+import org.hibernate.criterion.Example;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,7 +39,11 @@ public class CodeController extends BaseController{
 	@Autowired
 	private CodeService codeService;
 
-	private static DbConfigUtils dbConfigUtils = new DbConfigUtils();
+	@Autowired
+	private DbConfigDao dbConfigDao;
+
+	@Autowired
+	private TableStrategyConfigDao tableStrategyConfigDao;
 
 	@RequestMapping("/index")
 	public String init(){
@@ -50,14 +56,14 @@ public class CodeController extends BaseController{
 	@GetMapping("/getDbList")
 	@ResponseBody
 	public JSONObject getDbList(Model model){
-		List<DbConfig> dbConfigList = dbConfigUtils.getAllDbconfig();
+		List<DbConfig> dbConfigList = dbConfigDao.findAll();
 		return respJson(0,null,dbConfigList);
 	}
 
-	@GetMapping("/getByDbName")
+	@GetMapping("/getByDbId")
 	@ResponseBody
 	public JSONObject getByDbName(DbConfig dbConfig) throws IOException {
-		dbConfig = dbConfigUtils.getDbconfigByKey(dbConfig.getDbName());
+		dbConfig = dbConfigDao.getOne(dbConfig.getId());
 		return respJson(0, "", dbConfig);
 	}
 
@@ -75,7 +81,7 @@ public class CodeController extends BaseController{
 	@RequestMapping(value = "/edit",method=RequestMethod.PUT)
 	@ResponseBody
 	public JSONObject edit(@RequestBody DbConfig dbConfig){
-		dbConfigUtils.addDbconfig(dbConfig);
+		dbConfigDao.save(dbConfig);
 		return respJson(0, "修改成功", true);
 	}
 
@@ -99,7 +105,7 @@ public class CodeController extends BaseController{
 	@RequestMapping(value = "/save",method=RequestMethod.POST)
 	@ResponseBody
 	public JSONObject save(@RequestBody DbConfig dbConfig){
-		dbConfigUtils.addDbconfig(dbConfig);
+		dbConfigDao.save(dbConfig);
 		return respJson(0,"添加成功",true);
 	}
 
@@ -109,7 +115,7 @@ public class CodeController extends BaseController{
 	@RequestMapping(value = "/delete",method=RequestMethod.GET)
 	@ResponseBody
 	public JSONObject delete(Model model,DbConfig dbConfig){
-		dbConfigUtils.deleteDbconfig(dbConfig.getDbName());
+		dbConfigDao.delete(dbConfig.getId());
 		return respJson(0, "删除成功", true);
 	}
 
@@ -120,8 +126,8 @@ public class CodeController extends BaseController{
 
 	@GetMapping("/table-list")
 	@ResponseBody
-	public JSONObject tableList(String dbName) throws IOException {
-		DbConfig dbConfig = dbConfigUtils.getDbconfigByKey(dbName);
+	public JSONObject tableList(Long id) throws IOException {
+		DbConfig dbConfig = dbConfigDao.getOne(id);
 		List<TableInfo> tableList = codeService.getAllTables(dbConfig);
 		return respJson(0, "succ", tableList);
 	}
@@ -133,44 +139,58 @@ public class CodeController extends BaseController{
 
 	@GetMapping("/column-list")
 	@ResponseBody
-	public JSONObject columnList(String tableName,String dbName) throws IOException {
-		DbConfig dbConfig = dbConfigUtils.getDbconfigByKey(dbName);
+	public JSONObject columnList(String tableName,Long id) throws IOException {
+		DbConfig dbConfig = dbConfigDao.getOne(id);
 		TableInfo tableInfo = codeService.getAllColumns(tableName,dbConfig);
 		return respJson(0, "succ", tableInfo);
 	}
 
+	@GetMapping("/get-table-strategy")
+	@ResponseBody
+	public JSONObject getTableStrategy(String tableName,Long id) throws IOException {
+		return respJson(0, "succ", tableStrategyConfigDao.findByDbIdAndTableName(id,tableName));
+	}
 
 	/**
 	 * 保存配置信息
 	 */
 	@RequestMapping(value = "/columnsave",method=RequestMethod.POST)
-	public String save(Model model,DbConfig dbConfig,TableInfo tableInfo){
-		String[] arrRemark = request.getParameterValues("remarks");
+	@ResponseBody
+	public JSONObject save(Long id , String tableName,String comments , TableStrategyConfig tableStrategyConfig){
+		String[] remarks = request.getParameterValues("remarks[]");
+		DbConfig dbConfig = dbConfigDao.getOne(id);
+		TableInfo tableInfo = new TableInfo();
+		tableInfo.setTableName(tableName);
+		tableInfo.setComments(comments);
 		List<ColumnInfo> listItem = new ArrayList<ColumnInfo>();
-		for(String remark:arrRemark){
+		for(String remark:remarks){
 			System.out.println(remark);
 			String[] mark = remark.split("@");
 			ColumnInfo item = new ColumnInfo();
 			item.setColName(mark[0]);
 			item.setColType(mark[1]);
-			item.setComments(mark[2]);
-			if (mark.length ==4) {
+			if(mark.length >= 3) {
+				item.setComments(mark[2]);
+			}
+			if (mark.length >= 4) {
 				item.setExtra(mark[3]);
 			}
 			listItem.add(item);
 		}
 		tableInfo.setListColumn(listItem);
 		codeService.saveComment(tableInfo,dbConfig);
-
-		return "redirect:/column/"+tableInfo.getTableName()+"?url="+dbConfig.getUrl()+"&driver="+dbConfig.getDriver()+"&username="+dbConfig.getUsername()+"&password="+dbConfig.getPassword()+"&schema="+dbConfig.getSchema();
+		tableStrategyConfig.setDbId(id);
+		tableStrategyConfig.setTableName(tableName);
+		tableStrategyConfigDao.save(tableStrategyConfig);
+		return respJson(0, "保存成功", true);
 	}
 
 	/**
 	 * 生成代码
 	 */
 	@RequestMapping(value="/generate",method=RequestMethod.GET)
-	public String generate(String tableName,String dbName, boolean flag, HttpServletResponse response) throws IOException {
-		DbConfig dbConfig = dbConfigUtils.getDbconfigByKey(dbName);
+	public String generate(String tableName, Long id, TableStrategyConfig tableStrategyConfig, HttpServletResponse response) throws IOException {
+		DbConfig dbConfig = dbConfigDao.getOne(id);
 		TableInfo tableInfo = codeService.getAllColumns(tableName,dbConfig);
 		String model = tableInfo.getComments().substring(tableInfo.getComments().indexOf("#")+1);
 		AutoGenerator mpg = new AutoGenerator();
@@ -182,13 +202,12 @@ public class CodeController extends BaseController{
 		gc.setEnableCache(false);// XML 二级缓存
 		gc.setBaseResultMap(true);// XML ResultMap
 		gc.setBaseColumnList(false);// XML columList
-		gc.setAuthor("Auto-generator");
-		// 自定义文件命名，注意 %s 会自动填充表实体属性！
-		// gc.setMapperName("%sDao");
-		// gc.setXmlName("%sDao");
-		// gc.setServiceName("MP%sService");
-		// gc.setServiceImplName("%sServiceDiy");
-		// gc.setControllerName("%sAction");
+		gc.setAuthor(tableStrategyConfig.getAuthor());
+		gc.setEntityName(tableStrategyConfig.getEntityName());
+		gc.setMapperName(tableStrategyConfig.getMapperName());
+		gc.setXmlName(tableStrategyConfig.getXmlName());
+		gc.setServiceName(tableStrategyConfig.getServiceName());
+		gc.setServiceImplName(tableStrategyConfig.getServiceImplName());
 		mpg.setGlobalConfig(gc);
 		DataSourceConfig dsc = new DataSourceConfig();
 		dsc.setDbType(dbConfig.getDriver().indexOf("mysql")>-1?DbType.MYSQL:DbType.ORACLE);
@@ -199,10 +218,8 @@ public class CodeController extends BaseController{
 		mpg.setDataSource(dsc);
 		// 策略配置
 		StrategyConfig strategy = new StrategyConfig();
-		if(flag && tableInfo.getTableName().indexOf("_")>0 && tableInfo.getTableName().lastIndexOf("_")!=tableInfo.getTableName().length()-1) {
-			String prefix = tableInfo.getTableName().substring(0,tableInfo.getTableName().indexOf("_")+1);
-			strategy.setTablePrefix(prefix);// 此处可以修改为您的表前缀
-			NamingStrategy.removePrefix(tableInfo.getTableName(),prefix);// 表名生成策略
+		if(!StringUtils.isEmpty(tableStrategyConfig.getPrefix())) {
+			NamingStrategy.removePrefix(tableName,tableStrategyConfig.getPrefix());// 表名生成策略
 		}else{
 			strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
 		}
@@ -230,8 +247,13 @@ public class CodeController extends BaseController{
 		// 包配置
 		PackageConfig pc = new PackageConfig();
 		pc.setParent("com");
-		pc.setEntity("domain");
-		pc.setModuleName(model);
+		pc.setModuleName(tableStrategyConfig.getModelName());
+		pc.setEntity(tableStrategyConfig.getEntityPackage());
+		pc.setService(tableStrategyConfig.getServicePackage());
+		pc.setServiceImpl(tableStrategyConfig.getServiceImplPackage());
+		pc.setMapper(tableStrategyConfig.getMapperPackage());
+		pc.setController(tableStrategyConfig.getControllerPackage());
+
 		mpg.setPackageInfo(pc);
 		// 注入自定义配置，可以在 VM 中使用 cfg.abc 设置的值
 		InjectionConfig cfg = new InjectionConfig() {

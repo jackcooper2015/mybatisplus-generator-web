@@ -6,8 +6,8 @@ $UU.init({
         importFormVisible: false,
         dialogTitle: "",
         search_group: {
-            id:null,
-            dbName: null,
+            id:'',
+            dbName: '',
             url: "",
             driver: "",
             username: "",
@@ -67,7 +67,7 @@ $UU.init({
         }
     },
     created: function () {
-        this.search_group.dbName = $UF.getUrlParam("dbName");
+        this.search_group.id = $UF.getUrlParam("id");
         console.log("314314321",this.form)
         this.query();
     },
@@ -295,7 +295,7 @@ $UU.init({
         showColumns: function (tableName) {
             var _this = this;
             console.log(543524, tableName);
-            window.parent.document.getElementById("content").src = $UC.ctxPath +"/to-column-list?dbName="+_this.search_group.dbName+"&tableName="+tableName;
+            location.href = $UC.ctxPath +"/to-column-list?id="+_this.search_group.id+"&tableName="+tableName;
         }
     }
 });

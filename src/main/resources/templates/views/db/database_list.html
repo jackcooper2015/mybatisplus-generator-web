@@ -31,12 +31,12 @@
                 <el-table-column align="center" label="操作" min-width="15%">
                     <template scope="scope">
                         <el-button @click="deleteById(scope.row)" type="text" size="small">删除</el-button>
-                        <el-button @click="openDialog('edit',scope.row.dbName)" type="text" size="small">编辑</el-button>
+                        <el-button @click="openDialog('edit',scope.row.id)" type="text" size="small">编辑</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" min-width="5%">
+                <el-table-column align="center" min-width="5%" label="操作"  fixed="right">
                     <template scope="scope" >
-                        <el-button @click="showTables(scope.row.dbName)" type="text" size="small">查看表</el-button>
+                        <el-button @click="showTables(scope.row.id)" type="text" size="small">查看表</el-button>
                     </template>
                 </el-table-column>
             </el-table>
