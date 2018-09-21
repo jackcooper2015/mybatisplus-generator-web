@@ -62,8 +62,8 @@ public class CodeController extends BaseController{
 
 	@GetMapping("/getByDbId")
 	@ResponseBody
-	public JSONObject getByDbName(DbConfig dbConfig) throws IOException {
-		dbConfig = dbConfigDao.getOne(dbConfig.getId());
+	public JSONObject getByDbId(Long id) throws IOException {
+		DbConfig dbConfig = dbConfigDao.getOne(id);
 		return respJson(0, "", dbConfig);
 	}
 

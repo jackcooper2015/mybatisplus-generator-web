@@ -1,9 +1,11 @@
 package com.reapal.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.io.Serializable;
 
 /**
  * @ClassName :
@@ -13,7 +15,10 @@ import javax.persistence.Id;
  */
 @Entity
 @Data
-public class TableStrategyConfig {
+@JsonIgnoreProperties({ "handler","hibernateLazyInitializer" })
+public class TableStrategyConfig implements Serializable {
+
+    private static final long serialVersionUID = 2560431775903963939L;
     @Id
     private Long id;
     private Long dbId;

@@ -12,8 +12,7 @@
 <!-- content -->
 <th:block layout:fragment="content">
 
-    <el-collapse v-model="data_group.active" class="ui-collapse">
-        <el-collapse-item title="查询结果" name="active">
+
             <!--数据区域-->
             <el-row class="fn-clear">
                 <el-col class="fn-tal" :span="18">
@@ -21,7 +20,7 @@
                 </el-col>
             </el-row>
 
-            <el-table fixed class="fn-mt10" :data="data_group.list" border highlight-current-row @selection-change="onSelectionChange">
+            <el-table fixed class="fn-mt10" :data="data_group.list" highlight-current-row @selection-change="onSelectionChange">
                 <el-table-column  prop="dbName" label="名称（唯一）" align="center" min-width="10%" show-overflow-tooltip="true"></el-table-column>
                 <el-table-column  prop="url" label="URL" align="center" min-width="15%" show-overflow-tooltip="true"></el-table-column>
                 <el-table-column  prop="driver" label="driver" align="center" min-width="15%" show-overflow-tooltip="true"></el-table-column>
@@ -30,8 +29,8 @@
                 <el-table-column  prop="schema" label="schema" align="center" min-width="15%" show-overflow-tooltip="true"></el-table-column>
                 <el-table-column align="center" label="操作" min-width="15%">
                     <template scope="scope">
-                        <el-button @click="deleteById(scope.row)" type="text" size="small">删除</el-button>
-                        <el-button @click="openDialog('edit',scope.row.id)" type="text" size="small">编辑</el-button>
+                        <el-button @click="deleteById(scope.row)"  icon="el-icon-delete" circle size="small"></el-button>
+                        <el-button @click="openDialog('edit',scope.row.id)" icon="el-icon-edit" circle size="small"></el-button>
                     </template>
                 </el-table-column>
                 <el-table-column align="center" min-width="5%" label="操作"  fixed="right">
@@ -40,8 +39,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-        </el-collapse-item>
-    </el-collapse>
 
 
     <!-- 新建/编辑弹出框start -->
@@ -63,7 +60,14 @@
             <el-row>
                 <el-col :span="12" class="fn-pr20">
                     <el-form-item class="fn-ml30" label="driver：" prop="driver">
-                        <el-input v-model="form.driver" ></el-input>
+                        <el-select v-model="form.driver" clearable placeholder="请选择">
+                            <el-option
+                                    v-for="item in options"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="12" class="fn-pr20">

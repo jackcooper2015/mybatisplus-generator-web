@@ -1,5 +1,6 @@
 package com.reapal.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import java.io.Serializable;
 @Entity
 @Data
 @Table(name = "db_config")
+@JsonIgnoreProperties({ "handler","hibernateLazyInitializer" })
 public class DbConfig implements Serializable {
     private static final long serialVersionUID = 3148176768559230877L;
     

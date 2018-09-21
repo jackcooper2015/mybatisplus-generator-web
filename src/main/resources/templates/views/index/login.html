@@ -15,23 +15,33 @@
         }
 
         #app button {
-            width: 300px;
+            width: 100%;
             margin: 10px auto;
+        }
+
+        body{
+            background-color:#224b8f;
         }
     </style>
 </head>
 <body>
 <div id="app">
-    <div class="login-container">
-        <el-form ref="form" :model="form" label-width="80px">
-            <el-form-item label="用户名">
-                <el-input v-model="form.username"></el-input>
+    <div id="mydiv" class="login-container">
+        <h2 style="text-align: center;color:white;">mybatis-plus generator</h2>
+        <br>
+        <br>
+        <el-form ref="form" :model="form" label-width="0px">
+            <el-form-item>
+                <el-input pl v-model="form.username" placeholder="用户名"></el-input>
             </el-form-item>
-            <el-form-item label="密码">
-                <el-input type="password" v-model="form.password"></el-input>
+            <el-form-item>
+                <el-input type="password" v-model="form.password" placeholder="密码"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onSubmit">登录</el-button>
+            </el-form-item>
+            <el-form-item>
+                author: jack-cooper
             </el-form-item>
         </el-form>
     </div>
@@ -42,6 +52,8 @@
 <script th:src="@{/js/util/vue-resource.js}"></script>
 <script th:src="@{/js/util/element-ui.js}"></script>
 <script th:src="@{/js/util/util-core.js}"></script>
+<script th:src="@{/js/util/canvas-particle.js}"></script>
+
 
 <script th:inline="javascript">
     $UC = {
@@ -83,6 +95,26 @@
 
     });
 
+</script>
+<script th:inline="javascript">
+    window.onload = function() {
+        //配置
+        var config = {
+            vx: 4,	//小球x轴速度,正为右，负为左
+            vy: 4,	//小球y轴速度
+            height: 2,	//小球高宽，其实为正方形，所以不宜太大
+            width: 2,
+            count: 200,		//点个数
+            color: "121, 162, 185", 	//点颜色
+            stroke: "130,255,255", 		//线条颜色
+            dist: 6000, 	//点吸附距离
+            e_dist: 20000, 	//鼠标吸附加速距离
+            max_conn: 10 	//点到点最大连接数
+        }
+
+        //调用
+        CanvasParticle(config);
+    }
 </script>
 </body>
 

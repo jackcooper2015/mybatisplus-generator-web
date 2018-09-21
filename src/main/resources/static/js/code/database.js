@@ -39,6 +39,13 @@ $UU.init({
             catalog: null,
             dbType:null
         },
+        options:[{
+            value:'com.mysql.jdbc.Driver',
+            label:'Mysql'
+        },{
+            value:'oracle.jdbc.driver.OracleDriver',
+            label:'Oracle'
+        }],
         rules: {
             dbName: [
                 { required: true, message: '请输入数据库名称', trigger: 'blur' }
