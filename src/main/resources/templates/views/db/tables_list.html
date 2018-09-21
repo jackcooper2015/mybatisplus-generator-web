@@ -21,7 +21,7 @@
                 <el-table-column  prop="comments" label="备注" align="center" min-width="15%" show-overflow-tooltip="true"></el-table-column>
                 <el-table-column align="center" min-width="5%" label="操作"  fixed="right">
                     <template scope="scope" >
-                        <el-button @click="showColumns(scope.row.tableName)" type="text" size="small">查看表详情</el-button>
+                        <el-button @click="showColumns(scope.row.tableName,scope.row.comments)" type="text" size="small">查看表详情</el-button>
                     </template>
                 </el-table-column>
             </el-table>

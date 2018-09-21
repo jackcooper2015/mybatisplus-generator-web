@@ -189,9 +189,10 @@ public class CodeController extends BaseController{
 	 * 生成代码
 	 */
 	@RequestMapping(value="/generate",method=RequestMethod.GET)
-	public String generate(String tableName, Long id, TableStrategyConfig tableStrategyConfig, HttpServletResponse response) throws IOException {
+	public String generate(String tableName, Long id, HttpServletResponse response) throws IOException {
 		DbConfig dbConfig = dbConfigDao.getOne(id);
 		TableInfo tableInfo = codeService.getAllColumns(tableName,dbConfig);
+        TableStrategyConfig tableStrategyConfig = tableStrategyConfigDao.findByDbIdAndTableName(id, tableName);
 		String model = tableInfo.getComments().substring(tableInfo.getComments().indexOf("#")+1);
 		AutoGenerator mpg = new AutoGenerator();
 		// 全局配置
@@ -219,14 +220,13 @@ public class CodeController extends BaseController{
 		// 策略配置
 		StrategyConfig strategy = new StrategyConfig();
 		if(!StringUtils.isEmpty(tableStrategyConfig.getPrefix())) {
-			NamingStrategy.removePrefix(tableName,tableStrategyConfig.getPrefix());// 表名生成策略
-		}else{
-			strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
+            strategy.setTablePrefix(tableStrategyConfig.getPrefix());
 		}
 		strategy.setInclude(new String[] { tableInfo.getTableName() }); // 需要生成的表
 		// strategy.setExclude(new String[]{"test"}); // 排除生成的表
 		// 字段名生成策略
 		strategy.setNaming(NamingStrategy.underline_to_camel);
+        strategy.setColumnNaming(NamingStrategy.underline_to_camel);
 		// 自定义实体，公共字段
 		// strategy.setSuperEntityColumns(new String[] { "test_id", "age" });
 		// 自定义 mapper 父类

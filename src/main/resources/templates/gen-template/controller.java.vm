@@ -62,7 +62,7 @@ public class ${table.controllerName} {
     */
     @DeleteMapping
     public boolean delete(${table.entityName} ${lowrEntity}){
-        return ${lowerCaseServiceName}.removeById(${lowrEntity}.getId()());
+        return ${lowerCaseServiceName}.removeById(${lowrEntity}.getId());
     }
 
     /**

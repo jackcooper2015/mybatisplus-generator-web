@@ -292,10 +292,10 @@ $UU.init({
                 this.data_group.multipleSelection = val.id;
             }
         },
-        showColumns: function (tableName) {
+        showColumns: function (tableName,comments) {
             var _this = this;
             console.log(543524, tableName);
-            location.href = $UC.ctxPath +"/to-column-list?id="+_this.search_group.id+"&tableName="+tableName;
+            location.href = $UC.ctxPath +"/to-column-list?id="+_this.search_group.id+"&tableName="+tableName+'&comments='+comments;
         }
     }
 });

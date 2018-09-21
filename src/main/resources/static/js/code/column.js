@@ -7,7 +7,8 @@ $UU.init({
         dialogTitle: "",
         search_group: {
             id:'',
-            tableName:''
+            tableName:'',
+            comments:''
         },
         data_group: {
             active: 'active',
@@ -36,24 +37,25 @@ $UU.init({
             remarks:[],
             dbId:null,
             prefix:null,
-            modelName:null,
-            author:null,
-            entityName:null,
-            mapperName:null,
-            xmlName:null,
-            serviceName:null,
-            serviceImplName:null,
-            controllerName:null,
-            entityPackage:null,
-            servicePackage:null,
-            serviceImplPackage:null,
-            mapperPackage:null,
-            controllerPackage:null,
+            modelName:'cooper',
+            author:'Auto-generator',
+            entityName:'%s',
+            mapperName:'%sMapper',
+            xmlName:'%sMapper',
+            serviceName:'I%sService',
+            serviceImplName:'%sServiceImpl',
+            controllerName:'%sController',
+            entityPackage:'domain',
+            servicePackage:'service',
+            serviceImplPackage:'service.impl',
+            mapperPackage:'mapper',
+            controllerPackage:'controller',
         }
     },
     created: function () {
         this.search_group.id = $UF.getUrlParam("id");
         this.search_group.tableName = $UF.getUrlParam("tableName");
+        this.search_group.comments = $UF.getUrlParam("comments");
         console.log("314314321",this.form)
         this.query();
         this.queryTableStrategy();
@@ -90,7 +92,23 @@ $UU.init({
         queryTableStrategy: function(){
             var _this = this;
             $UU.http.get("/get-table-strategy",{id:_this.search_group.id,tableName:_this.search_group.tableName},function (response) {
-                _this.columnForm = response.data.data;
+                if(response.data.data != undefined) {
+                    _this.columnForm.id = response.data.data.id;
+                    _this.columnForm.prefix = response.data.data.prefix;
+                    _this.columnForm.modelName = response.data.data.modelName;
+                    _this.columnForm.author = response.data.data.author;
+                    _this.columnForm.entityName = response.data.data.entityName;
+                    _this.columnForm.mapperName = response.data.data.mapperName;
+                    _this.columnForm.xmlName = response.data.data.xmlName;
+                    _this.columnForm.serviceName = response.data.data.serviceName;
+                    _this.columnForm.serviceImplName = response.data.data.serviceImplName;
+                    _this.columnForm.controllerName = response.data.data.controllerName;
+                    _this.columnForm.entityPackage = response.data.data.entityPackage;
+                    _this.columnForm.servicePackage = response.data.data.servicePackage;
+                    _this.columnForm.serviceImplPackage = response.data.data.serviceImplPackage;
+                    _this.columnForm.mapperPackage = response.data.data.mapperPackage;
+                    _this.columnForm.controllerPackage = response.data.data.controllerPackage;
+                }
             });
         },
        query: function () {
@@ -174,38 +192,36 @@ $UU.init({
         },
         submitColForm: function (formName) {
             var _this = this;
-            _this.$refs[formName].validate(function (valid) {
-                if (valid) {
-                    _this.$confirm('确定操作吗?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(function () {
-                        _this.columnForm.id = _this.search_group.id;
-                        _this.columnForm.tableName = _this.search_group.tableName;
-                        _this.columnForm.comments = '';
-                        _this.data_group.list.forEach(function (e) {
-                            var remark = e.colName+'@'+e.colType+'@'+e.comments+'@'+e.extra;
-                            _this.columnForm.remarks.push(remark);
-                        });
-                        console.log(7777, _this.columnForm);
-                        $UU.http.post("/columnsave", _this.columnForm, function (response) {
-                            if(response.data.code === 0){
-                                _this.$message.success(response.data.msg);
-                            }else{
-                                _this.$message.error(response.data.msg);
-                            }
-                        }, {
-                            before: function () {
-                                _this.btn_disabled = true;
-                            },
-                            after: function () {
-                                _this.btn_disabled = false;
-                            }
-                        });
-                    }).catch(function () {
-                    });
-                }
+            _this.$confirm('确定操作吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(function () {
+                console.log(666,_this.columnForm)
+                _this.columnForm.id = _this.search_group.id;
+                _this.columnForm.tableName = _this.search_group.tableName;
+                _this.columnForm.comments = decodeURI(_this.search_group.comments);
+                _this.data_group.list.forEach(function (e) {
+                    var remark = e.colName+'@'+e.colType+'@'+e.comments+'@'+e.extra;
+                    _this.columnForm.remarks.push(remark);
+                });
+                console.log(7777, _this.columnForm);
+                $UU.http.post("/columnsave", _this.columnForm, function (response) {
+                    if(response.data.code === 0){
+                        _this.$message.success(response.data.msg);
+                    }else{
+                        _this.$message.error(response.data.msg);
+                    }
+                }, {
+                    before: function () {
+                        _this.btn_disabled = true;
+                    },
+                    after: function () {
+                        _this.btn_disabled = false;
+                    }
+                });
+            }).catch(function (e) {
+                console.log(e)
             });
         },
         onSelectionChange: function (val) {
@@ -326,8 +342,16 @@ $UU.init({
         },
         download: function () {
             var _this = this;
+            _this.$confirm('你的配置是否保存?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(function () {
+                //请求参数
+                window.open($UC.ctxPath+"/generate?tableName="+_this.data_group.tableName+"&id="+_this.data_group.id);
+            }).catch(function () {
+            });
             // window.location.href=$UC.ctxPath+"/generate?tableName="+_this.data_group.tableName+"&dbName="+_this.data_group.dbName;
-            window.open($UC.ctxPath+"/generate?tableName="+_this.data_group.tableName+"&id="+_this.data_group.id);
         },
         saveForm: function () {
             

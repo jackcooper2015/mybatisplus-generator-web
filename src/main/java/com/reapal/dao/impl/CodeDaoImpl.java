@@ -23,7 +23,7 @@ public class CodeDaoImpl implements CodeDao {
 	    	String strSql = "";
 
 	    	if(dbConfig.getUrl().indexOf("mysql")>0){
-	    		strSql = "ALTER TABLE "+tableInfo.getTableName()+" COMMENT '#"+tableInfo.getComments()+"';";
+	    		strSql = "ALTER TABLE "+tableInfo.getTableName()+" COMMENT '"+tableInfo.getComments()+"';";
 	    		stmt.executeUpdate(strSql);
 		    	//stmt.executeUpdate("use information_schema;");
 		    	for(ColumnInfo item : tableInfo.getListColumn()){
