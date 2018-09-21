@@ -10,7 +10,6 @@ spring:
     password: root
     schema: classpath:sql/schema.sql
     data: classpath:sql/data.sql
-    initialization-mode: always
   h2:
     console:
       # http://ip:port/h2-console

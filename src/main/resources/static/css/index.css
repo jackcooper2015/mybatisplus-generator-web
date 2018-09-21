@@ -21,7 +21,7 @@ body, button, input, select, textarea {
     top: 0;
     left: 0;
     right: 0;
-    background-color: #282b32;
+    background-color: #20a0ff;
 }
 
 .logo {
@@ -42,7 +42,7 @@ body, button, input, select, textarea {
 
 .logo span {
     font-size: 16px;
-    color: #acacac;
+    color: white;
     margin-left: 8px;
 }
 
@@ -98,7 +98,7 @@ body, button, input, select, textarea {
 }
 
 .menu .el-menu--dark {
-    background-color: #282b32;
+    background-color: #20a0ff;
 }
 
 .menu .el-menu--horizontal.el-menu--dark .el-submenu .el-menu-item.is-active, .menu .el-menu-item.is-active {
@@ -106,7 +106,7 @@ body, button, input, select, textarea {
 }
 
 .menu .el-menu--dark .el-menu-item:hover {
-    background-color: #282b32;
+    background-color: #20a0ff;
 }
 
 .nav {

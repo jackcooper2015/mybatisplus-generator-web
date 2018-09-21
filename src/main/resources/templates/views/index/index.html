@@ -18,8 +18,8 @@
         </a>
         <div id="header" v-cloak>
             <div class="menu">
-                <el-menu theme="dark" :default-active="header.activeMenuId" mode="horizontal" @select="onHeaderSelect"
-                        background-color="#282b32" text-color="#fff" active-text-color="#ffd04b">
+                <el-menu :default-active="header.activeMenuId" mode="horizontal" @select="onHeaderSelect"
+                        background-color="#20a0ff" text-color="#fff" active-text-color="#ffd04b">
                     <el-menu-item v-for="item in header.menuItems" :index="item.menuId" :title="header.activeMenuId==item.menuId?'':item.menuName">
                         {{item.menuName}}
                     </el-menu-item>

@@ -14,10 +14,11 @@ public class CommonInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse httpServletResponse, Object o) throws Exception {
-//        Object user = request.getSession().getAttribute("user");
-//        if(user == null){
-//            return false;
-//        }
+        Object user = request.getSession().getAttribute("user");
+        if(user == null){
+            httpServletResponse.sendRedirect("/login");
+            return false;
+        }
         return true;
     }
 
