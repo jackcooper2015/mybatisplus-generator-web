@@ -37,7 +37,7 @@ $UU.init({
             remarks:[],
             dbId:null,
             prefix:null,
-            modelName:'chehejia',
+            modelName:'reapal',
             author:'Auto-generator',
             entityName:'%s',
             mapperName:'%sMapper',
