@@ -4,6 +4,7 @@ import com.reapal.dao.CodeDao;
 import com.reapal.model.ColumnInfo;
 import com.reapal.model.DbConfig;
 import com.reapal.model.TableInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@Slf4j
 public class CodeDaoImpl implements CodeDao {
 
 	
@@ -27,20 +29,36 @@ public class CodeDaoImpl implements CodeDao {
 	    		stmt.executeUpdate(strSql);
 		    	//stmt.executeUpdate("use information_schema;");
 		    	for(ColumnInfo item : tableInfo.getListColumn()){
-		    		if(StringUtils.isEmpty(item.getComments())){
+					StringBuilder sb = new StringBuilder();
+					sb.append("ALTER TABLE ");
+					if(StringUtils.isEmpty(tableInfo.getTableName())){
 						continue;
+					}else{
+						sb.append(" "+tableInfo.getTableName()+" ");
 					}
-		    		if (StringUtils.isEmpty(item.getExtra())) {
-						strSql = "ALTER TABLE "+tableInfo.getTableName()+" MODIFY "+item.getColName()+" "+item.getColType()+" COMMENT '"+item.getComments()+"'; ";
-					} else {
-						strSql = "ALTER TABLE " + tableInfo.getTableName() + " MODIFY " + item.getColName() + " " + item.getColType() + " "+item.getExtra()+" "+"COMMENT '" + item.getComments() + "'; ";
+					sb.append(" MODIFY ");
+					if(StringUtils.isEmpty(item.getColName())){
+						continue;
+					}else{
+						sb.append(" "+item.getColName()+" ");
 					}
-		    		System.out.println(">>>>>>>>>>>"+strSql);
-		    		//strSql = "update information_schema.COLUMNS t set t.column_comment='"+item.getComments()+"' where t.TABLE_SCHEMA='数据库名' and t.table_name='"+tableInfo.getTableName()+"' and t.COLUMN_NAME='"+item.getColName()+"';"); 
-		    		stmt.executeUpdate(strSql); 
+					sb.append(" "+ item.getColType()+" ");
+					if(!item.isNullable()){
+						sb.append(" NOT NULL ");
+					}
+					if(!StringUtils.isEmpty(item.getDefaultValue())){
+						sb.append(" DEFAULT "+item.getDefaultValue()+" ");
+					}
+					if(!StringUtils.isEmpty(item.getExtra())){
+						sb.append(" " + item.getExtra() + " ");
+					}
+					if(!StringUtils.isEmpty(item.getComments())){
+						sb.append(" COMMENT '" + item.getComments() + "' ;");
+					}
+					log.info("update mysql column, sql is : {}",sb.toString());
+		    		stmt.executeUpdate(sb.toString());
 		    	}
-	    	}
-	    	else{
+	    	} else{
 	    		strSql = "COMMENT ON TABLE "+tableInfo.getTableName()+" IS '#"+tableInfo.getComments()+"'";
 	    		stmt.executeUpdate(strSql);
 		    	for(ColumnInfo item : tableInfo.getListColumn()){
@@ -138,19 +156,21 @@ public class CodeDaoImpl implements CodeDao {
 	    	
 	    	//得到字段注解
 	    	if(dbConfig.getUrl().indexOf("mysql")>0){
-	    		strSql = "select column_name,column_comment,data_type,CHARACTER_MAXIMUM_LENGTH,extra from Information_schema.columns where table_Name = '"+tableName+"' and table_schema='"+dbConfig.getSchema()+"'";
+	    		strSql = "select column_name,column_comment,column_type,is_nullable,extra,column_default from Information_schema.columns where table_Name = '"+tableName+"' and table_schema='"+dbConfig.getSchema()+"'";
 			}
 	    	else{
 	    		strSql = "select z.COLUMN_NAME,c.comments,z.data_type from user_tab_columns z,user_col_comments c where z.TABLE_NAME=c.table_name and z.COLUMN_NAME=c.column_name and z.Table_Name='"+tableName+"'";
 	    	}
-	    	List<ColumnInfo> colList = new ArrayList<ColumnInfo>();
+	    	List<ColumnInfo> colList = new ArrayList<>();
 	    	rs = stmt.executeQuery(strSql);
 	    	while(rs.next()){
 	    		ColumnInfo colInfo = new ColumnInfo();
 	    		colInfo.setColName(rs.getString(1));
 				colInfo.setComments(rs.getString(2));
-				if(dbConfig.getUrl().indexOf("mysql")>0 && "varchar".equalsIgnoreCase(rs.getString(3))) {
-					colInfo.setColType(rs.getString(3)+"("+rs.getString(4)+")");
+				if(dbConfig.getUrl().indexOf("mysql")>0) {
+					colInfo.setColType(rs.getString(3));
+					colInfo.setDefaultValue(rs.getString(6));
+					colInfo.setNullable("YES".equals(rs.getString(4)));
 				}else{
 					colInfo.setColType(rs.getString(3));
 				}

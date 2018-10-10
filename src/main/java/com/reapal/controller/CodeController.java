@@ -175,6 +175,12 @@ public class CodeController extends BaseController{
 			if (mark.length >= 4) {
 				item.setExtra(mark[3]);
 			}
+			if (mark.length >= 5) {
+				item.setNullable("true".equalsIgnoreCase(mark[4]));
+			}
+			if (mark.length >= 6) {
+				item.setDefaultValue(mark[5]);
+			}
 			listItem.add(item);
 		}
 		tableInfo.setListColumn(listItem);

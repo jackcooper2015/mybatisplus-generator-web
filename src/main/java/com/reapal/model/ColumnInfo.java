@@ -1,43 +1,40 @@
 package com.reapal.model;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
+@Data
 public class ColumnInfo implements Serializable {
     private static final long serialVersionUID = 3148176768559230877L;
-	
+
+	/**
+	 * 列名
+	 */
 	private String colName;
+	/**
+	 * 列类型
+	 */
 	private String colType;
+	/**
+	 * 列备注
+	 */
 	private String comments;
-	//是否是主键自增
+	/**
+	 * 默认值
+	 */
+	private String defaultValue;
+
+	/**
+	 * 是否允许为null
+	 */
+	private boolean isNullable;
+	/**
+	 * 其他
+	 */
 	private String extra;
 
-	public String getExtra() {
-		return extra;
-	}
 
-	public void setExtra(String extra) {
-		this.extra = extra;
-	}
-
-	public String getColName() {
-		return colName;
-	}
-	public void setColName(String colName) {
-		this.colName = colName;
-	}
-	public String getColType() {
-		return colType;
-	}
-	public void setColType(String colType) {
-		this.colType = colType;
-	}
-	public String getComments() {
-		return comments;
-	}
-	public void setComments(String comments) {
-		this.comments = comments;
-	}
-	
 	
 }
 
