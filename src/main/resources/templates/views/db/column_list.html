@@ -106,7 +106,7 @@
                     </el-col>
                 </el-row>
 
-                <el-table fixed class="fn-mt10" :data="data_group.list"  highlight-current-row
+                <el-table stripe="true" fixed class="fn-mt10" :data="data_group.list" highlight-current-row
                           @selection-change="onSelectionChange">
                     <el-table-column type="index" width="50"></el-table-column>
                     <el-table-column prop="colName" label="列名" align="center" min-width="5%"
@@ -118,10 +118,18 @@
                     <el-table-column prop="comments" label="注释" align="center" min-width="15%"
                                      show-overflow-tooltip="true">
                         <template scope="scope">
-                             <el-input v-model="scope.row.comments" placeholder="请填写注释" :rules="{required: true, message: '注释不能为空', trigger: 'blur'}"></el-input>
+                            <el-input v-model="scope.row.comments" placeholder="请填写注释"
+                                      :rules="{required: true, message: '注释不能为空', trigger: 'blur'}"></el-input>
                         </template>
                     </el-table-column>
                     <el-table-column prop="extra" label="主键" align="center" min-width="15%"
+                                     show-overflow-tooltip="true"></el-table-column>
+                    <el-table-column prop="nullable" label="是否允许为Null" align="center" min-width="15%" show-overflow-tooltip="true">
+                        <template scope="scope">
+                            {{scope.row.nullable?'':'NOT NULL'}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="defaultValue" label="默认值" align="center" min-width="15%"
                                      show-overflow-tooltip="true"></el-table-column>
                 </el-table>
             </el-form>
