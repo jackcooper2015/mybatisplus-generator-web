@@ -16,7 +16,7 @@ import java.util.List;
 @Slf4j
 public class CodeDaoImpl implements CodeDao {
 
-	
+
 	@Override
 	public void saveComment(TableInfo tableInfo, DbConfig dbConfig){
 		Connection conn = getConnection(dbConfig);
@@ -40,14 +40,18 @@ public class CodeDaoImpl implements CodeDao {
 					if(StringUtils.isEmpty(item.getColName())){
 						continue;
 					}else{
-						sb.append(" "+item.getColName()+" ");
+						sb.append(" `"+item.getColName()+"` ");
 					}
 					sb.append(" "+ item.getColType()+" ");
 					if(!item.isNullable()){
 						sb.append(" NOT NULL ");
 					}
 					if(!StringUtils.isEmpty(item.getDefaultValue())){
-						sb.append(" DEFAULT "+item.getDefaultValue()+" ");
+						if(item.getDefaultValue().equalsIgnoreCase("undefined")) {
+							sb.append(" DEFAULT '" + item.getDefaultValue() + "' ");
+						}else{
+							sb.append(" DEFAULT " + item.getDefaultValue() + " ");
+						}
 					}
 					if(!StringUtils.isEmpty(item.getExtra())){
 						sb.append(" " + item.getExtra() + " ");
@@ -63,40 +67,40 @@ public class CodeDaoImpl implements CodeDao {
 	    		stmt.executeUpdate(strSql);
 		    	for(ColumnInfo item : tableInfo.getListColumn()){
 		    		strSql = "COMMENT ON COLUMN "+tableInfo.getTableName()+"."+item.getColName()+" IS '"+item.getComments()+"'";
-		    		stmt.executeUpdate(strSql); 
+		    		stmt.executeUpdate(strSql);
 		    	}
 	    	}
-	    	if(stmt != null){   // 关闭声明    
-		        try{    
-		            stmt.close() ;    
-		        }catch(SQLException e){    
-		            e.printStackTrace() ;    
+	    	if(stmt != null){   // 关闭声明
+		        try{
+		            stmt.close() ;
+		        }catch(SQLException e){
+		            e.printStackTrace() ;
 		        }
 	    	}
 	    }
 	    catch(SQLException e)
 	    {
 	      throw new RuntimeException("execute sql occer error", e);
-	    } 
+	    }
 	    finally{
-	      try{   
+	      try{
 	        conn.close();
 	      }catch (Exception e) {
-	        throw new RuntimeException(e); 
-	      } 
+	        throw new RuntimeException(e);
+	      }
 	    }
 	};
 
 	@Override
 	public List<TableInfo> getAllTables(DbConfig dbConfig){
 		List<TableInfo> tableList = new ArrayList<TableInfo>();
-		
+
 		Connection conn = getConnection(dbConfig);
 	    try{
 	    	Statement stmt = conn.createStatement();
 	    	String strSql = "";
 	    	if(dbConfig.getUrl().indexOf("mysql")>0){
-	    		strSql = "select table_name,TABLE_COMMENT from information_schema.tables where table_schema='"+dbConfig.getSchema()+"'";	    	
+	    		strSql = "select table_name,TABLE_COMMENT from information_schema.tables where table_schema='"+dbConfig.getSchema()+"'";
 	    	}
 	    	else{
 	    		strSql = "select table_name,comments from user_tab_comments where table_type='TABLE' order by table_name";
@@ -105,39 +109,39 @@ public class CodeDaoImpl implements CodeDao {
 	    	ResultSet rs = stmt.executeQuery(strSql);
 	    	while(rs.next()){
 	    		TableInfo table = new TableInfo();
-	    		table.setTableName(rs.getString(1));    
-	    		table.setComments(rs.getString(2)); 
+	    		table.setTableName(rs.getString(1));
+	    		table.setComments(rs.getString(2));
 	    		tableList.add(table);
 	        }
-	    	
-	    	if(stmt != null){   // 关闭声明    
-		        try{    
-		            stmt.close() ;    
-		        }catch(SQLException e){    
-		            e.printStackTrace() ;    
+
+	    	if(stmt != null){   // 关闭声明
+		        try{
+		            stmt.close() ;
+		        }catch(SQLException e){
+		            e.printStackTrace() ;
 		        }
 	    	}
 	    }
 	    catch(SQLException e)
 	    {
 	      throw new RuntimeException("execute sql occer error", e);
-	    } 
+	    }
 	    finally{
-	      try{   
+	      try{
 	        conn.close();
 	      }catch (Exception e) {
-	        throw new RuntimeException(e); 
-	      } 
+	        throw new RuntimeException(e);
+	      }
 	    }
-		
+
 		return tableList;
 	}
-	
+
 	@Override
 	public TableInfo getAllColumns(String tableName, DbConfig dbConfig){
 		TableInfo tableInfo = new TableInfo();
 		tableInfo.setTableName(tableName);
-		
+
 		Connection conn = getConnection(dbConfig);
 	    try{
 	    	Statement stmt = conn.createStatement();
@@ -151,9 +155,9 @@ public class CodeDaoImpl implements CodeDao {
 	    	}
 	    	ResultSet rs = stmt.executeQuery(strSql);
 	    	while(rs.next()){
-	    		tableInfo.setComments(rs.getString(1));    
+	    		tableInfo.setComments(rs.getString(1));
 	        }
-	    	
+
 	    	//得到字段注解
 	    	if(dbConfig.getUrl().indexOf("mysql")>0){
 	    		strSql = "select column_name,column_comment,column_type,is_nullable,extra,column_default from Information_schema.columns where table_Name = '"+tableName+"' and table_schema='"+dbConfig.getSchema()+"'";
@@ -182,41 +186,41 @@ public class CodeDaoImpl implements CodeDao {
 	    		colList.add(colInfo);
 	        }
 	    	tableInfo.setListColumn(colList);
-	    	
-	    	if(stmt != null){   // 关闭声明    
-		        try{    
-		            stmt.close() ;    
-		        }catch(SQLException e){    
-		            e.printStackTrace() ;    
+
+	    	if(stmt != null){   // 关闭声明
+		        try{
+		            stmt.close() ;
+		        }catch(SQLException e){
+		            e.printStackTrace() ;
 		        }
 	    	}
 	    }
 	    catch(SQLException e)
 	    {
 	      throw new RuntimeException("execute sql occer error", e);
-	    } 
+	    }
 	    finally{
-	      try{   
+	      try{
 	        conn.close();
 	      }catch (Exception e) {
-	        throw new RuntimeException(e); 
-	      } 
+	        throw new RuntimeException(e);
+	      }
 	    }
-		
+
 		return tableInfo;
 	}
-	
-	/* 获取数据库连接的函数*/  
+
+	/* 获取数据库连接的函数*/
     private Connection getConnection(DbConfig dbConfig) {
-        Connection con = null;  //创建用于连接数据库的Connection对象   
-        try {  
-            Class.forName(dbConfig.getDriver());// 加载Mysql数据驱动       
-            con = DriverManager.getConnection(dbConfig.getUrl(), dbConfig.getUsername(), dbConfig.getPassword());// 创建数据连接  
-              
-        } catch (Exception e) {  
+        Connection con = null;  //创建用于连接数据库的Connection对象
+        try {
+            Class.forName(dbConfig.getDriver());// 加载Mysql数据驱动
+            con = DriverManager.getConnection(dbConfig.getUrl(), dbConfig.getUsername(), dbConfig.getPassword());// 创建数据连接
+
+        } catch (Exception e) {
             System.out.println("数据库连接失败" + e.getMessage());
-        }  
-        return con; //返回所建立的数据库连接   
+        }
+        return con; //返回所建立的数据库连接
     }
 
 	/* 获取数据库连接的函数*/
