@@ -96,7 +96,7 @@
                     activeMenuId: '',
                     menuItems: [
                         {
-                            menuId: '01', menuName: '系统管理', href: '#', iconClass: 'el-icon-menu',
+                            menuId: '01', menuName: '系统管理', href: '#', iconClass: 'el-icon-setting',
                             subMenuItems: [
                                 {menuId: '012', menuName: '数据源管理', href: $UC.ctxPath + '/database-list'}
                             ]
@@ -104,6 +104,11 @@
                             menuId: '02', menuName: '数据库列表', href: '#', iconClass: 'el-icon-menu',
                             subMenuItems: [
                                 {menuId: '022', menuName: '数据源管理', href: $UC.ctxPath + '/database-list'}
+                            ]
+                        },{
+                            menuId: '03', menuName: '常用工具', href: '#', iconClass: 'el-icon-loading',
+                            subMenuItems: [
+                                {menuId: '031', menuName: '在线编辑器', href: $UC.ctxPath + '/editor/to-editor'},
                             ]
                         }
                     ]

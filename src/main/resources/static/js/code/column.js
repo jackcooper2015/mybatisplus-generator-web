@@ -37,7 +37,7 @@ $UU.init({
             remarks:[],
             dbId:null,
             prefix:null,
-            modelName:'reapal',
+            modelName:'chehejia',
             author:'Auto-generator',
             entityName:'%s',
             mapperName:'%sMapper',
@@ -202,7 +202,7 @@ $UU.init({
                 _this.columnForm.tableName = _this.search_group.tableName;
                 _this.columnForm.comments = decodeURI(_this.search_group.comments);
                 _this.data_group.list.forEach(function (e) {
-                    var remark = e.colName+'@'+e.colType+'@'+e.comments+'@'+e.extra;
+                    var remark = e.colName+'@'+e.colType+'@'+e.comments+'@'+e.extra+'@'+e.nullable+'@'+(e.defaultValue==null?'':e.defaultValue);
                     _this.columnForm.remarks.push(remark);
                 });
                 console.log(7777, _this.columnForm);

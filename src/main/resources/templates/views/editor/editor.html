@@ -1,0 +1,525 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorator="/layouts/default">
+<th:block layout:fragment="title">
+    方案路由
+</th:block>
+<!-- head -->
+<th:block layout:fragment="head">
+    <!--页面自定义样式-->
+    <link th:href="@{/js/plugins/codemirror/lib/codemirror.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/addon/hint/show-hint.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/addon/display/fullscreen.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/addon/fold/foldgutter.css}" rel="stylesheet" type="text/css">
+    <!-- 主题 -->
+    <link th:href="@{/js/plugins/codemirror/theme/dracula.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/3024-day.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/3024-night.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/abcdef.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/ambiance-mobile.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/ambiance.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/base16-dark.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/base16-light.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/bespin.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/blackboard.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/cobalt.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/colorforth.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/darcula.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/duotone-dark.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/duotone-light.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/eclipse.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/elegant.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/erlang-dark.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/gruvbox-dark.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/hopscotch.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/icecoder.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/idea.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/isotope.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/lesser-dark.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/liquibyte.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/lucario.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/material.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/mbo.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/mdn-like.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/midnight.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/monokai.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/neat.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/neo.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/night.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/oceanic-next.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/panda-syntax.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/paraiso-dark.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/paraiso-light.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/pastel-on-dark.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/railscasts.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/rubyblue.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/seti.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/shadowfox.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/solarized.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/ssms.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/the-matrix.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/tomorrow-night-bright.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/tomorrow-night-eighties.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/ttcn.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/twilight.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/vibrant-ink.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/xq-dark.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/xq-light.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/yeti.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/zenburn.css}" rel="stylesheet" type="text/css">
+
+    <style>
+        /** style */
+        html,body {
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+  /*      .CodeMirror {
+            border: 1px solid #eee;
+            height: auto;
+        }*/
+        /** 处理弹框中使用codemirror时自动提示被遮挡的bug */
+        .CodeMirror-hints{
+            z-index:2147483647;
+        }
+        .CodeMirror-lines{
+            line-height: 24px;
+            font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", 微软雅黑, Arial, sans-serif;
+        }
+    </style>
+</th:block>
+<!-- content -->
+<th:block layout:fragment="content">
+    <el-form :inline="true" :model="form" class="demo-form-inline">
+        <el-form-item label="语言模式:">
+            <el-select v-model="form.mode" placeholder="请选择" @change="changeMode" filterable clearable>
+                <el-option
+                        v-for="item in modes"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="主题:">
+            <el-select v-model="form.theme" placeholder="请选择" @change="changeTheme" filterable clearable>
+                <el-option
+                        v-for="item in themes"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item>
+            <el-button type="text" icon="el-icon-question" @click="onTips">快捷键</el-button>
+        </el-form-item>
+
+    </el-form>
+    <codemirror ref="myCm"
+                :value="form.code"
+                :options="cmOptions"
+                @ready="onCmReady"
+                @focus="onCmFocus"
+                @input="onCmCodeChange"
+    ></codemirror>
+</th:block>
+
+<!-- js -->
+<th:block layout:fragment="js">
+
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/lib/codemirror.js}"></script>
+    <!-- vue 組件 -->
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/lib/vue-codemirror.js}"></script>
+
+    <!-- 因为HTML混合语言依赖Javascript、XML、CSS语言支持，所以都要引入 -->
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/mode/simple.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/mode/overlay.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/javascript/javascript.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/shell/shell.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/sql/sql.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/yaml/yaml.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/groovy/groovy.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/clike/clike.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/javascript/javascript.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/xml/xml.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/css/css.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/htmlmixed/htmlmixed.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/vue/vue.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/coffeescript/coffeescript.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/sass/sass.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/pug/pug.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/handlebars/handlebars.js}"></script>
+    <!--提示-->
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/selection/selection-pointer.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/hint/show-hint.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/hint/anyword-hint.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/hint/sql-hint.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/hint/xml-hint.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/hint/html-hint.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/hint/css-hint.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/hint/javascript-hint.js}"></script>
+    <!-- 全屏 -->
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/display/fullscreen.js}"></script>
+    <!-- 格式化 -->
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/lib/formatting.js}"></script>
+    <!-- 快捷键 -->
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/keymap/sublime.js}"></script>
+    <!-- 代码折叠 -->
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/fold/foldcode.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/fold/foldgutter.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/fold/brace-fold.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/fold/comment-fold.js}"></script>
+    <!--括号匹配-->
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/edit/closebrackets.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/edit/closetag.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/edit/matchbrackets.js}"></script>
+    <!-- 选行高亮 -->
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/selection/active-line.js}"></script>
+    <!-- 注释代码 -->
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/comment/continuecomment.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/comment/comment.js}"></script>
+    <!--页面js-->
+    <script>
+        // Vue.component('codemirror', VueCodeMirror.codemirror);
+        Vue.use(window.VueCodemirror);
+        $UU.init({
+            data:{
+                loading:false,
+                cmOptions:{
+                    smartIndent : true,    // 是否智能缩进
+                    lineNumbers: true,     // 显示行数
+                    indentUnit: 2,         // 缩进单位为4
+                    tabSize: 4,            // tab单位4
+                    styleActiveLine: true, // 当前行背景高亮
+                    matchBrackets: true,   // 括号匹配
+                    autoCloseTags:true,    //自动关闭标签 addon/edit/
+                    autoCloseBrackets: true, //自动输入括号
+                    continueComments:"Enter",
+                    mode: 'javascript',     // javascript混合模式
+                    lineWrapping: true,     // 自动换行
+                    foldGutter:true,
+                    gutters:["CodeMirror-linenumbers","CodeMirror-foldgutter"],
+                    theme: 'idea',      // dracula
+                    keyMap: 'default',
+                    extraKeys: {
+                        // F11键切换全屏
+                        "F11": function(cm) {
+                            cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+                        },
+                        // Esc键退出全屏
+                        "Esc": function(cm) {
+                            if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+                        },
+                        "Alt-Enter":'autocomplete', //唤起智能提示
+                        "Ctrl-/": "toggleComment", //注释代码
+                        "Ctrl-Alt-L":function autoFormat(cm) {
+                            var totalLines = cm.lineCount();
+                            cm.autoFormatRange({line:0, ch:0}, {line:totalLines});
+                        }
+                    }
+                },
+
+                form: {
+                    code:"",
+                    mode:"text/x-java",
+                    theme:"idea"
+                },
+                modes:[
+                    {
+                        value: 'text/x-java',
+                        label: 'java'
+                    },{
+                        value: 'javascript',
+                        label: 'javascript'
+                    },{
+                        value: 'text/x-sql',
+                        label: 'SQL'
+                    },{
+                        value: 'text/html',
+                        label: 'html'
+                    },{
+                        value: 'text/x-vue',
+                        label: 'Vue'
+                    },{
+                        value: 'text/x-sh',
+                        label: 'Shell'
+                    },{
+                        value: 'text/x-yaml',
+                        label: 'Yaml'
+                    },{
+                        value: 'javascript',
+                        label: 'javascript'
+                    },{
+                        value: 'application/json',
+                        label: 'Json'
+                    },
+                ],
+                themes:[
+                    {
+                        "label":"idea",
+                        "value":"idea"
+                    },{
+                        "label":"dracula",
+                        "value":"dracula"
+                    },
+                    {
+                        "label":"eclipse",
+                        "value":"eclipse"
+                    },{
+                        "label":"3024-day",
+                        "value":"3024-day"
+                    },
+                    {
+                        "label":"3024-night",
+                        "value":"3024-night"
+                    },
+                    {
+                        "label":"abcdef",
+                        "value":"abcdef"
+                    },
+                    {
+                        "label":"ambiance-mobile",
+                        "value":"ambiance-mobile"
+                    },
+                    {
+                        "label":"ambiance",
+                        "value":"ambiance"
+                    },
+                    {
+                        "label":"base16-dark",
+                        "value":"base16-dark"
+                    },
+                    {
+                        "label":"base16-light",
+                        "value":"base16-light"
+                    },
+                    {
+                        "label":"bespin",
+                        "value":"bespin"
+                    },
+                    {
+                        "label":"blackboard",
+                        "value":"blackboard"
+                    },
+                    {
+                        "label":"cobalt",
+                        "value":"cobalt"
+                    },
+                    {
+                        "label":"colorforth",
+                        "value":"colorforth"
+                    },
+                    {
+                        "label":"darcula",
+                        "value":"darcula"
+                    },
+                    {
+                        "label":"duotone-dark",
+                        "value":"duotone-dark"
+                    },
+                    {
+                        "label":"duotone-light",
+                        "value":"duotone-light"
+                    },
+                    {
+                        "label":"elegant",
+                        "value":"elegant"
+                    },
+                    {
+                        "label":"erlang-dark",
+                        "value":"erlang-dark"
+                    },
+                    {
+                        "label":"gruvbox-dark",
+                        "value":"gruvbox-dark"
+                    },
+                    {
+                        "label":"hopscotch",
+                        "value":"hopscotch"
+                    },
+                    {
+                        "label":"icecoder",
+                        "value":"icecoder"
+                    },
+                    {
+                        "label":"isotope",
+                        "value":"isotope"
+                    },
+                    {
+                        "label":"lesser-dark",
+                        "value":"lesser-dark"
+                    },
+                    {
+                        "label":"liquibyte",
+                        "value":"liquibyte"
+                    },
+                    {
+                        "label":"lucario",
+                        "value":"lucario"
+                    },
+                    {
+                        "label":"material",
+                        "value":"material"
+                    },
+                    {
+                        "label":"mbo",
+                        "value":"mbo"
+                    },
+                    {
+                        "label":"mdn-like",
+                        "value":"mdn-like"
+                    },
+                    {
+                        "label":"midnight",
+                        "value":"midnight"
+                    },
+                    {
+                        "label":"monokai",
+                        "value":"monokai"
+                    },
+                    {
+                        "label":"neat",
+                        "value":"neat"
+                    },
+                    {
+                        "label":"neo",
+                        "value":"neo"
+                    },
+                    {
+                        "label":"night",
+                        "value":"night"
+                    },
+                    {
+                        "label":"oceanic-next",
+                        "value":"oceanic-next"
+                    },
+                    {
+                        "label":"panda-syntax",
+                        "value":"panda-syntax"
+                    },
+                    {
+                        "label":"paraiso-dark",
+                        "value":"paraiso-dark"
+                    },
+                    {
+                        "label":"paraiso-light",
+                        "value":"paraiso-light"
+                    },
+                    {
+                        "label":"pastel-on-dark",
+                        "value":"pastel-on-dark"
+                    },
+                    {
+                        "label":"railscasts",
+                        "value":"railscasts"
+                    },
+                    {
+                        "label":"rubyblue",
+                        "value":"rubyblue"
+                    },
+                    {
+                        "label":"seti",
+                        "value":"seti"
+                    },
+                    {
+                        "label":"shadowfox",
+                        "value":"shadowfox"
+                    },
+                    {
+                        "label":"solarized",
+                        "value":"solarized"
+                    },
+                    {
+                        "label":"ssms",
+                        "value":"ssms"
+                    },
+                    {
+                        "label":"the-matrix",
+                        "value":"the-matrix"
+                    },
+                    {
+                        "label":"tomorrow-night-bright",
+                        "value":"tomorrow-night-bright"
+                    },
+                    {
+                        "label":"tomorrow-night-eighties",
+                        "value":"tomorrow-night-eighties"
+                    },
+                    {
+                        "label":"ttcn",
+                        "value":"ttcn"
+                    },
+                    {
+                        "label":"twilight",
+                        "value":"twilight"
+                    },
+                    {
+                        "label":"vibrant-ink",
+                        "value":"vibrant-ink"
+                    },
+                    {
+                        "label":"xq-dark",
+                        "value":"xq-dark"
+                    },
+                    {
+                        "label":"xq-light",
+                        "value":"xq-light"
+                    },
+                    {
+                        "label":"yeti",
+                        "value":"yeti"
+                    },
+                    {
+                        "label":"zenburn",
+                        "value":"zenburn"
+                    }]
+
+            },
+            computed: {
+                codemirror:function() {
+                    // 获取浏览器可视区域高度
+                    var clientHeight = `${document.documentElement.clientHeight}`;          //document.body.clientWidth;
+                    this.$refs.myCm.codemirror.setSize("100%", clientHeight);
+                    return this.$refs.myCm.codemirror
+                }
+            },
+            mounted() {
+                console.log('this is current codemirror object', this.codemirror);
+                // you can use this.codemirror to do something...
+            },
+            methods: {
+                onCmReady(cm) {
+                    console.log('the editor is readied!', cm)
+                },
+                onCmFocus(cm) {
+                    console.log('the editor is focus!', cm)
+                },
+                onCmCodeChange(newCode) {
+                    console.log('this is new code', newCode);
+                    this.code = newCode
+                },
+                changeMode:function (value) {
+                    console.log("new mode:==>", value);
+                    this.codemirror.setOption("mode", value);
+                },
+                changeTheme:function (value) {
+                    console.log("new them:==>", value);
+                    this.codemirror.setOption("theme", value);
+                },
+                onTips:function () {
+                    this.$notify({
+                        title: '快捷键:',
+                        dangerouslyUseHTMLString: true,
+                        message: '1、<strong>Ctrl+Alt+L</strong> 格式化代码<br>' +
+                                 '2、<strong>F11</strong> 全屏/退出全屏<br>' +
+                                 '3、<strong>Alt-Enter</strong> 唤醒智能提示<br>' +
+                                 '4、<strong>Ctrl-/</strong> 注释代码<br>' +
+                                 '5、其他参考<a href="https://discuss.codemirror.net/t/user-manual-in-chinese/1436/4">这里</a>'
+                    });
+                }
+            }
+        });
+    </script>
+
+</th:block>
+</html>
