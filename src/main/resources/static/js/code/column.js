@@ -37,7 +37,7 @@ $UU.init({
             remarks:[],
             dbId:null,
             prefix:null,
-            modelName:'chehejia',
+            modelName:'reapal',
             author:'Auto-generator',
             entityName:'%s',
             mapperName:'%sMapper',
@@ -236,7 +236,7 @@ $UU.init({
                     _this.$message.error(response.data.msg);
                 }
             },{
-                
+
             })
         },
         getById: function (id) {
@@ -354,7 +354,7 @@ $UU.init({
             // window.location.href=$UC.ctxPath+"/generate?tableName="+_this.data_group.tableName+"&dbName="+_this.data_group.dbName;
         },
         saveForm: function () {
-            
+
         }
     }
 });
