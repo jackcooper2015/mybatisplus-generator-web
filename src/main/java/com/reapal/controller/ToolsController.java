@@ -31,8 +31,4 @@ public class ToolsController extends BaseController {
         return "/views/tools/state_chart";
     }
 
-    @GetMapping(value = "/to-mindchart")
-    public String toMindChart(){
-        return "/views/tools/mind_chart";
-    }
 }
