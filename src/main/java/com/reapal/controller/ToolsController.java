@@ -15,6 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/tools")
 public class ToolsController extends BaseController {
 
+    @GetMapping(value = "/to-markdown")
+    public String toMarkDownEditor(){
+        return "/views/tools/markdown";
+    }
+
+
     @GetMapping(value = "/to-editor")
     public String toEditor(){
         return "/views/tools/editor";

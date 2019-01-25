@@ -1,0 +1,43 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorator="/layouts/default">
+<th:block layout:fragment="title">
+    MarkDown在线编辑器
+</th:block>
+<!-- head -->
+<th:block layout:fragment="head">
+    <!--页面自定义样式-->
+    <link th:href="@{/js/plugins/markdown/css/markdown.css}" rel="stylesheet" type="text/css">
+    <style>
+        /** style */
+    </style>
+</th:block>
+<!-- content -->
+<th:block layout:fragment="content">
+    <div>
+        <markdown-editor height="750px" v-model="content" />
+    </div>
+
+</th:block>
+
+<!-- js -->
+<th:block layout:fragment="js">
+
+    <script type="text/javascript" th:src="@{/js/plugins/markdown/js/markdown.js}"></script>
+    <script>
+        $UU.init({
+            data:{
+                loading:false,
+                content:''
+            },
+            created: function () {
+
+            },
+            mounted: function () {
+            },
+            methods:{
+
+            }
+        });
+    </script>
+
+</th:block>
+</html>
