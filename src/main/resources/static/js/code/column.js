@@ -17,7 +17,8 @@ $UU.init({
             multipleTable: [],
             comments:"",
             tableName:"",
-            dbName:""
+            dbName:"",
+            id:null,
         },
         form: {
             id:null,
@@ -37,7 +38,7 @@ $UU.init({
             remarks:[],
             dbId:null,
             prefix:null,
-            modelName:'cooper',
+            modelName:'chehejia',
             author:'Auto-generator',
             entityName:'%s',
             mapperName:'%sMapper',

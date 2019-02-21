@@ -28,42 +28,27 @@ $UU.init({
                 total: 100 //记录总数
             }
         },
-        form: {
-            id:null,
-            dbName: null,
-            url: "",
-            driver: "",
-            username: "",
-            password: "",
-            schema: null,
-            catalog: null,
-            dbType:null
-        },
-        rules: {
-            dbName: [
-                { required: true, message: '请输入应用名', trigger: 'blur' }
-            ],
-            url: [
-                { required: true, message: '请输入事件id', trigger: 'blur' }
-            ],
-            driver: [
-                { required: true, message: '请输入事件名称', trigger: 'blur' }
-            ],
-            username: [
-                { required: true, message: '请输入事件内容', trigger: 'blur' }
-            ],
-            password: [
-                { required: true, message: '请输入异常信息', trigger: 'blur' }
-            ],
-            schema: [
-                { required: true, message: '请选择发生时间', trigger: 'blur' }
-            ],
-            catalog: [
-                { required: true, message: '请输入在哪发生的(ip:port)', trigger: 'blur' }
-            ],
-            dbType: [
-                { required: true, message: '请输入是否已传播出去0否1是', trigger: 'blur' }
-            ],
+        form:{},
+        columnForm:{
+            id:'',
+            tableName:'',
+            comments:'',
+            remarks:[],
+            dbId:null,
+            prefix:null,
+            modelName:'chehejia',
+            author:'Auto-generator',
+            entityName:'%s',
+            mapperName:'%sMapper',
+            xmlName:'%sMapper',
+            serviceName:'I%sService',
+            serviceImplName:'%sServiceImpl',
+            controllerName:'%sController',
+            entityPackage:'domain',
+            servicePackage:'service',
+            serviceImplPackage:'service.impl',
+            mapperPackage:'mapper',
+            controllerPackage:'controller',
         }
     },
     created: function () {
@@ -158,23 +143,7 @@ $UU.init({
             }
         },
         submitForm: function (formName) {
-            var _this = this;
-            _this.$refs[formName].validate(function (valid) {
-                if (valid) {
-                    _this.$confirm('确定操作吗?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(function () {
-                        if (_this.dialogTitle === "新增") {
-                            _this.save();
-                        } else if (_this.dialogTitle === "编辑") {
-                            _this.update();
-                        }
-                    }).catch(function () {
-                    });
-                }
-            });
+            this.batchGenerate();
         },
         onSelectionChange: function (val) {
             this.data_group.multipleSelection = val;
@@ -188,7 +157,7 @@ $UU.init({
                     _this.$message.error(response.data.msg);
                 }
             },{
-                
+
             })
         },
         getById: function (id) {
@@ -236,6 +205,12 @@ $UU.init({
         },
         setData: function () {
             var _this = this;
+        },
+        batchGenerate:function(){
+            let _this = this;
+            _this.columnForm.tableName = _this.data_group.multipleSelection.map(t => t.tableName).join(",");
+            console.log("=============>:", _this.columnForm);
+            window.open($UC.ctxPath+"/batchGenerate?jsonStr="+encodeURIComponent(JSON.stringify(_this.columnForm))+"&id="+$UF.getUrlParam("id"));
         },
         save: function () {
             var _this = this;
@@ -296,6 +271,9 @@ $UU.init({
             var _this = this;
             console.log(543524, tableName);
             location.href = $UC.ctxPath +"/to-column-list?id="+_this.search_group.id+"&tableName="+tableName+'&comments='+comments;
+        },
+        openDialog:function () {
+            this.dialogFormVisible = true;
         }
     }
 });

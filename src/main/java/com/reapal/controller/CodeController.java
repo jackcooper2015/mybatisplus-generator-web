@@ -1,5 +1,6 @@
 package com.reapal.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
@@ -191,15 +192,32 @@ public class CodeController extends BaseController{
 		return respJson(0, "保存成功", true);
 	}
 
+	@GetMapping("/batchGenerate")
+	public String batchGenerate(String jsonStr,Long id,HttpServletResponse response){
+		TableStrategyConfig tableStrategyConfig = JSON.parseObject(jsonStr, TableStrategyConfig.class);
+		DbConfig dbConfig = dbConfigDao.getOne(id);
+		this.buildCodes(response, dbConfig, tableStrategyConfig);
+		return null;
+	}
+
 	/**
 	 * 生成代码
 	 */
 	@RequestMapping(value="/generate",method=RequestMethod.GET)
 	public String generate(String tableName, Long id, HttpServletResponse response) throws IOException {
 		DbConfig dbConfig = dbConfigDao.getOne(id);
-		TableInfo tableInfo = codeService.getAllColumns(tableName,dbConfig);
         TableStrategyConfig tableStrategyConfig = tableStrategyConfigDao.findByDbIdAndTableName(id, tableName);
-		String model = tableInfo.getComments().substring(tableInfo.getComments().indexOf("#")+1);
+		this.buildCodes(response, dbConfig, tableStrategyConfig);
+		return null;
+	}
+
+	/**
+	 * 生成代码的核心逻辑
+	 * @param response
+	 * @param dbConfig
+	 * @param tableStrategyConfig
+	 */
+	private void buildCodes(HttpServletResponse response, DbConfig dbConfig, TableStrategyConfig tableStrategyConfig) {
 		AutoGenerator mpg = new AutoGenerator();
 		// 全局配置
 		GlobalConfig gc = new GlobalConfig();
@@ -217,7 +235,7 @@ public class CodeController extends BaseController{
 		gc.setServiceImplName(tableStrategyConfig.getServiceImplName());
 		mpg.setGlobalConfig(gc);
 		DataSourceConfig dsc = new DataSourceConfig();
-		dsc.setDbType(dbConfig.getDriver().indexOf("mysql")>-1?DbType.MYSQL:DbType.ORACLE);
+		dsc.setDbType(dbConfig.getDriver().indexOf("mysql")>-1? DbType.MYSQL:DbType.ORACLE);
 		dsc.setDriverName(dbConfig.getDriver());
 		dsc.setUsername(dbConfig.getUsername());
 		dsc.setPassword(dbConfig.getPassword());
@@ -228,11 +246,11 @@ public class CodeController extends BaseController{
 		if(!StringUtils.isEmpty(tableStrategyConfig.getPrefix())) {
             strategy.setTablePrefix(tableStrategyConfig.getPrefix());
 		}
-		strategy.setInclude(new String[] { tableInfo.getTableName() }); // 需要生成的表
+		strategy.setInclude(tableStrategyConfig.getTableName().split(",")); // 需要生成的表
 		// strategy.setExclude(new String[]{"test"}); // 排除生成的表
 		// 字段名生成策略
 		strategy.setNaming(NamingStrategy.underline_to_camel);
-        strategy.setColumnNaming(NamingStrategy.underline_to_camel);
+		strategy.setColumnNaming(NamingStrategy.underline_to_camel);
 		// 自定义实体，公共字段
 		// strategy.setSuperEntityColumns(new String[] { "test_id", "age" });
 		// 自定义 mapper 父类
@@ -275,14 +293,14 @@ public class CodeController extends BaseController{
 		mpg.setCfg(cfg);
 		// 自定义模板配置，可以 copy 源码 mybatis-plus/src/main/resources/template 下面内容修改，
 		// 放置自己项目的 src/main/resources/template 目录下, 默认名称一下可以不配置，也可以自定义模板名称
-		 TemplateConfig tc = new TemplateConfig();
-		 tc.setController("/templates/gen-template/controller.java.vm");
-		 tc.setEntity("/templates/gen-template/entity.java.vm");
-		 tc.setMapper("/templates/gen-template/mapper.java.vm");
-		 tc.setXml("/templates/gen-template/mapper.xml.vm");
-		 tc.setService("/templates/gen-template/service.java.vm");
-		 tc.setServiceImpl("/templates/gen-template/serviceImpl.java.vm");
-		 mpg.setTemplate(tc);
+		TemplateConfig tc = new TemplateConfig();
+		tc.setController("/templates/gen-template/controller.java.vm");
+		tc.setEntity("/templates/gen-template/entity.java.vm");
+		tc.setMapper("/templates/gen-template/mapper.java.vm");
+		tc.setXml("/templates/gen-template/mapper.xml.vm");
+		tc.setService("/templates/gen-template/service.java.vm");
+		tc.setServiceImpl("/templates/gen-template/serviceImpl.java.vm");
+		mpg.setTemplate(tc);
 		// 执行生成
 		mpg.execute();
 		// 打印注入设置
@@ -300,17 +318,13 @@ public class CodeController extends BaseController{
 				ff.mkdirs();
 			}
 			zip.zip(ff,zos,"");
-
 			zos.flush();
 			zos.close();
-
 			//删除目录
 			FileUtils.DeleteFolder(request.getSession().getServletContext().getRealPath("/")+"/WEB-INF/upload/"+request.getSession().getId());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		return null;
 	}
 
 }
