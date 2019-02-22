@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
+import com.reapal.conf.MySqlTypeConvertExt;
 import com.reapal.dao.DbConfigDao;
 import com.reapal.dao.TableStrategyConfigDao;
 import com.reapal.model.ColumnInfo;
@@ -245,6 +246,7 @@ public class CodeController extends BaseController{
 		dsc.setUsername(dbConfig.getUsername());
 		dsc.setPassword(dbConfig.getPassword());
 		dsc.setUrl(dbConfig.getUrl());
+        dsc.setTypeConvert(new MySqlTypeConvertExt()); //dateTime ---> OFFSET_DATE_TIME
 		mpg.setDataSource(dsc);
 		// 策略配置
 		StrategyConfig strategy = new StrategyConfig();
