@@ -92,9 +92,12 @@ $UU.init({
             $UU.http.get("/table-list",
                 req
                 , function (response) {
-                    //获取回调数据
-                    console.log(response.data);
-                    _this.data_group.list = response.data.data;
+                    console.log("=========>", response);
+                    if(response.body.code === 0){
+                        _this.data_group.list = response.body.data;
+                    }else{
+                        _this.$message.error(response.body.msg);
+                    }
                 }, {
                     requestBody: true,
                     before: function () {

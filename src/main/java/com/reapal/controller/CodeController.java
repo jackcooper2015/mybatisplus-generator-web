@@ -128,8 +128,13 @@ public class CodeController extends BaseController{
 	@GetMapping("/table-list")
 	@ResponseBody
 	public JSONObject tableList(Long id) throws IOException {
-		DbConfig dbConfig = dbConfigDao.getOne(id);
-		List<TableInfo> tableList = codeService.getAllTables(dbConfig);
+		List<TableInfo> tableList = null;
+		try {
+			DbConfig dbConfig = dbConfigDao.getOne(id);
+			tableList = codeService.getAllTables(dbConfig);
+		} catch (Exception e) {
+			return respJson(500, "数据库链接失败",null);
+		}
 		return respJson(0, "succ", tableList);
 	}
 
