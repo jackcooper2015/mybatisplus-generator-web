@@ -21,14 +21,14 @@ body, button, input, select, textarea {
     top: 0;
     left: 0;
     right: 0;
-    background-color: #20a0ff;
+    background-color: #224b8f;
 }
 
 .logo {
     display: block;
     height: 47px;
     line-height: 47px;
-    width: 200px;
+    width: 280px;
     text-align: center;
 }
 
