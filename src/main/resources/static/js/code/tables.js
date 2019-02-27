@@ -101,9 +101,11 @@ $UU.init({
                 }, {
                     requestBody: true,
                     before: function () {
+                        _this.loading = true;
                         _this.btn_disabled = true;
                     },
                     after: function () {
+                        _this.loading = false;
                         _this.btn_disabled = false;
                     }
                 });
