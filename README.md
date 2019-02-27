@@ -31,7 +31,8 @@
 
 
 ###### 4. 找到你表所在的数据库，点击“选中”，此时可以看到你所有的表信息
-![image.png](https://upload-images.jianshu.io/upload_images/3710706-0ac65f79eec52d60.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![image.png](https://upload-images.jianshu.io/upload_images/3710706-e1464dd15752ce1f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
 
 
 
