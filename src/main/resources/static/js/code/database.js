@@ -18,7 +18,7 @@ $UU.init({
         },
         data_group: {
             active: 'active',
-            list: [{}, {}, {}],
+            list: [],
             multipleSelection: [],
             multipleTable: [],
             //分页

@@ -27,40 +27,41 @@
                 <el-table-column  prop="username" label="用户名" align="center" min-width="10%" show-overflow-tooltip="true"></el-table-column>
                 <el-table-column  prop="password" label="密码" align="center" min-width="10%" show-overflow-tooltip="true"></el-table-column>
                 <el-table-column  prop="schema" label="schema" align="center" min-width="15%" show-overflow-tooltip="true"></el-table-column>
-                <el-table-column align="center" label="操作" min-width="15%">
+                <el-table-column align="center" label="操作" min-width="10%">
                     <template scope="scope">
-                        <el-button @click="deleteById(scope.row)"  icon="el-icon-delete" circle size="small"></el-button>
-                        <el-button @click="openDialog('edit',scope.row.id)" icon="el-icon-edit" circle size="small"></el-button>
+                        <el-button @click="deleteById(scope.row)" type="danger"  icon="el-icon-delete" circle size="small" plain></el-button>
+                        <el-button @click="openDialog('edit',scope.row.id)" type="warning" icon="el-icon-edit" circle size="small" plain></el-button>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" min-width="5%" label="操作"  fixed="right">
+                <el-table-column align="center" min-width="10%" label="操作"  fixed="right">
                     <template scope="scope" >
-                        <el-button @click="showTables(scope.row.id)" type="text" size="small">查看表</el-button>
+                        <el-button @click="showTables(scope.row.id)" type="primary" size="small" plain>Tables</el-button>
                     </template>
                 </el-table-column>
             </el-table>
 
 
     <!-- 新建/编辑弹出框start -->
-  <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" width="99%">
+  <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" width="55%">
         <el-form label-width="150px" :model="form" :rules="rules" ref="form" label-position="right">
-            <el-row><el-col :span="24">信息<br/><hr/><br/></el-col></el-row>
             <el-row>
-                <el-col :span="12" class="fn-pr20">
+                <el-col :span="24" class="fn-pr20">
                     <el-form-item class="fn-ml30" label="名称（唯一）：" prop="dbName">
                         <el-input v-model="form.dbName" ></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="12" class="fn-pr20">
+            </el-row>
+            <el-row>
+                <el-col :span="24" class="fn-pr20">
                     <el-form-item class="fn-ml30" label="URL：" prop="url">
                         <el-input v-model="form.url" ></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row>
-                <el-col :span="12" class="fn-pr20">
+                <el-col :span="24" class="fn-pr20">
                     <el-form-item class="fn-ml30" label="driver：" prop="driver">
-                        <el-select v-model="form.driver" clearable placeholder="请选择">
+                        <el-select style="width:100%;" v-model="form.driver" clearable placeholder="请选择">
                             <el-option
                                     v-for="item in options"
                                     :key="item.value"
@@ -70,19 +71,23 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <el-col :span="12" class="fn-pr20">
+            </el-row>
+            <el-row>
+                <el-col :span="24" class="fn-pr20">
                     <el-form-item class="fn-ml30" label="用户名：" prop="username">
                         <el-input v-model="form.username" ></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row>
-                <el-col :span="12" class="fn-pr20">
+                <el-col :span="24" class="fn-pr20">
                     <el-form-item class="fn-ml30" label="密码：" prop="password">
                         <el-input v-model="form.password" ></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="12" class="fn-pr20">
+            </el-row>
+            <el-row>
+                <el-col :span="24" class="fn-pr20">
                     <el-form-item class="fn-ml30" label="schema：" prop="schema">
                         <el-input v-model="form.schema" ></el-input>
                     </el-form-item>
