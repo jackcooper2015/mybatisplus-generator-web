@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import ${package.Service}.${table.serviceName};
 import ${package.Entity}.${entity};
 import java.util.*;
@@ -88,10 +90,13 @@ public class ${table.controllerName} {
     * 分页查询
     */
     @GetMapping("/page")
-    public IPage<${table.entityName}> page(Page<${table.entityName}> page,${table.entityName} ${lowrEntity}){
+    public PageInfo<${table.entityName}> page(int pageNum, int pageSize, ${table.entityName} ${lowrEntity}){
+        // PageHelper插件分页
+        PageHelper.startPage(pageNum, pageSize);
         QueryWrapper<${table.entityName}> wp = new QueryWrapper<>();
         //todo init wp
-        return ${lowerCaseServiceName}.page(page,wp);
+        PageInfo<${table.entityName}> pageResult = new PageInfo<>(${lowerCaseServiceName}.list(wp));
+        return pageResult;
     }
 
 
