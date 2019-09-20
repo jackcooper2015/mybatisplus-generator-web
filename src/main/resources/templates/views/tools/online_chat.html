@@ -50,6 +50,12 @@
             min-height: 700px;
         }
 
+        .curr-user-div{
+            font-weight: 900;
+            font-size: large;
+            text-align: center;
+        }
+
         .ui-content{
             min-height: 700px;
         }
@@ -96,7 +102,13 @@
                 </el-footer>
             </el-container>
             <el-aside width="200px">
-
+                <el-row>
+                    <div class="curr-user-div">当前在线用户</div>
+                </el-row>
+                <el-row v-for="item in users">
+                    <el-col :span="12">{{item.name}}</el-col>
+                    <el-col :span="12">{{item.ip}}</el-col>
+                </el-row>
             </el-aside>
         </el-container>
     </el-container>
@@ -115,6 +127,7 @@
             data: {
                 loading: false,
                 msgList: [],
+                users:[],
                 webSocket: null,
                 message:'',
             },
@@ -154,7 +167,17 @@
                         var message = JSON.parse(event.data) || {};
                         //喉咙发炎
                         if (message.type === 'SPEAK') {
-                            _this.msgList.push(message);
+                            _this.msgList.push(JSON.parse(message.data));
+                        }else if(message.type === 'ENTER'){
+                            _this.users = JSON.parse(message.data);
+                        }else if(message.type === 'QUIT'){
+                            let user = JSON.parse(message.data);
+                            let i = _this.users.length;
+                            while(i--){
+                                if(_this.users[i].name === user.username){
+                                    _this.users.splice(i, 1);
+                                }
+                            }
                         }
                     };
                     /**
@@ -186,9 +209,7 @@
                         _this.webSocket.send(JSON.stringify(
                             {
                                 msg:_this.message,
-                                type:'',
-                                username:'',
-                                onlineCount:0
+                                username:''
                             }
                             ));
                         _this.message = '';
