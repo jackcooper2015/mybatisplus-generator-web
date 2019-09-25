@@ -19,4 +19,5 @@ public class Speak {
     private String username; //发送人
 
     private String msg; //发送消息
+
 }

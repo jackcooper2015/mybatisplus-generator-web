@@ -1,10 +1,13 @@
 package com.reapal.chat;
 
 import com.alibaba.fastjson.JSON;
+import com.reapal.utils.WebsocketUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,6 +20,7 @@ import java.util.stream.Collectors;
  * @see Session   WebSocket会话对象 通过它给客户端发送消息
  */
 
+@Slf4j
 @Component
 @ServerEndpoint("/chat")
 public class WebSocketChatServer {
@@ -33,10 +37,12 @@ public class WebSocketChatServer {
     @OnOpen
     public void onOpen(Session session) {
         onlineSessions.put(session.getId(), session);
-        final List<User> users = onlineSessions.values().stream().map(t -> new User("匿名用户" + t.getId(), "")).collect(Collectors.toList());
+        final List<User> users = onlineSessions.values().stream().map(t -> new User(getHostFromSession(t), "")).collect(Collectors.toList());
         String data = JSON.toJSONString(users);
         sendMessageToAll(Message.jsonStr(Message.ENTER, data));
     }
+
+
 
     /**
      * 当客户端发送消息：1.获取它的用户名和消息 2.发送消息给所有人
@@ -46,8 +52,9 @@ public class WebSocketChatServer {
     @OnMessage
     public void onMessage(Session session, String jsonStr) {
         Speak speak = JSON.parseObject(jsonStr, Speak.class);
-        speak.setUsername("匿名用户"+session.getId());
-        sendMessageToAll(Message.jsonStr(Message.SPEAK, JSON.toJSONString(speak)));
+        speak.setUsername(getHostFromSession(session));
+        log.info("=======> :{}",JSON.toJSONString(speak));
+        sendSpeakToAll(speak,session.getId());
     }
 
     /**
@@ -56,7 +63,8 @@ public class WebSocketChatServer {
     @OnClose
     public void onClose(Session session) {
         onlineSessions.remove(session.getId());
-        String data = JSON.toJSONString(new User("匿名用户"+session.getId(), ""));
+        String host = getHostFromSession(session);
+        String data = JSON.toJSONString(new User(host, host));
         sendMessageToAll(Message.jsonStr(Message.QUIT, data));
     }
 
@@ -65,7 +73,11 @@ public class WebSocketChatServer {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        error.printStackTrace();
+        onlineSessions.remove(session.getId());
+        String host = getHostFromSession(session);
+        String data = JSON.toJSONString(new User(host, host));
+        sendMessageToAll(Message.jsonStr(Message.QUIT, data));
+//        log.error("链接断开",error);
     }
 
     /**
@@ -79,6 +91,26 @@ public class WebSocketChatServer {
                 e.printStackTrace();
             }
         });
+    }
+
+    /**
+     * 公共方法：发送信息给所有人
+     */
+    private static void sendSpeakToAll(Speak speak,String sessionId) {
+        final Message message = Message.builder().type(Message.SPEAK).data(JSON.toJSONString(speak)).build();
+        onlineSessions.forEach((id, session) -> {
+            try {
+                message.setMe(id.equals(sessionId));
+                session.getBasicRemote().sendText(JSON.toJSONString(message));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private String getHostFromSession(Session session) {
+        final InetSocketAddress remoteAddress = WebsocketUtil.getRemoteAddress(session);
+        return remoteAddress.getHostString()+":"+remoteAddress.getPort();
     }
 
 }

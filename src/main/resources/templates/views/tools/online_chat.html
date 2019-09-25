@@ -33,7 +33,7 @@
             margin-bottom: 12px;
         }
 
-        .username-div{
+        .username-label{
             width:fit-content;
             width:-moz-fit-content;
             border-radius:10px;
@@ -81,13 +81,23 @@
             <el-container>
                 <el-main>
                     <el-row v-for="item in msgList">
-                        <el-col :span="2">
-                            <el-tooltip class="item" manual="true" value="true" effect="dark" :content="item.msg" placement="right">
-                                <div class="username-div">{{item.username}}:</div>
-                            </el-tooltip>
+                        <el-col :span="4">
+                            &nbsp;
+                            <template v-if="!item.me">
+                                <el-tooltip class="item" manual="true" value="true" effect="dark" :content="item.msg" placement="right">
+                                    <label class="username-label">{{item.username}}</label>
+                                </el-tooltip>
+                            </template>
                         </el-col>
-                        <el-col :span="20"></el-col>
-                        <el-col :span="2"></el-col>
+                        <el-col :span="16">&nbsp;</el-col>
+                        <el-col :span="4">
+                            &nbsp;
+                            <template v-if="item.me">
+                                <el-tooltip class="item" manual="true" value="true" effect="dark" :content="item.msg" placement="left">
+                                    <label class="username-label">{{item.username}}</label>
+                                </el-tooltip>
+                            </template>
+                        </el-col>
                     </el-row>
                 </el-main>
                 <el-footer>
@@ -167,14 +177,17 @@
                         var message = JSON.parse(event.data) || {};
                         //喉咙发炎
                         if (message.type === 'SPEAK') {
-                            _this.msgList.push(JSON.parse(message.data));
+                            let speakObj = JSON.parse(message.data);
+                            speakObj.me = message.me;
+                            _this.msgList.push(speakObj);
+                            console.log(_this.msgList,'color:green')
                         }else if(message.type === 'ENTER'){
                             _this.users = JSON.parse(message.data);
                         }else if(message.type === 'QUIT'){
                             let user = JSON.parse(message.data);
                             let i = _this.users.length;
                             while(i--){
-                                if(_this.users[i].name === user.username){
+                                if(_this.users[i].name === user.name){
                                     _this.users.splice(i, 1);
                                 }
                             }
@@ -214,7 +227,7 @@
                             ));
                         _this.message = '';
                     }else{
-                        _this.$message.warn("不能发送空白信息");
+                        _this.$message.warning("不能发送空白信息");
                     }
                 }
             }
