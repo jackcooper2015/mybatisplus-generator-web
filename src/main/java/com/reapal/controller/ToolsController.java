@@ -37,4 +37,9 @@ public class ToolsController extends BaseController {
         return "/views/tools/state_chart";
     }
 
+    @GetMapping(value = "/to-onlinechat")
+    public String toOnlineChart(){
+        return "/views/tools/online_chat";
+    }
+
 }

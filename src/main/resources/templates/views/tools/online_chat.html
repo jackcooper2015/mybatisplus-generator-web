@@ -1,0 +1,239 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorator="/layouts/default">
+<th:block layout:fragment="title">
+    在线聊天室
+</th:block>
+<!-- head -->
+<th:block layout:fragment="head">
+    <!--页面自定义样式-->
+
+    <style>
+        .el-header, .el-footer {
+            background-color: #B3C0D1;
+            color: #333;
+            text-align: center;
+            line-height: 60px;
+        }
+
+        .el-aside {
+            background-color: #D3DCE6;
+            color: #333;
+            text-align: left;
+            line-height: 30px;
+        }
+
+        .el-main {
+            background-color: #E9EEF3;
+            color: #333;
+            text-align: left;
+            line-height: 30px;
+        }
+
+        .el-main > .el-row{
+            margin-bottom: 12px;
+        }
+
+        .username-label{
+            width:fit-content;
+            width:-moz-fit-content;
+            border-radius:10px;
+            text-align: right;
+        }
+
+        .msg-div{
+            width:fit-content;
+            width:-moz-fit-content;
+            background-color: #a3cf62	;
+            border-radius:10px;
+        }
+        body{
+            min-height: 700px;
+        }
+
+        .curr-user-div{
+            font-weight: 900;
+            font-size: large;
+            text-align: center;
+        }
+
+        .ui-content{
+            min-height: 700px;
+        }
+
+        .el-tooltip__popper.is-dark{
+            background: #00bb00;
+        }
+
+        .ui-content > .el-container{
+            min-height: 700px;
+        }
+
+        body > .el-container {
+            min-height: 100%;
+            margin-bottom: 40px;
+        }
+    </style>
+</th:block>
+<!-- content -->
+<th:block layout:fragment="content">
+    <el-container>
+        <el-container>
+            <el-container>
+                <el-main>
+                    <el-row v-for="item in msgList">
+                        <el-col :span="4">
+                            &nbsp;
+                            <template v-if="!item.me">
+                                <el-tooltip class="item" manual="true" value="true" effect="dark" :content="item.msg" placement="right">
+                                    <label class="username-label">{{item.username}}</label>
+                                </el-tooltip>
+                            </template>
+                        </el-col>
+                        <el-col :span="16">&nbsp;</el-col>
+                        <el-col :span="4">
+                            &nbsp;
+                            <template v-if="item.me">
+                                <el-tooltip class="item" manual="true" value="true" effect="dark" :content="item.msg" placement="left">
+                                    <label class="username-label">{{item.username}}</label>
+                                </el-tooltip>
+                            </template>
+                        </el-col>
+                    </el-row>
+                </el-main>
+                <el-footer>
+                    <el-row>
+                        <el-col :span="18">
+                            <el-input @keyup.enter.native="sendMsgToServer" v-model="message"></el-input>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-button @click="sendMsgToServer">发送</el-button>
+                        </el-col>
+                    </el-row>
+                </el-footer>
+            </el-container>
+            <el-aside width="200px">
+                <el-row>
+                    <div class="curr-user-div">当前在线用户</div>
+                </el-row>
+                <el-row v-for="item in users">
+                    <el-col :span="12">{{item.name}}</el-col>
+                    <el-col :span="12">{{item.ip}}</el-col>
+                </el-row>
+            </el-aside>
+        </el-container>
+    </el-container>
+
+
+</th:block>
+
+<!-- js -->
+<th:block layout:fragment="js">
+
+    <script type="text/javascript" th:src="@{/js/plugins/gojs/go.js}"></script>
+
+    <!--页面js-->
+    <script>
+        $UU.init({
+            data: {
+                loading: false,
+                msgList: [],
+                users:[],
+                webSocket: null,
+                message:'',
+            },
+            created: function () {
+
+            },
+            mounted: function () {
+                let _this = this;
+                _this.webSocket = this.getWebSocket();
+            },
+            methods: {
+                /**
+                 * WebSocket客户端
+                 *
+                 * 使用说明：
+                 * 1、WebSocket客户端通过回调函数来接收服务端消息。例如：webSocket.onmessage
+                 * 2、WebSocket客户端通过send方法来发送消息给服务端。例如：webSocket.send();
+                 */
+                getWebSocket() {
+                    let _this = this;
+                    /**
+                     * WebSocket客户端 PS：URL开头表示WebSocket协议 中间是域名端口 结尾是服务端映射地址
+                     */
+                    let webSocket = new WebSocket($UC.wsUrl);
+                    /**
+                     * 当服务端打开连接
+                     */
+                    webSocket.onopen = function (event) {
+                        console.log('WebSocket打开连接');
+                    };
+                    /**
+                     * 当服务端发来消息：1.广播消息 2.更新在线人数
+                     */
+                    webSocket.onmessage = function (event) {
+                        console.log('WebSocket收到消息：%c' + event.data, 'color:green');
+                        //获取服务端消息
+                        var message = JSON.parse(event.data) || {};
+                        //喉咙发炎
+                        if (message.type === 'SPEAK') {
+                            let speakObj = JSON.parse(message.data);
+                            speakObj.me = message.me;
+                            _this.msgList.push(speakObj);
+                            console.log(_this.msgList,'color:green')
+                        }else if(message.type === 'ENTER'){
+                            _this.users = JSON.parse(message.data);
+                        }else if(message.type === 'QUIT'){
+                            let user = JSON.parse(message.data);
+                            let i = _this.users.length;
+                            while(i--){
+                                if(_this.users[i].name === user.name){
+                                    _this.users.splice(i, 1);
+                                }
+                            }
+                        }
+                    };
+                    /**
+                     * 关闭连接
+                     */
+                    webSocket.onclose = function (event) {
+                        console.log('WebSocket关闭连接');
+                    };
+                    /**
+                     * 通信失败
+                     */
+                    webSocket.onerror = function (event) {
+                        console.log('WebSocket发生异常');
+                    };
+                    return webSocket;
+                },
+                init: function () {
+
+                },
+
+                // Show the diagram's model in JSON format
+                save: function () {
+
+                },
+
+                sendMsgToServer:function () {
+                    let _this = this;
+                    if(!!_this.message){
+                        _this.webSocket.send(JSON.stringify(
+                            {
+                                msg:_this.message,
+                                username:''
+                            }
+                            ));
+                        _this.message = '';
+                    }else{
+                        _this.$message.warning("不能发送空白信息");
+                    }
+                }
+            }
+        })
+        ;
+    </script>
+
+</th:block>
+</html>

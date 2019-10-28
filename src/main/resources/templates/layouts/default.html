@@ -27,14 +27,15 @@
 <script th:src="@{/js/util/moment.js}"></script>
 <script th:src="@{/js/util/vue.js}"></script>
 <script th:src="@{/js/util/vue-resource.js}"></script>
-<script th:src="@{/js/util/element-ui.js}"></script>
+<script th:src="@{/js/util/element-ui-2.12.0.js}"></script>
 <script th:src="@{/js/util/util-core.js}"></script>
 <script th:src="@{/js/util/util-ext.js}"></script>
 
 <script th:inline="javascript">
     $UC = {
         ctxPath: /*[[${#httpServletRequest.getContextPath()}]]*/ null,
-        ctxStatic: /*[[${#httpServletRequest.getContextPath()}]]*/ null
+        ctxStatic: /*[[${#httpServletRequest.getContextPath()}]]*/ null,
+        wsUrl:[[${session.wsUrl}]]
     };
 </script>
 

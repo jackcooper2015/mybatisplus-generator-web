@@ -6,11 +6,25 @@
 <th:block layout:fragment="head">
     <!--页面自定义样式-->
     <style>
+        body{
+            overflow-y:hidden;
+        }
         /** style */
+        .wraper {
+            height: 1280px;
+            overflow: hidden;
+            overflow-y: auto;
+        }
+        .back-ball {
+            color: #fff;
+            border-radius: 22px;
+            padding: 10px;
+        }
     </style>
 </th:block>
 <!-- content -->
 <th:block layout:fragment="content">
+    <div class="wraper">
     <el-row>
         <el-button :disabled="data_group.multipleSelection.length === 0" type="danger" @click="openDialog" plain>批量生成代码</el-button>
     </el-row>
@@ -137,6 +151,8 @@
         </div>
     </el-dialog>
 
+    <el-backtop target=".wraper"></el-backtop>
+    </div>
 </th:block>
 
 <!-- js -->

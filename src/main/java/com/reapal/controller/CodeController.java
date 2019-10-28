@@ -20,14 +20,19 @@ import com.reapal.utils.ZipFileUtils;
 import org.apache.tools.zip.ZipOutputStream;
 import org.hibernate.criterion.Example;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,13 +50,21 @@ public class CodeController extends BaseController{
 	private DbConfigDao dbConfigDao;
 
 	@Autowired
+	private Environment env;
+
+
+	@Autowired
 	private TableStrategyConfigDao tableStrategyConfigDao;
 
 	@RequestMapping("/index")
-	public String init(){
+	public String init(HttpServletRequest request) throws UnknownHostException {
 		if(request.getSession().getAttribute("user") == null){
 			return "redirect:/login";
 		}
+		final String hostAddress = InetAddress.getLocalHost().getHostAddress();
+		String port = env.getProperty("server.port");
+		final HttpSession session = request.getSession();
+		session.setAttribute("wsUrl","ws://"+hostAddress+":"+port+"/chat");
 		return "/views/index/index";
 	}
 
