@@ -18,7 +18,6 @@ import com.reapal.service.CodeService;
 import com.reapal.utils.FileUtils;
 import com.reapal.utils.ZipFileUtils;
 import org.apache.tools.zip.ZipOutputStream;
-import org.hibernate.criterion.Example;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
@@ -33,10 +32,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Controller
@@ -240,7 +236,8 @@ public class CodeController extends BaseController{
 		AutoGenerator mpg = new AutoGenerator();
 		// 全局配置
 		GlobalConfig gc = new GlobalConfig();
-		gc.setOutputDir(request.getSession().getServletContext().getRealPath("/")+"/WEB-INF/upload/"+request.getSession().getId());
+		String outPutDir = request.getSession().getServletContext().getRealPath("/") + "/WEB-INF/upload/" + request.getSession().getId();
+		gc.setOutputDir(outPutDir);
 		gc.setFileOverride(true);
 		gc.setActiveRecord(true);
 		gc.setEnableCache(false);// XML 二级缓存
@@ -299,15 +296,40 @@ public class CodeController extends BaseController{
 		pc.setController(tableStrategyConfig.getControllerPackage());
 
 		mpg.setPackageInfo(pc);
+
 		// 注入自定义配置，可以在 VM 中使用 cfg.abc 设置的值
 		InjectionConfig cfg = new InjectionConfig() {
+
+			void initFileOutConfigList(){
+				FileOutConfig fpage = new FileOutConfig("/templates/gen-template/page.html.vm") {
+					@Override
+					public String outputFile(com.baomidou.mybatisplus.generator.config.po.TableInfo tableInfo) {
+						//设置文件名
+						final String fname = tableInfo.getName().replaceAll("_", "-" ).toLowerCase();
+						return outPutDir + File.separator + "resource" + File.separator + "templates" + File.separator + "views" + File.separator + fname + ".html";
+					}
+				};
+				FileOutConfig fjs = new FileOutConfig("/templates/gen-template/page.js.vm") {
+					@Override
+					public String outputFile(com.baomidou.mybatisplus.generator.config.po.TableInfo tableInfo) {
+						//设置文件名
+						final String fname = tableInfo.getName().replaceAll("_", "-" ).toLowerCase();
+						return outPutDir + File.separator + "resource" + File.separator + "static"+File.separator+"js" + File.separator + fname + ".js";
+					}
+				};
+				List<FileOutConfig> list = new ArrayList<>(Collections.emptyList());
+				list.add(fpage);
+				list.add(fjs);
+				this.setFileOutConfigList(list);
+			}
+
 			@Override
 			public void initMap() {
 				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("abc", this.getConfig().getGlobalConfig().getAuthor() + "-mp");
 				map.put("entityLombokModel",true);
 				map.put("restControllerStyle",true);
 				this.setMap(map);
+				this.initFileOutConfigList();
 			}
 		};
 		mpg.setCfg(cfg);
@@ -323,9 +345,6 @@ public class CodeController extends BaseController{
 		mpg.setTemplate(tc);
 		// 执行生成
 		mpg.execute();
-		// 打印注入设置
-		System.err.println(mpg.getCfg().getMap().get("abc"));
-
 		//打包下载
 		response.setContentType("APPLICATION/OCTET-STREAM");
 		response.setHeader("Content-Disposition","attachment; filename=src.zip");

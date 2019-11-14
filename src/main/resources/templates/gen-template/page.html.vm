@@ -1,0 +1,134 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorator="layouts/default">
+<th:block layout:fragment="title">
+    $!{table.comment}-页面
+</th:block>
+<!-- head -->
+<th:block layout:fragment="head">
+    <!--页面自定义样式-->
+    <style>
+        /** style */
+    </style>
+</th:block>
+<!-- content -->
+<th:block layout:fragment="content">
+
+    <el-collapse v-model="search_group.active" class="ui-collapse">
+        <el-collapse-item title="查询条件" name="active">
+            <!--搜索区域-->
+            <el-row :gutter="120">
+                <el-form class="ui-container-search2" :model="search_group" ref="search_group" label-width="130px" label-position="left">
+                    <el-col :span="12">
+#if($table.fields.size()%2==0)
+        #set($middle = $table.fields.size()/2)
+    #else
+        #set($middle = $table.fields.size()/2+1)
+#end
+#foreach($field in ${table.fields})
+#if($foreach.index == $middle )
+                    </el-col>
+                    <el-col :span="12">
+#end
+#if(${field.propertyType} == 'OffsetDateTime' || ${field.propertyType} == 'DateTime' || ${field.propertyType} == 'Date' )
+                            <el-form-item label="${field.comment}：" prop="${field.propertyName}List">
+                                <el-date-picker
+                                        clearable
+                                        v-model="search_group.${field.propertyName}List"
+                                        type="datetimerange"
+                                        placeholder="选择起止时间"
+                                        :default-time="['00:00:00', '23:59:59']"
+                                        style="width:100%;"
+                                        :editable="false"
+                                >
+                                </el-date-picker>
+                            </el-form-item>
+#else
+                            <el-form-item label="${field.comment}：" prop="${field.propertyName}">
+                                <el-input v-model="search_group.${field.propertyName}" placeholder="${field.comment}" clearable></el-input>
+                            </el-form-item>
+#end
+#end
+                    </el-col>
+                </el-form>
+            </el-row>
+            <!--按钮区域-->
+            <el-row class="fn-mt10 fn-clear">
+                <el-col>
+                    <el-button @click="query"  type="primary" plain>搜 索</el-button>
+                    <el-button @click="resetForm('search_group')"  plain>重 置</el-button>
+                </el-col>
+            </el-row>
+        </el-collapse-item>
+    </el-collapse>
+
+
+    <el-collapse v-model="data_group.active" class="ui-collapse">
+        <el-collapse-item title="查询结果" name="active">
+            <!--数据区域-->
+            <el-row class="fn-clear">
+                <el-col class="fn-tal" :span="18">
+                    <el-button @click="openDialog('new')" type="primary" plain>添加</el-button>
+                    <el-button @click="openDialog('edit')" :disabled="data_group.multipleSelection.length != 1" type="primary" plain>编辑</el-button>
+                    <el-button @click="openDialog('delete')" :disabled="data_group.multipleSelection.length <= 0" type="primary" plain>删除</el-button>
+                </el-col>
+                <!--
+                <el-col class="fn-tar" :span="6">
+                    <el-button @click="doExportExcel()" plain>导 出</el-button>
+                    <el-button @click="commonOpenExcelDialog()" plain>导出设置</el-button>
+                </el-col>
+                -->
+            </el-row>
+
+            <el-table fixed class="fn-mt10" :data="data_group.list" border highlight-current-row @selection-change="onSelectionChange">
+                <el-table-column align="center" type="selection" width="55"></el-table-column>
+#foreach($field in ${table.fields})
+#if(${field.propertyType} == 'OffsetDateTime' || ${field.propertyType} == 'DateTime' || ${field.propertyType} == 'Date' )
+                    <el-table-column sortable prop="${field.propertyName}" label="${field.comment}" align="center" min-width="180" show-overflow-tooltip="true">
+                        <template scope="scope">
+                            #[[ {{$UF.date.formatLongFromString(scope.row.]]# $!{field.propertyName} #[[)}} ]]#
+                        </template>
+                    </el-table-column>
+#else
+                    <el-table-column sortable prop="${field.propertyName}" label="${field.comment}" align="center" min-width="180" show-overflow-tooltip="true"></el-table-column>
+#end
+#end
+            </el-table>
+            <!-- 分页区域 -->
+            <el-pagination class="fn-mt25" :total="data_group.pagination.total" :current-page="data_group.pagination.index" :page-sizes="[10, 30, 50, 100]"
+                           :page-size="data_group.pagination.size" layout="->,total, sizes, prev, pager, next, jumper" @current-change="onCurrentPageChange" @size-change="onPageSizeChange">
+            </el-pagination>
+        </el-collapse-item>
+    </el-collapse>
+
+
+    <!-- 新建/编辑弹出框start -->
+    <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" width="50%">
+        <el-form label-width="150px" :model="form" :rules="rules" ref="form" label-position="right">
+#foreach($field in ${table.fields})
+#if(${field.propertyType} == 'OffsetDateTime' || ${field.propertyType} == 'DateTime' || ${field.propertyType} == 'Date' )
+            <el-form-item class="fn-ml30" label="${field.comment}：" prop="${field.propertyName}">
+                <el-date-picker style="width:100%;" v-model="form.${field.propertyName}" type="date" placeholder="选择日期" :disabled="false"></el-date-picker>
+            </el-form-item>
+#else
+            <el-form-item class="fn-ml30" label="${field.comment}：" prop="${field.propertyName}">
+                <el-input v-model="form.${field.propertyName}" ></el-input>
+            </el-form-item>
+#end
+#end
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="submitForm('form')">确 定</el-button>
+        </div>
+    </el-dialog>
+    <!-- 新建/编辑弹出框end   -->
+
+
+</th:block>
+
+<!-- js -->
+<th:block layout:fragment="js">
+    <!--页面js-->
+    #set($kebabName = $table.name.replace('_','-'))
+    <script th:src="@{/js/${kebabName}.js}"></script>
+</th:block>
+</html>

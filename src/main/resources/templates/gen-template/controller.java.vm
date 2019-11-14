@@ -1,13 +1,16 @@
 package ${package.Controller};
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import org.springframework.util.StringUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import com.chehejia.framework.beans.model.Response;
+import com.chehejia.framework.beans.model.page.PageParam;
+import com.chehejia.framework.beans.model.page.PageResult;
 import ${package.Service}.${table.serviceName};
 import ${package.Entity}.${entity};
 import java.util.*;
@@ -33,7 +36,8 @@ import ${superControllerClassPackage};
 #else
 @Controller
 #end
-@RequestMapping("#if(${package.ModuleName})/${package.ModuleName}#end/#if(${controllerMappingHyphenStyle})${controllerMappingHyphen}#else${table.entityPath}#end")
+#set($kebabName = $table.name.replace('_','-'))
+@RequestMapping("/${kebabName}")
 #if(${kotlin})
 class ${table.controllerName}#if(${superControllerClass}) : ${superControllerClass}()#end
 
@@ -52,52 +56,88 @@ public class ${table.controllerName} {
     #set($lowrEntity = $table.entityName.substring(0,1).toLowerCase() + $table.entityName.substring(1,$table.entityName.length()))
 
     /**
+    * 通过id查询
+    */
+    @GetMapping("/get-by-id/{id}")
+    public Response getById(@PathVariable(value = "id") Integer id){
+        return Response.success(${lowerCaseServiceName}.getById(id));
+    }
+
+    /**
     * 新增
     */
-    @PostMapping
-    public boolean save(${table.entityName} ${lowrEntity}){
-        return ${lowerCaseServiceName}.save(${lowrEntity});
+    @PostMapping("/save")
+    public Response save(@RequestBody ${table.entityName} ${lowrEntity}){
+        ${lowerCaseServiceName}.save(${lowrEntity});
+        return Response.success();
     }
 
     /**
     * 通过id删除
     */
-    @DeleteMapping
-    public boolean delete(${table.entityName} ${lowrEntity}){
-        return ${lowerCaseServiceName}.removeById(${lowrEntity}.getId());
+    @DeleteMapping("/delete-by-id/{id}")
+    public Response delete(@PathVariable(value = "id") String ids){
+        String[] idsStrs = ids.split(",");
+        for (String id:idsStrs){
+            ${lowerCaseServiceName}.removeById(Integer.parseInt(id));
+        }
+        return Response.success();
     }
 
     /**
     * 修改
     */
-    @PutMapping
-    public boolean updateById(${table.entityName} ${lowrEntity}){
-        return ${lowerCaseServiceName}.updateById(${lowrEntity});
+    @PutMapping("/update")
+    public Response updateById(@RequestBody ${table.entityName} ${lowrEntity}){
+        ${lowerCaseServiceName}.updateById(${lowrEntity});
+        return Response.success();
     }
 
 
     /**
     * 查询列表
     */
-    @GetMapping("/list")
-    public List<${table.entityName}> list(${table.entityName} ${lowrEntity} ){
-        QueryWrapper<${table.entityName}> wp = new QueryWrapper<>();
-        //todo init wp
-        return ${lowerCaseServiceName}.list(wp);
+    @PostMapping("/list")
+    public Response list(@RequestBody ${table.entityName} ${lowrEntity} ){
+    final LambdaQueryWrapper<${table.entityName}> lambda = new QueryWrapper<${table.entityName}>().lambda();
+        this.buildCondition(lambda,${lowrEntity});
+        return Response.success(${lowerCaseServiceName}.list(lambda));
     }
 
     /**
     * 分页查询
     */
-    @GetMapping("/page")
-    public PageInfo<${table.entityName}> page(int pageNum, int pageSize, ${table.entityName} ${lowrEntity}){
-        // PageHelper插件分页
-        PageHelper.startPage(pageNum, pageSize);
-        QueryWrapper<${table.entityName}> wp = new QueryWrapper<>();
-        //todo init wp
-        PageInfo<${table.entityName}> pageResult = new PageInfo<>(${lowerCaseServiceName}.list(wp));
-        return pageResult;
+    @PostMapping("/page")
+    public Response page(@RequestBody PageParam<${table.entityName}> pageParam){
+        final ${table.entityName} param = pageParam.getParam();
+        final LambdaQueryWrapper<${table.entityName}> lambda = new QueryWrapper<${table.entityName}>().lambda();
+        this.buildCondition(lambda,param);
+        final IPage<${table.entityName}> page = ${lowerCaseServiceName}.page(new Page<>(pageParam.getPageNo(), pageParam.getPageSize()), lambda);
+        PageResult<${table.entityName}> pr = new PageResult();
+        pr.setPageCount(page.getPages());
+        pr.setTotalCount(page.getTotal());
+        pr.setPageNo(new Long(page.getCurrent()).intValue());
+        pr.setPageSize((int) page.getSize());
+        pr.setResults(page.getRecords());
+        return Response.success(pr);
     }
+
+
+        /**
+        * 构造查询条件
+        * @param lambda
+        * @param param
+        */
+        private void buildCondition(LambdaQueryWrapper<${table.entityName}> lambda, ${table.entityName} param){
+#foreach($field in ${table.fields})
+#if($field.name != 'id')
+#set($upperFieldName = $field.propertyName.substring(0,1).toUpperCase() + $field.propertyName.substring(1,$field.propertyName.length()))
+            if(!StringUtils.isEmpty(param.get${upperFieldName}())){
+                lambda.eq(${table.entityName}::get${upperFieldName}, param.get${upperFieldName}());
+            }
+#end
+#end
+        }
 
 
 }
