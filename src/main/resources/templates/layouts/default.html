@@ -5,6 +5,7 @@
     <title> -- 车和家</title>
     <link rel="stylesheet" th:href="@{/css/element-ui.css }"/>
     <link rel="stylesheet" th:href="@{/css/util.css}"/>
+    <link rel="stylesheet" th:href="@{/css/animate.css}">
     <th:block layout:fragment="head">
         this is head!
     </th:block>
@@ -17,7 +18,7 @@
 
 <!--content -->
 <div id="app" class="ui-content fn-mt20" v-cloak v-loading="loading">
-    <el-card class="box-card">
+    <el-card class="box-card animated lightSpeedIn">
     <th:block layout:fragment="content">
         this is content!
     </th:block>
