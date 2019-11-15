@@ -36,6 +36,7 @@
                                         type="datetimerange"
                                         placeholder="选择起止时间"
                                         :default-time="['00:00:00', '23:59:59']"
+                                        value-format="yyyy-MM-dd HH:mm:ss"
                                         style="width:100%;"
                                         :editable="false"
                                 >

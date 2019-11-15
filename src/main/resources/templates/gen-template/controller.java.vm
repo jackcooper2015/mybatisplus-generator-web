@@ -7,13 +7,16 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.chehejia.framework.beans.model.Response;
 import com.chehejia.framework.beans.model.page.PageParam;
 import com.chehejia.framework.beans.model.page.PageResult;
+import org.springframework.util.CollectionUtils;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import ${package.Service}.${table.serviceName};
 import ${package.Entity}.${entity};
 import java.util.*;
+import lombok.Data;
 
 #if(${cfg.restControllerStyle})
 #else
@@ -98,7 +101,7 @@ public class ${table.controllerName} {
     * 查询列表
     */
     @PostMapping("/list")
-    public Response list(@RequestBody ${table.entityName} ${lowrEntity} ){
+    public Response list(@RequestBody ${table.entityName}ReqVo ${lowrEntity} ){
     final LambdaQueryWrapper<${table.entityName}> lambda = new QueryWrapper<${table.entityName}>().lambda();
         this.buildCondition(lambda,${lowrEntity});
         return Response.success(${lowerCaseServiceName}.list(lambda));
@@ -108,8 +111,8 @@ public class ${table.controllerName} {
     * 分页查询
     */
     @PostMapping("/page")
-    public Response page(@RequestBody PageParam<${table.entityName}> pageParam){
-        final ${table.entityName} param = pageParam.getParam();
+    public Response page(@RequestBody PageParam<${table.entityName}ReqVo> pageParam){
+        final ${table.entityName}ReqVo param = pageParam.getParam();
         final LambdaQueryWrapper<${table.entityName}> lambda = new QueryWrapper<${table.entityName}>().lambda();
         this.buildCondition(lambda,param);
         final IPage<${table.entityName}> page = ${lowerCaseServiceName}.page(new Page<>(pageParam.getPageNo(), pageParam.getPageSize()), lambda);
@@ -128,18 +131,39 @@ public class ${table.controllerName} {
         * @param lambda
         * @param param
         */
-        private void buildCondition(LambdaQueryWrapper<${table.entityName}> lambda, ${table.entityName} param){
+        private void buildCondition(LambdaQueryWrapper<${table.entityName}> lambda, ${table.entityName}ReqVo param){
 #foreach($field in ${table.fields})
 #if($field.name != 'id')
 #set($upperFieldName = $field.propertyName.substring(0,1).toUpperCase() + $field.propertyName.substring(1,$field.propertyName.length()))
+#if(${field.propertyType} == 'OffsetDateTime' || ${field.propertyType} == 'DateTime' || ${field.propertyType} == 'Date' )
+            if(!CollectionUtils.isEmpty(param.get${upperFieldName}List())){
+                lambda.ge(${table.entityName}::get${upperFieldName}, param.get${upperFieldName}List().get(0));
+                lambda.le(${table.entityName}::get${upperFieldName}, param.get${upperFieldName}List().get(1));
+            }
+#else
             if(!StringUtils.isEmpty(param.get${upperFieldName}())){
                 lambda.eq(${table.entityName}::get${upperFieldName}, param.get${upperFieldName}());
             }
+#end
+#end
+#end
+        }
+
+
+        /**
+         * 请求model
+         */
+        @Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        private static class ${table.entityName}ReqVo extends ${table.entityName} {
+#foreach($field in ${table.fields})
+#if(${field.propertyType} == 'OffsetDateTime' || ${field.propertyType} == 'DateTime' || ${field.propertyType} == 'Date' )
+            private List<String> ${field.propertyName}List; // ${field.comment}起止
 #end
 #end
         }
 
 
 }
-
 #end

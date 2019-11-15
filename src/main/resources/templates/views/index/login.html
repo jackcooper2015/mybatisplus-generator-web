@@ -35,17 +35,17 @@
         <br>
         <br>
         <el-form ref="form" :model="form" label-width="0px">
-            <el-form-item class="animated bounceInDown">
+            <el-form-item class="animated bounceInLeft">
                 <el-input pl v-model="form.username" placeholder="用户名"></el-input>
             </el-form-item>
-            <el-form-item class="animated bounceInUp">
+            <el-form-item class="animated bounceInLeft">
                 <el-input type="password" v-model="form.password" placeholder="密码"></el-input>
             </el-form-item>
             <el-form-item class="animated rubberBand">
                 <el-button type="primary" @click="onSubmit">登录</el-button>
             </el-form-item>
             <el-form-item>
-                <label style="font-weight: bold;color:white;" class="animated infinite flipOutY">author: jack-cooper</label>
+                <label style="font-weight: bold;color:white;" class="animated wobble">author: jack-cooper</label>
             </el-form-item>
         </el-form>
     </div>
