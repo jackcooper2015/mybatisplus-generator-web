@@ -85,7 +85,7 @@
 #if(${field.propertyType} == 'OffsetDateTime' || ${field.propertyType} == 'DateTime' || ${field.propertyType} == 'Date' )
                     <el-table-column sortable prop="${field.propertyName}" label="${field.comment}" align="center" min-width="180" show-overflow-tooltip="true">
                         <template scope="scope">
-                            #[[ {{$UF.date.formatLongFromString(scope.row.]]# $!{field.propertyName} #[[)}} ]]#
+                            #[[ {{$UF.date.formatLongFromString(scope.row.]]#$!{field.propertyName}#[[)}} ]]#
                         </template>
                     </el-table-column>
 #else
@@ -111,7 +111,7 @@
             </el-form-item>
 #else
             <el-form-item class="fn-ml30" label="${field.comment}：" prop="${field.propertyName}">
-                <el-input v-model="form.${field.propertyName}" ></el-input>
+                <el-input v-model="form.${field.propertyName}" prop="${field.propertyName}"></el-input>
             </el-form-item>
 #end
 #end
