@@ -133,7 +133,6 @@ public class ${table.controllerName} {
         */
         private void buildCondition(LambdaQueryWrapper<${table.entityName}> lambda, ${table.entityName}ReqVo param){
 #foreach($field in ${table.fields})
-#if($field.name != 'id')
 #set($upperFieldName = $field.propertyName.substring(0,1).toUpperCase() + $field.propertyName.substring(1,$field.propertyName.length()))
 #if(${field.propertyType} == 'OffsetDateTime' || ${field.propertyType} == 'DateTime' || ${field.propertyType} == 'Date' )
             if(!CollectionUtils.isEmpty(param.get${upperFieldName}List())){
@@ -144,7 +143,6 @@ public class ${table.controllerName} {
             if(!StringUtils.isEmpty(param.get${upperFieldName}())){
                 lambda.eq(${table.entityName}::get${upperFieldName}, param.get${upperFieldName}());
             }
-#end
 #end
 #end
         }
