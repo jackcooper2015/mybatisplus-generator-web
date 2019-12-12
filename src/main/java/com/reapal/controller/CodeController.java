@@ -264,6 +264,7 @@ public class CodeController extends BaseController{
             strategy.setTablePrefix(tableStrategyConfig.getPrefix());
 		}
 		strategy.setInclude(tableStrategyConfig.getTableName().split(",")); // 需要生成的表
+		strategy.setLogicDeleteFieldName("is_delete");
 		// strategy.setExclude(new String[]{"test"}); // 排除生成的表
 		// 字段名生成策略
 		strategy.setNaming(NamingStrategy.underline_to_camel);

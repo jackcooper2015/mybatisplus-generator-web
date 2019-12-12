@@ -145,6 +145,7 @@ public class ${table.controllerName} {
             }
 #end
 #end
+            lambda.orderBy(true,false, ${table.entityName}::getId);
         }
 
 

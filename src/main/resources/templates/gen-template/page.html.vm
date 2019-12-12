@@ -54,7 +54,7 @@
             <!--按钮区域-->
             <el-row class="fn-mt10 fn-clear">
                 <el-col>
-                    <el-button @click="query"  type="primary" plain>搜 索</el-button>
+                    <el-button @click="query(1)"  type="primary" plain>搜 索</el-button>
                     <el-button @click="resetForm('search_group')"  plain>重 置</el-button>
                 </el-col>
             </el-row>
@@ -111,7 +111,7 @@
             </el-form-item>
 #else
             <el-form-item class="fn-ml30" label="${field.comment}：" prop="${field.propertyName}">
-                <el-input v-model="form.${field.propertyName}" prop="${field.propertyName}"></el-input>
+                <el-input v-model="form.${field.propertyName}" maxlength="" prop="${field.propertyName}"></el-input>
             </el-form-item>
 #end
 #end

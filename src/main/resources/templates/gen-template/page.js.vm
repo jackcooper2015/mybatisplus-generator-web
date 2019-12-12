@@ -86,7 +86,7 @@
                 _this.data_group.pagination.size=size;
                 this.query();
             },
-            query: function () {
+            query: function (pageNo) {
                 var _this = this;
                 //清空选中的数据
                 _this.data_group.multipleSelection="";
@@ -94,6 +94,9 @@
                 var vinStr = $UF.getTextAreaArray(_this.search_group.vinListStr);
                 if (vinStr.length > 0) {
                     _this.search_group.vinList = (vinStr).split(",");
+                }
+                if(!!pageNo){
+                    _this.data_group.pagination.index = pageNo;
                 }
                 //请求参数
                 var req = {
