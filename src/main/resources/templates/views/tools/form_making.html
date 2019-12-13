@@ -1,0 +1,42 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorator="/layouts/default">
+<th:block layout:fragment="title">
+    MarkDown在线编辑器
+</th:block>
+<!-- head -->
+<th:block layout:fragment="head">
+    <!--页面自定义样式-->
+    <link th:href="@{/js/plugins/vue-form-making/FormMaking.css}" rel="stylesheet" type="text/css">
+    <style>
+        /** style */
+    </style>
+</th:block>
+<!-- content -->
+<th:block layout:fragment="content">
+    <fm-making-form style="height: 600px;" preview generate-code generate-json>
+    </fm-making-form>
+</th:block>
+
+<!-- js -->
+<th:block layout:fragment="js">
+
+    <script type="text/javascript" th:src="@{/js/plugins/vue-form-making/FormMaking.umd.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/vue-form-making/ace.js}"></script>
+    <script>
+        $UU.init({
+            data:{
+                loading:false,
+                content:''
+            },
+            created: function () {
+
+            },
+            mounted: function () {
+            },
+            methods:{
+
+            }
+        });
+    </script>
+
+</th:block>
+</html>

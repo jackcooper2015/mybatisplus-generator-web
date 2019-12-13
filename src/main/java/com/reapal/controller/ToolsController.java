@@ -42,4 +42,9 @@ public class ToolsController extends BaseController {
         return "/views/tools/online_chat";
     }
 
+    @GetMapping(value = "/to-form-making")
+    public String toFormMaking(){
+        return "/views/tools/form_making";
+    }
+
 }
