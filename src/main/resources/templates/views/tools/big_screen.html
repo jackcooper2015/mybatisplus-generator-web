@@ -1,0 +1,61 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorator="/layouts/default">
+<th:block layout:fragment="title">
+    大屏
+</th:block>
+<!-- head -->
+<th:block layout:fragment="head">
+    <!--页面自定义样式-->
+    <style>
+        html, body, #app {
+            width: 100%;
+            height: 100%;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .border-box-content {
+            color: rgb(66,185,131);
+            font-size: 40px;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+    </style>
+</th:block>
+<!-- content -->
+<th:block layout:fragment="content">
+    <dv-full-screen-container>
+        <dv-border-box-11 title="理想大盘">
+<!--            <dv-loading>Loading...</dv-loading>-->
+            <dv-decoration-5 style="width:300px;height:40px;" />
+        </dv-border-box-11>
+    </dv-full-screen-container>
+</th:block>
+
+<!-- js -->
+<th:block layout:fragment="js">
+
+    <script th:src="@{/js/util/vue.js}"></script>
+    <!--调试版-->
+    <script type="text/javascript" th:src="@{/js/util/datav.min.vue.js}"></script>
+    <script>
+        $UU.init({
+            data:{
+                loading:false,
+                content:''
+            },
+            created: function () {
+
+            },
+            mounted: function () {
+            },
+            methods:{
+
+            }
+        });
+    </script>
+
+</th:block>
+</html>

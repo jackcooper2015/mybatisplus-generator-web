@@ -47,4 +47,10 @@ public class ToolsController extends BaseController {
         return "/views/tools/form_making";
     }
 
+
+    @GetMapping(value = "/to-big-screen")
+    public String toBigScreen(){
+        return "/views/tools/big_screen";
+    }
+
 }
