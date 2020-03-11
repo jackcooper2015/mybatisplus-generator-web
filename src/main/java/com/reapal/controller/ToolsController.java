@@ -53,4 +53,10 @@ public class ToolsController extends BaseController {
         return "/views/tools/big_screen";
     }
 
+    @GetMapping(value = "/to-vchart")
+    public String toViser(){
+        return "/views/tools/vchart_demo";
+    }
+
+
 }

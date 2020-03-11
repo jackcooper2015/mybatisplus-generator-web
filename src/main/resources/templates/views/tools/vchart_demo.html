@@ -1,0 +1,81 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorator="/layouts/default">
+<th:block layout:fragment="title">
+    大屏
+</th:block>
+<!-- head -->
+<th:block layout:fragment="head">
+    <link th:href="@{/js/plugins/v-chart/v-charts.min.css}" rel="stylesheet" type="text/css">
+    <!--页面自定义样式-->
+    <style>
+
+    </style>
+</th:block>
+<!-- content -->
+<th:block layout:fragment="content">
+    <el-row>
+       <el-col :span="12">
+           <ve-line :data="chartData"></ve-line>
+       </el-col>
+        <el-col :span="12">
+            <ve-histogram :data="chartData"></ve-histogram>
+        </el-col>
+    </el-row>
+    <el-row>
+        <el-col :span="12">
+            <ve-bar :data="chartData"></ve-bar>
+        </el-col>
+        <el-col :span="12">
+            <ve-pie :data="chartData"></ve-pie>
+        </el-col>
+    </el-row>
+    <el-row>
+        <el-col :span="12">
+            <ve-ring :data="chartData"></ve-ring>
+        </el-col>
+        <el-col :span="12">
+            <ve-waterfall :data="chartData"></ve-waterfall>
+        </el-col>
+    </el-row>
+    <el-row>
+        <el-col :span="12">
+            <ve-funnel :data="chartData"></ve-funnel>
+        </el-col>
+        <el-col :span="12">
+            <ve-radar :data="chartData"></ve-radar>
+        </el-col>
+    </el-row>
+</th:block>
+
+<!-- js -->
+<th:block layout:fragment="js">
+    <script type="text/javascript" th:src="@{/js/plugins/v-chart/echarts.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/v-chart/v-charts.min.js}"></script>
+    <script>
+        $UU.init({
+            data:{
+                loading:false,
+                chartData: {
+                    columns: ['日期', '销售额'],
+                    rows: [
+                        { '日期': '1月1日', '销售额': 123 },
+                        { '日期': '1月2日', '销售额': 1223 },
+                        { '日期': '1月3日', '销售额': 2123 },
+                        { '日期': '1月4日', '销售额': 4123 },
+                        { '日期': '1月5日', '销售额': 3123 },
+                        { '日期': '1月6日', '销售额': 7123 }
+                    ]
+                }
+            },
+            created: function () {
+
+            },
+            mounted: function () {
+            },
+            methods:{
+
+            }
+        });
+    </script>
+
+</th:block>
+</html>
