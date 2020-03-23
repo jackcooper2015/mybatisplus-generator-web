@@ -58,5 +58,10 @@ public class ToolsController extends BaseController {
         return "/views/tools/vchart_demo";
     }
 
+    @GetMapping(value = "/to-code-diff")
+    public String toCodeDiff(){
+        return "/views/tools/code-diff";
+    }
+
 
 }
