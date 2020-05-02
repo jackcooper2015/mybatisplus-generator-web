@@ -10,7 +10,8 @@ body {
     background-size: 100% 100%;
     background-position: center center;
     background-repeat: no-repeat;
-    background-image: url(https://img.alicdn.com/imgextra/i3/840020522/TB22bUNqhtmpuFjSZFqXXbHFpXa_!!840020522.jpg);
+    background-color: rgb(17, 17, 17);
+    /*background-image: url(https://img.alicdn.com/imgextra/i3/840020522/TB22bUNqhtmpuFjSZFqXXbHFpXa_!!840020522.jpg);*/
     -webkit-transition: all .3s ease-out;
     -moz-transition: all .3s ease-out;
     -ms-transition: all .3s ease-out;

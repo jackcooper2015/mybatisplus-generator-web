@@ -7,13 +7,14 @@
     <title>HTML5 可视化音乐播放器</title>
     <link type="text/css" rel="stylesheet" th:href="@{/js/plugins/player/main.css}">
     <link th:href="@{/js/plugins/player/player.min.css}" rel="stylesheet" type="text/css">
-    <script type="text/javascript" th:src="@{/js/plugins/player/player.min.js}"></script>
 </head>
 
 <body>
-<div class="play-box">
-    <player></player>
-    <div class="player-tips"></div>
+<div id="particles-js">
+    <div class="play-box">
+        <player></player>
+        <div class="player-tips"></div>
+    </div>
 </div>
 </body>
 
@@ -21,6 +22,9 @@
 <script th:src="@{/js/util/moment.js}"></script>
 <script th:src="@{/js/util/vue.js}"></script>
 <script th:src="@{/js/util/vue-resource.js}"></script>
+<script type="text/javascript" th:src="@{/js/plugins/player/player.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/plugins/particles/particles.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/plugins/particles/app.js}"></script>
 <script type="text/javascript">
     var player = new Player();
     player.init({
