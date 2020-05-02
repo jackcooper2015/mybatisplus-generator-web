@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HTML5 可视化音乐播放器</title>
     <link type="text/css" rel="stylesheet" th:href="@{/js/plugins/player/main.css}">
-    <link th:href="@{/js/plugins/player/player.min.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/player/player.css}" rel="stylesheet" type="text/css">
 </head>
 
 <body>
@@ -22,7 +22,7 @@
 <script th:src="@{/js/util/moment.js}"></script>
 <script th:src="@{/js/util/vue.js}"></script>
 <script th:src="@{/js/util/vue-resource.js}"></script>
-<script type="text/javascript" th:src="@{/js/plugins/player/player.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/plugins/player/player.js}"></script>
 <script type="text/javascript" th:src="@{/js/plugins/particles/particles.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/plugins/particles/app.js}"></script>
 <script type="text/javascript">
@@ -67,11 +67,14 @@
                 let t = response.data;
                 let songid = t.url.split("?")[1].split("=")[1].split(".")[0];
                 let url = getMp3Url(songid);
+                let lyric = getLyric(songid);
                 list.push({
                     title: t.name,//音乐标题
                     album: "",//所属专辑
                     artist: t.artistsname,//艺术家
                     mp3: url,//音乐路径
+                    songid:songid,
+                    lyric:lyric
                 })
             },
             error: function (xhr, errorType, error) {
@@ -102,6 +105,26 @@
         });
         return url;
     }
+
+    function getLyric(songId){
+        let lyric = '';
+        $.ajax({
+            url: 'https://api.imjad.cn/cloudmusic/?type=lyric&id='+songId,
+            type: 'get',
+            async:false,
+            dataType: 'json',
+            success: function (response) {
+                console.log("===>result", response);
+                let t = response.lrc;
+                lyric = t.lyric;
+            },
+            error: function (xhr, errorType, error) {
+                alert('Ajax request error, errorType: ' + errorType + ', error: ' + error)
+            }
+        });
+        return lyric;
+    }
+
 </script>
 
 </html>
