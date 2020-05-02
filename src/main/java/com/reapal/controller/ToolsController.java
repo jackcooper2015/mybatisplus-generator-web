@@ -64,4 +64,10 @@ public class ToolsController extends BaseController {
     }
 
 
+    @GetMapping(value = "/to-music")
+    public String toMusic(){
+        return "/views/tools/mp3_player";
+    }
+
+
 }

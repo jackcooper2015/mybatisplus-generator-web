@@ -1,0 +1,103 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="HTML5VisualizationPlayer">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML5 可视化音乐播放器</title>
+    <link type="text/css" rel="stylesheet" th:href="@{/js/plugins/player/main.css}">
+    <link th:href="@{/js/plugins/player/player.min.css}" rel="stylesheet" type="text/css">
+    <script type="text/javascript" th:src="@{/js/plugins/player/player.min.js}"></script>
+</head>
+
+<body>
+<div class="play-box">
+    <player></player>
+    <div class="player-tips"></div>
+</div>
+</body>
+
+<script th:src="@{/js/util/jquery.js}"></script>
+<script th:src="@{/js/util/moment.js}"></script>
+<script th:src="@{/js/util/vue.js}"></script>
+<script th:src="@{/js/util/vue-resource.js}"></script>
+<script type="text/javascript">
+    var player = new Player();
+    player.init({
+        autoPlay: true,//自动播放
+        // effect: 0,//频谱效果,不设置或0为随机变化,1为条形柱状,2为环状声波,3 心电图效果
+        color: null,//颜色 color:16进制颜色代码,不设置或设置为空(空字符或null)将随机使用默认颜色
+        button: {//设置生成的控制按钮,不设置button默认全部创建
+            prev: true,//上一首
+            play: true,//播放,暂停
+            next: true,//下一首
+            volume: true,//音量
+            progressControl: true,//是否开启进度控制
+        },
+        event: function (e) {
+            //这是一个事件方法,点击控制按钮会到此方法
+            //参数:e.eventType 事件类型
+            //参数:e.describe 事件详情,或参数
+            //e.eventType  prev: 点击上一首,next：点击下一首,play:点击 播放/暂停
+            if(e.eventType==='next'){
+                changeList();
+            }
+            console.log(e);
+        },
+        energy: function (value) {
+            //此时播放的能量值,时刻变化
+            //console.log(value);
+        },
+        playList: changeList()
+    });
+
+    function changeList() {
+        let list = player.playList||[];
+        $.ajax({
+            url: 'https://api.uomg.com/api/rand.music?sort=%E7%83%AD%E6%AD%8C%E6%A6%9C&format=json',
+            type: 'get',
+            async:false,
+            dataType: 'json',
+            success: function (response) {
+                console.log("===>result", response);
+                let t = response.data;
+                let songid = t.url.split("?")[1].split("=")[1].split(".")[0];
+                let url = getMp3Url(songid);
+                list.push({
+                    title: t.name,//音乐标题
+                    album: "",//所属专辑
+                    artist: t.artistsname,//艺术家
+                    mp3: url,//音乐路径
+                })
+            },
+            error: function (xhr, errorType, error) {
+                alert('Ajax request error, errorType: ' + errorType + ', error: ' + error)
+            }
+        });
+        player.playList = list;
+        return list;
+    }
+
+    function getMp3Url(songId){
+        let url = '';
+        $.ajax({
+            url: 'https://api.imjad.cn/cloudmusic/?type=song&id='+songId+'&search_type=1',
+            type: 'get',
+            async:false,
+            dataType: 'json',
+            success: function (response) {
+                console.log("===>result", response);
+                let t = response.data;
+                if(t.length>-1){
+                    url =  t[0].url;
+                }
+            },
+            error: function (xhr, errorType, error) {
+                alert('Ajax request error, errorType: ' + errorType + ', error: ' + error)
+            }
+        });
+        return url;
+    }
+</script>
+
+</html>

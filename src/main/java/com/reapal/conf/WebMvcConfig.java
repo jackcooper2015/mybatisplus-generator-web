@@ -28,6 +28,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.reapal.interceptor.CommonInterceptor;
+import com.reapal.interceptor.CorsInterceptor;
 import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,6 +56,8 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new CorsInterceptor())
+                .addPathPatterns("/**");
         registry.addInterceptor(new CommonInterceptor())
                 .addPathPatterns("/**")
                 .excludePathPatterns("/","/login","/loginOut","/js/**","/css/**","/img/**");
