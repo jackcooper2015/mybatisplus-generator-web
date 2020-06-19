@@ -113,10 +113,13 @@
         <el-form-item>
             <el-button type="text" icon="el-icon-question" @click="onTips">快捷键</el-button>
         </el-form-item>
+        <el-form-item>
+            <el-button type="text" icon="el-icon-video-play" @click="godRun">上帝模式运行groovy代码</el-button>
+        </el-form-item>
 
     </el-form>
     <codemirror ref="myCm"
-                :value="form.code"
+                v-model="form.code"
                 :options="cmOptions"
                 @ready="onCmReady"
                 @focus="onCmFocus"
@@ -516,6 +519,23 @@
                                  '4、<strong>Ctrl-/</strong> 注释代码<br>' +
                                  '5、其他参考<a href="https://discuss.codemirror.net/t/user-manual-in-chinese/1436/4">这里</a>'
                     });
+                },
+                godRun:function () {
+                    let _this = this;
+                    $UU.http.post("/god/run-script",
+                        {script:_this.form.code}
+                        , function (response) {
+                            //获取回调数据
+                            console.log("=========>:",response);
+                        }, {
+                            requestBody: true,
+                            before: function () {
+                                _this.btn_disabled = true;
+                            },
+                            after: function () {
+                                _this.btn_disabled = false;
+                            }
+                        });
                 }
             }
         });
