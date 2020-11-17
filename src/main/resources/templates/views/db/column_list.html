@@ -13,19 +13,17 @@
 <!-- content -->
 <th:block layout:fragment="content">
 
-
-
-            <el-row class="fn-clear">
-                <el-col class="fn-tal" :span="18">
+    <div style="position: relative;text-align: right;">
                     <el-button @click="submitColForm('columnForm')" type="warning" plain>保存</el-button>
                     <el-button :disabled="columnForm.id == null || columnForm.id == ''" @click="download" type="primary" plain>生成代码</el-button>
-                </el-col>
-            </el-row>
+    </div>
+
 
             <el-form :model="columnForm" label-position="right"  label-width="100px">
+                <el-card class="box-card">
                 <el-row>
                     <el-col :span="8" class="fn-pr20">
-                        <el-form-item class="fn-ml30" label="前缀：">
+                        <el-form-item class="fn-ml30" label="去掉表前缀：">
                             <el-input v-model="columnForm.prefix" ></el-input>
                         </el-form-item>
                     </el-col>
@@ -105,7 +103,9 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
+                </el-card>
 
+                <el-card class="box-card fn-mt10">
                 <el-table stripe="true" fixed class="fn-mt10" :data="data_group.list" highlight-current-row
                           @selection-change="onSelectionChange">
                     <el-table-column type="index" width="50"></el-table-column>
@@ -132,6 +132,7 @@
                     <el-table-column prop="defaultValue" label="默认值" align="center" min-width="15%"
                                      show-overflow-tooltip="true"></el-table-column>
                 </el-table>
+                </el-card>
             </el-form>
 
 

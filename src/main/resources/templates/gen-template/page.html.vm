@@ -12,8 +12,7 @@
 <!-- content -->
 <th:block layout:fragment="content">
 
-    <el-collapse v-model="search_group.active" class="ui-collapse">
-        <el-collapse-item title="查询条件" name="active">
+    <el-card class="box-card">
             <!--搜索区域-->
             <el-row :gutter="120">
                 <el-form class="ui-container-search2" :model="search_group" ref="search_group" label-width="130px" label-position="left">
@@ -58,12 +57,9 @@
                     <el-button @click="resetForm('search_group')"  plain>重 置</el-button>
                 </el-col>
             </el-row>
-        </el-collapse-item>
-    </el-collapse>
+    </el-card>
 
-
-    <el-collapse v-model="data_group.active" class="ui-collapse">
-        <el-collapse-item title="查询结果" name="active">
+    <el-card class="box-card fn-mt10">
             <!--数据区域-->
             <el-row class="fn-clear">
                 <el-col class="fn-tal" :span="18">
@@ -97,8 +93,7 @@
             <el-pagination class="fn-mt25" :total="data_group.pagination.total" :current-page="data_group.pagination.index" :page-sizes="[10, 30, 50, 100]"
                            :page-size="data_group.pagination.size" layout="->,total, sizes, prev, pager, next, jumper" @current-change="onCurrentPageChange" @size-change="onPageSizeChange">
             </el-pagination>
-        </el-collapse-item>
-    </el-collapse>
+    </el-card>
 
 
     <!-- 新建/编辑弹出框start -->
