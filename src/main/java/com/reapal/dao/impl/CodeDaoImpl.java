@@ -6,11 +6,14 @@ import com.reapal.model.DbConfig;
 import com.reapal.model.TableInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Repository
 @Slf4j
@@ -47,7 +50,7 @@ public class CodeDaoImpl implements CodeDao {
 						sb.append(" NOT NULL ");
 					}
 					if(!StringUtils.isEmpty(item.getDefaultValue())){
-						if(item.getDefaultValue().equalsIgnoreCase("undefined")) {
+						if(item.getDefaultValue().equalsIgnoreCase("undefined") || hasChinese(item.getDefaultValue())) {
 							sb.append(" DEFAULT '" + item.getDefaultValue() + "' ");
 						}else{
 							sb.append(" DEFAULT " + item.getDefaultValue() + " ");
@@ -238,6 +241,19 @@ public class CodeDaoImpl implements CodeDao {
 			return e.getMessage();
 		}
 		return null;
+	}
+
+
+	/**
+	 * 根据正则表达式判断字符是否为汉字
+	 * 字符串中包含汉字时返回true
+	 */
+	public static boolean hasChinese(String value) {
+		// 汉字的Unicode取值范围
+		String regex = "[\u4e00-\u9fa5]";
+		Pattern pattern = Pattern.compile(regex);
+		Matcher match = pattern.matcher(value);
+		return match.find();
 	}
 
 
