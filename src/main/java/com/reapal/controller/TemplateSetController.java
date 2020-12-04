@@ -1,10 +1,13 @@
 package com.reapal.controller;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.ReflectUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.reapal.dao.TemplateDao;
 import com.reapal.dao.TemplateSetDao;
 import com.reapal.model.Template;
+import com.reapal.model.TemplateCusConf;
 import com.reapal.model.TemplateSet;
 import com.reapal.utils.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +18,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,15 +63,21 @@ public class TemplateSetController extends BaseController {
     @Transactional(rollbackFor = Exception.class)
     public JSONObject save(@RequestBody TemplateSet templateSet) throws IOException {
         templateSetDao.save(templateSet);
-
-        ClassPathResource pathResource = new ClassPathResource("templates"+File.separator+"gen-template");
-        String path = pathResource.getFile().getAbsolutePath();
-        File file = new File(path);
-        File[] files = file.listFiles();
-        assert files != null;
-        List<Template> templates = Arrays.stream(files).map(t -> Template.builder().templateSetId(templateSet.getId()).templateName(t.getName()).content(FileUtil.readString(t, StandardCharsets.UTF_8)).build()).collect(Collectors.toList());
+        TemplateCusConf tcc = new TemplateCusConf();
+        Field[] fields = ReflectUtil.getFields(TemplateCusConf.class);
+        List<Template> templates = new ArrayList<>();
+        for (Field f : fields) {
+            String fieldValue = (String) ReflectUtil.getFieldValue(tcc, f);
+            ClassPathResource rr = new ClassPathResource(fieldValue);
+            InputStream inputStream = rr.getInputStream();
+            templates.add(Template.builder().templateSetId(templateSet.getId()).templateName(getFileNameFromPath(fieldValue)).content(IoUtil.read(inputStream, Charset.defaultCharset())).build());
+        }
         templateDao.save(templates);
         return respJson(0, "", templateSet);
+    }
+
+    private String getFileNameFromPath(String path){
+        return path.substring(path.lastIndexOf("/") + 1);
     }
 
     /**
