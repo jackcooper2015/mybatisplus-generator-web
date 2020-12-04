@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
+import com.baomidou.mybatisplus.generator.engine.VelocityTemplateEngine;
+import com.reapal.conf.CustomerVelocityTemplateEngine;
 import com.reapal.conf.MySqlTypeConvertExt;
 import com.reapal.dao.DbConfigDao;
 import com.reapal.dao.TableStrategyConfigDao;
@@ -301,6 +303,7 @@ public class CodeController extends BaseController{
 
 		mpg.setPackageInfo(pc);
 
+
 		//匹配模板
 		matchTemplateConfig(mpg, outPutDir,tableStrategyConfig);
 
@@ -312,7 +315,7 @@ public class CodeController extends BaseController{
 		try {
 			ZipFileUtils zip = new ZipFileUtils();
 			ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
-			String fileName = request.getSession().getServletContext().getRealPath("/")+"/WEB-INF/upload/"+request.getSession().getId();
+			String fileName = request.getSession().getServletContext().getRealPath("/")+File.separator+"WEB-INF"+File.separator+"upload"+File.separator+request.getSession().getId();
 			File ff = new File(fileName);
 			if(!ff.exists()){
 				ff.mkdirs();
@@ -321,7 +324,7 @@ public class CodeController extends BaseController{
 			zos.flush();
 			zos.close();
 			//删除目录
-			FileUtils.DeleteFolder(request.getSession().getServletContext().getRealPath("/")+"/WEB-INF/upload/"+request.getSession().getId());
+			FileUtils.DeleteFolder(fileName);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -338,10 +341,10 @@ public class CodeController extends BaseController{
 		//系统默认模板
 		TemplateCusConf tcc = new TemplateCusConf();
 		if(tableStrategyConfig.getTemplateSetId()!=null && tableStrategyConfig.getTemplateSetId()>0 ){
+			mpg.setTemplateEngine(new CustomerVelocityTemplateEngine());
 			//在tmp下生成临时文件当模板
 			List<Template> templates = templateDao.findByTemplateSetId(tableStrategyConfig.getTemplateSetId());
-			ClassPathResource resource = new ClassPathResource("templates" + File.separator + "templateTmp"+File.separator);
-			String path = resource.getPath();
+			String path = System.getProperty("java.io.tmpdir");
 			for (Template t : templates) {
 				String fpath = path + t.getTemplateSetId()+ File.separator + t.getTemplateName();
 				if(FileUtil.exist(fpath)){
@@ -379,6 +382,8 @@ public class CodeController extends BaseController{
 					default:
 				}
 			}
+		}else{
+			mpg.setTemplateEngine(new VelocityTemplateEngine());
 		}
 		// 注入自定义配置，可以在 VM 中使用 cfg.abc 设置的值
 		InjectionConfig cfg = new InjectionConfig() {

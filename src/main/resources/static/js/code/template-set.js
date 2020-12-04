@@ -348,7 +348,7 @@ Vue.use(window.VueCodemirror);
                         console.log(response.data);
                         if (response.data.code === 0) {
                             _this.templateList = response.data.data;
-                            // _this.templateForm = _this.templateList[0]
+                            _this.templateForm = _this.templateList[0]
                             _this.templateDialogVisible = true;
                         } else {
                             _this.$message.error(response.data.msg);
@@ -405,7 +405,6 @@ Vue.use(window.VueCodemirror);
                         if (response.data.code === 0) {
                             _this.$message.success(response.data.msg);
                             _this.dialogFormVisible = false;
-                            _this.fetchFilesBySetId(_this.curId);
                         } else {
                             _this.$message.error(response.data.msg);
                         }
@@ -455,7 +454,7 @@ Vue.use(window.VueCodemirror);
             onCmReady(cm) {
                 console.log('the editor is readied!', cm)
                 let _this = this;
-                this.$refs.myCm.codemirror.setSize("100%", "500px");
+                this.$refs.myCm.codemirror.setSize("100%", "calc(100vh - 168px)");
                 this.codemirror = this.$refs.myCm.codemirror;
                 if(!!_this.templateForm.content){
                     _this.codemirror?.setValue(_this.templateForm.content);

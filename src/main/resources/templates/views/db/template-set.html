@@ -134,8 +134,11 @@
                     <el-button @click="editCurTemplate(item)" style="border:0;width:100%;text-align:left;" size="mini" icon="el-icon-tickets">{{item.templateName}}</el-button>
                 </el-row>
             </el-aside>
-            <el-main>
-                <el-row style="text-align:left;font-weight: 999;margin-bottom:5px;font-size:24px;">{{templateForm.templateName}}</el-row>
+            <el-main style="padding:0;">
+                <el-row style="text-align:left;font-weight: 999;margin-bottom:5px;font-size:24px;">
+                    <el-col :span="12">{{templateForm.templateName}}</el-col>
+                    <el-col :span="12" style="text-align:right;"><el-button :disabled="!!!templateForm.id" type="primary" @click="submitTemplate">保存</el-button></el-col>
+                </el-row>
                 <el-row>
                     <codemirror :options="cmOptions"
                                 @ready="onCmReady"
@@ -145,7 +148,6 @@
                     </codemirror>
                 </el-row>
                 <el-row style="margin-top:5px;text-align:right;">
-                    <el-button type="primary" @click="submitTemplate">保存</el-button>
                 </el-row>
             </el-main>
         </el-container>

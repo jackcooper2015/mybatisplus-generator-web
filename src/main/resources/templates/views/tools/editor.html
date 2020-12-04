@@ -69,7 +69,7 @@
     <style>
         /** style */
         html,body {
-            height: 100%;
+            height: auto;
             padding: 0;
             margin: 0;
         }
@@ -480,9 +480,7 @@
             },
             computed: {
                 codemirror:function() {
-                    // 获取浏览器可视区域高度
-                    var clientHeight = `${document.documentElement.clientHeight}`;          //document.body.clientWidth;
-                    this.$refs.myCm.codemirror.setSize("100%", clientHeight);
+                    this.$refs.myCm.codemirror.setSize("100%", "calc(100vh - 140px)");
                     return this.$refs.myCm.codemirror
                 }
             },
