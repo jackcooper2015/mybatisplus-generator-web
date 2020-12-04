@@ -31,6 +31,27 @@ create table if not exists `table_strategy_config`  (
   `service_impl_package` varchar(255),
   `mapper_package` varchar(255),
   `controller_package` varchar(255),
+  `template_set_id` int(11),
   PRIMARY KEY (`id`)
 )  engine=innodb default charset=utf8;
 
+--drop table if exists `template_set`;
+create table if not exists `template_set`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `set_name` varchar(255) COMMENT '组名',
+  `desc` varchar(255) comment '描述',
+  `create_user` varchar(255) comment '创建人',
+  PRIMARY KEY (`id`)
+)  engine=innodb default charset=utf8;
+
+
+-- drop table if exists `template`;
+create table if not exists `template`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `set_id`  int(11) NOT NULL comment '组id',
+  `template_name` varchar(255) COMMENT '模板文件名',
+  `content`  varchar(409600) comment '模板类容',
+  `create_user` varchar(255) comment '创建人',
+  `remark` varchar(255) comment '备注',
+  PRIMARY KEY (`id`)
+)  engine=innodb default charset=utf8;

@@ -1,5 +1,6 @@
 package com.reapal.controller;
 
+import cn.hutool.core.io.FileUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.annotation.DbType;
@@ -10,16 +11,15 @@ import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.reapal.conf.MySqlTypeConvertExt;
 import com.reapal.dao.DbConfigDao;
 import com.reapal.dao.TableStrategyConfigDao;
-import com.reapal.model.ColumnInfo;
-import com.reapal.model.DbConfig;
-import com.reapal.model.TableInfo;
-import com.reapal.model.TableStrategyConfig;
+import com.reapal.dao.TemplateDao;
+import com.reapal.model.*;
 import com.reapal.service.CodeService;
 import com.reapal.utils.FileUtils;
 import com.reapal.utils.ZipFileUtils;
 import org.apache.tools.zip.ZipOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.charset.Charset;
 import java.util.*;
 
 
@@ -48,6 +49,8 @@ public class CodeController extends BaseController{
 	@Autowired
 	private Environment env;
 
+	@Autowired
+	private TemplateDao templateDao;
 
 	@Autowired
 	private TableStrategyConfigDao tableStrategyConfigDao;
@@ -298,11 +301,90 @@ public class CodeController extends BaseController{
 
 		mpg.setPackageInfo(pc);
 
+		//匹配模板
+		matchTemplateConfig(mpg, outPutDir,tableStrategyConfig);
+
+		// 执行生成
+		mpg.execute();
+		//打包下载
+		response.setContentType("APPLICATION/OCTET-STREAM");
+		response.setHeader("Content-Disposition","attachment; filename=src.zip");
+		try {
+			ZipFileUtils zip = new ZipFileUtils();
+			ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
+			String fileName = request.getSession().getServletContext().getRealPath("/")+"/WEB-INF/upload/"+request.getSession().getId();
+			File ff = new File(fileName);
+			if(!ff.exists()){
+				ff.mkdirs();
+			}
+			zip.zip(ff,zos,"");
+			zos.flush();
+			zos.close();
+			//删除目录
+			FileUtils.DeleteFolder(request.getSession().getServletContext().getRealPath("/")+"/WEB-INF/upload/"+request.getSession().getId());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	/**
+	 * 匹配模板
+	 * @param mpg
+	 * @param outPutDir
+	 * @param tableStrategyConfig
+	 */
+	private void matchTemplateConfig(AutoGenerator mpg, String outPutDir, TableStrategyConfig tableStrategyConfig) {
+		//系统默认模板
+		TemplateCusConf tcc = new TemplateCusConf();
+		if(tableStrategyConfig.getTemplateSetId()!=null && tableStrategyConfig.getTemplateSetId()>0 ){
+			//在tmp下生成临时文件当模板
+			List<Template> templates = templateDao.findByTemplateSetId(tableStrategyConfig.getTemplateSetId());
+			ClassPathResource resource = new ClassPathResource("templates" + File.separator + "templateTmp"+File.separator);
+			String path = resource.getPath();
+			for (Template t : templates) {
+				String fpath = path + t.getTemplateSetId()+ File.separator + t.getTemplateName();
+				if(FileUtil.exist(fpath)){
+					//删掉旧文件，防止模板更新
+					FileUtil.del(fpath);
+				}
+				//创建新文件
+				File file = FileUtil.touch(fpath);
+				FileUtil.writeString(t.getContent(), file, Charset.defaultCharset());
+				switch (t.getTemplateName()){
+					case "controller.java.vm":
+						tcc.setControllerPath(fpath);
+						break;
+					case "entity.java.vm":
+						tcc.setEntityPath(fpath);
+						break;
+					case "mapper.java.vm":
+						tcc.setMapperJavaPath(fpath);
+						break;
+					case "mapper.xml.vm":
+						tcc.setMapperXmlPath(fpath);
+						break;
+					case "page.html.vm":
+						tcc.setPageHtmlPath(fpath);
+						break;
+					case "page.js.vm":
+						tcc.setPageJsPath(fpath);
+						break;
+					case "service.java.vm":
+						tcc.setServicePath(fpath);
+						break;
+					case "serviceImpl.java.vm":
+						tcc.setServiceImplPath(fpath);
+						break;
+					default:
+				}
+			}
+		}
 		// 注入自定义配置，可以在 VM 中使用 cfg.abc 设置的值
 		InjectionConfig cfg = new InjectionConfig() {
 
 			void initFileOutConfigList(){
-				FileOutConfig fpage = new FileOutConfig("/templates/gen-template/page.html.vm") {
+				FileOutConfig fpage = new FileOutConfig(tcc.getPageHtmlPath()) {
 					@Override
 					public String outputFile(com.baomidou.mybatisplus.generator.config.po.TableInfo tableInfo) {
 						//设置文件名
@@ -310,7 +392,7 @@ public class CodeController extends BaseController{
 						return outPutDir + File.separator + "resource" + File.separator + "templates" + File.separator + "views" + File.separator + fname + ".html";
 					}
 				};
-				FileOutConfig fjs = new FileOutConfig("/templates/gen-template/page.js.vm") {
+				FileOutConfig fjs = new FileOutConfig(tcc.getPageJsPath()) {
 					@Override
 					public String outputFile(com.baomidou.mybatisplus.generator.config.po.TableInfo tableInfo) {
 						//设置文件名
@@ -337,34 +419,13 @@ public class CodeController extends BaseController{
 		// 自定义模板配置，可以 copy 源码 mybatis-plus/src/main/resources/template 下面内容修改，
 		// 放置自己项目的 src/main/resources/template 目录下, 默认名称一下可以不配置，也可以自定义模板名称
 		TemplateConfig tc = new TemplateConfig();
-		tc.setController("/templates/gen-template/controller.java.vm");
-		tc.setEntity("/templates/gen-template/entity.java.vm");
-		tc.setMapper("/templates/gen-template/mapper.java.vm");
-		tc.setXml("/templates/gen-template/mapper.xml.vm");
-		tc.setService("/templates/gen-template/service.java.vm");
-		tc.setServiceImpl("/templates/gen-template/serviceImpl.java.vm");
+		tc.setController(tcc.getControllerPath());
+		tc.setEntity(tcc.getEntityPath());
+		tc.setMapper(tcc.getMapperJavaPath());
+		tc.setXml(tcc.getMapperXmlPath());
+		tc.setService(tcc.getServicePath());
+		tc.setServiceImpl(tcc.getServiceImplPath());
 		mpg.setTemplate(tc);
-		// 执行生成
-		mpg.execute();
-		//打包下载
-		response.setContentType("APPLICATION/OCTET-STREAM");
-		response.setHeader("Content-Disposition","attachment; filename=src.zip");
-		try {
-			ZipFileUtils zip = new ZipFileUtils();
-			ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
-			String fileName = request.getSession().getServletContext().getRealPath("/")+"/WEB-INF/upload/"+request.getSession().getId();
-			File ff = new File(fileName);
-			if(!ff.exists()){
-				ff.mkdirs();
-			}
-			zip.zip(ff,zos,"");
-			zos.flush();
-			zos.close();
-			//删除目录
-			FileUtils.DeleteFolder(request.getSession().getServletContext().getRealPath("/")+"/WEB-INF/upload/"+request.getSession().getId());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 }

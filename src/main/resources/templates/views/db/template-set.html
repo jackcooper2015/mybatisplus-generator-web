@@ -1,0 +1,213 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorator="/layouts/default">
+<th:block layout:fragment="title">
+    -页面
+</th:block>
+<!-- head -->
+<th:block layout:fragment="head">
+    <!--页面自定义样式-->
+    <link th:href="@{/js/plugins/codemirror/lib/codemirror.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/addon/hint/show-hint.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/addon/display/fullscreen.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/addon/fold/foldgutter.css}" rel="stylesheet" type="text/css">
+    <!-- 主题 -->
+    <link th:href="@{/js/plugins/codemirror/theme/dracula.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/3024-day.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/3024-night.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/abcdef.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/ambiance-mobile.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/ambiance.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/base16-dark.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/base16-light.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/bespin.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/blackboard.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/cobalt.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/colorforth.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/darcula.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/duotone-dark.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/duotone-light.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/eclipse.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/elegant.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/erlang-dark.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/gruvbox-dark.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/hopscotch.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/icecoder.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/idea.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/isotope.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/lesser-dark.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/liquibyte.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/lucario.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/material.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/mbo.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/mdn-like.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/midnight.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/monokai.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/neat.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/neo.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/night.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/oceanic-next.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/panda-syntax.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/paraiso-dark.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/paraiso-light.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/pastel-on-dark.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/railscasts.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/rubyblue.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/seti.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/shadowfox.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/solarized.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/ssms.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/the-matrix.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/tomorrow-night-bright.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/tomorrow-night-eighties.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/ttcn.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/twilight.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/vibrant-ink.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/xq-dark.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/xq-light.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/yeti.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/js/plugins/codemirror/theme/zenburn.css}" rel="stylesheet" type="text/css">
+    <!--页面自定义样式-->
+    <style>
+        /** style */
+        .CodeMirror-hints {
+            z-index: 2147483647;
+        }
+
+        .CodeMirror-lines {
+            line-height: 24px;
+            font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", 微软雅黑, Arial, sans-serif;
+        }
+
+    </style>
+</th:block>
+<!-- content -->
+<th:block layout:fragment="content">
+
+    <el-card class="box-card fn-mt10">
+            <!--数据区域-->
+            <el-row class="fn-clear">
+                <el-col class="fn-tal" :span="18">
+                    <el-button @click="openDialog('new')" type="primary" plain>添加</el-button>
+                    <el-button @click="openDialog('edit')" :disabled="data_group.multipleSelection.length != 1" type="primary" plain>编辑</el-button>
+                    <el-button @click="openDialog('delete')" :disabled="data_group.multipleSelection.length <= 0" type="primary" plain>删除</el-button>
+                </el-col>
+            </el-row>
+
+            <el-table fixed class="fn-mt10" :data="data_group.list" border highlight-current-row @selection-change="onSelectionChange">
+                <el-table-column align="center" type="selection" width="55"></el-table-column>
+                    <el-table-column sortable prop="id" label="ID" align="center" min-width="180" show-overflow-tooltip="true"></el-table-column>
+                    <el-table-column sortable prop="setName" label="模板集名称" align="center" min-width="180" show-overflow-tooltip="true"></el-table-column>
+                    <el-table-column sortable prop="desc" label="描述" align="center" min-width="180" show-overflow-tooltip="true"></el-table-column>
+                <el-table-column
+                        fixed="right"
+                        label="操作"
+                        width="100">
+                    <template slot-scope="scope">
+                        <el-button @click="handleClick(scope.row)" type="text" size="small">配置文件</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+    </el-card>
+
+
+    <!-- 新建/编辑弹出框start -->
+    <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" width="50%">
+        <el-form label-width="150px" :model="form" :rules="rules" ref="form" label-position="right">
+            <el-form-item class="fn-ml30" label="模板集名称：" prop="setName">
+                <el-input v-model="form.setName" maxlength="" prop="setName"></el-input>
+            </el-form-item>
+            <el-form-item class="fn-ml30" label="描述：" prop="desc">
+                <el-input v-model="form.desc" maxlength="" prop="desc"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="submitForm('form')">确 定</el-button>
+        </div>
+    </el-dialog>
+    <!-- 新建/编辑弹出框end   -->
+
+
+    <el-dialog title="模板文件配置" :visible.sync="templateDialogVisible" fullscreen>
+        <el-container>
+            <el-aside width="150px">
+                <el-row v-for="item in templateList">
+                    <el-button @click="editCurTemplate(item)" style="border:0;width:100%;text-align:left;" size="mini" icon="el-icon-tickets">{{item.templateName}}</el-button>
+                </el-row>
+            </el-aside>
+            <el-main>
+                <el-row style="text-align:left;font-weight: 999;margin-bottom:5px;font-size:24px;">{{templateForm.templateName}}</el-row>
+                <el-row>
+                    <codemirror :options="cmOptions"
+                                @ready="onCmReady"
+                                ref="myCm"
+                                v-model="templateForm.content"
+                    >
+                    </codemirror>
+                </el-row>
+                <el-row style="margin-top:5px;text-align:right;">
+                    <el-button type="primary" @click="submitTemplate">保存</el-button>
+                </el-row>
+            </el-main>
+        </el-container>
+    </el-dialog>
+
+</th:block>
+
+<!-- js -->
+<th:block layout:fragment="js">
+    <!--页面js-->
+
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/lib/codemirror.js}"></script>
+    <!-- vue 組件 -->
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/lib/vue-codemirror.js}"></script>
+
+    <!-- 因为HTML混合语言依赖Javascript、XML、CSS语言支持，所以都要引入 -->
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/mode/simple.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/mode/overlay.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/javascript/javascript.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/shell/shell.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/sql/sql.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/yaml/yaml.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/groovy/groovy.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/clike/clike.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/javascript/javascript.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/xml/xml.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/css/css.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/htmlmixed/htmlmixed.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/vue/vue.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/coffeescript/coffeescript.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/sass/sass.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/pug/pug.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/mode/handlebars/handlebars.js}"></script>
+    <!--提示-->
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/selection/selection-pointer.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/hint/show-hint.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/hint/anyword-hint.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/hint/sql-hint.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/hint/xml-hint.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/hint/html-hint.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/hint/css-hint.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/hint/javascript-hint.js}"></script>
+    <!-- 全屏 -->
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/display/fullscreen.js}"></script>
+    <!-- 格式化 -->
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/lib/formatting.js}"></script>
+    <!-- 快捷键 -->
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/keymap/sublime.js}"></script>
+    <!-- 代码折叠 -->
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/fold/foldcode.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/fold/foldgutter.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/fold/brace-fold.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/fold/comment-fold.js}"></script>
+    <!--括号匹配-->
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/edit/closebrackets.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/edit/closetag.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/edit/matchbrackets.js}"></script>
+    <!-- 选行高亮 -->
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/selection/active-line.js}"></script>
+    <!-- 注释代码 -->
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/comment/continuecomment.js}"></script>
+    <script type="text/javascript" th:src="@{/js/plugins/codemirror/addon/comment/comment.js}"></script>
+    <script th:src="@{/js/code/template-set.js}"></script>
+</th:block>
+</html>

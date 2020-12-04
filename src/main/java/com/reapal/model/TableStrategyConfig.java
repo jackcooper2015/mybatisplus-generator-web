@@ -37,5 +37,6 @@ public class TableStrategyConfig implements Serializable {
     private String serviceImplPackage;
     private String mapperPackage;
     private String controllerPackage;
+    private Long templateSetId;
 
 }

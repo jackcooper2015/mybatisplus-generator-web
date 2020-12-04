@@ -31,6 +31,7 @@ $UU.init({
             catalog: null,
             dbType:null
         },
+        templateSetList:[],
         columnForm:{
             id:'',
             tableName:'',
@@ -51,9 +52,11 @@ $UU.init({
             serviceImplPackage:'service.impl',
             mapperPackage:'mapper',
             controllerPackage:'controller',
+            templateSetId:null
         }
     },
     created: function () {
+        this.queryTmpSetList();
         this.search_group.id = $UF.getUrlParam("id");
         this.search_group.tableName = $UF.getUrlParam("tableName");
         this.search_group.comments = $UF.getUrlParam("comments");
@@ -93,23 +96,13 @@ $UU.init({
         queryTableStrategy: function(){
             var _this = this;
             $UU.http.get("/get-table-strategy",{id:_this.search_group.id,tableName:_this.search_group.tableName},function (response) {
-                if(response.data.data != undefined) {
-                    _this.columnForm.id = response.data.data.id;
-                    _this.columnForm.prefix = response.data.data.prefix;
-                    _this.columnForm.modelName = response.data.data.modelName;
-                    _this.columnForm.author = response.data.data.author;
-                    _this.columnForm.entityName = response.data.data.entityName;
-                    _this.columnForm.mapperName = response.data.data.mapperName;
-                    _this.columnForm.xmlName = response.data.data.xmlName;
-                    _this.columnForm.serviceName = response.data.data.serviceName;
-                    _this.columnForm.serviceImplName = response.data.data.serviceImplName;
-                    _this.columnForm.controllerName = response.data.data.controllerName;
-                    _this.columnForm.entityPackage = response.data.data.entityPackage;
-                    _this.columnForm.servicePackage = response.data.data.servicePackage;
-                    _this.columnForm.serviceImplPackage = response.data.data.serviceImplPackage;
-                    _this.columnForm.mapperPackage = response.data.data.mapperPackage;
-                    _this.columnForm.controllerPackage = response.data.data.controllerPackage;
+                if(!!response.data.data) {
+                    _this.columnForm = response.data.data;
                 }
+                if(!!!_this.columnForm.templateSetId){
+                    _this.columnForm.templateSetId = -1
+                }
+                _this.columnForm.remarks = []
             });
         },
        query: function () {
@@ -135,6 +128,17 @@ $UU.init({
                         _this.loading = false;
                         _this.btn_disabled = false;
                     }
+                });
+        },
+        queryTmpSetList: function () {
+            var _this = this;
+            $UU.http.post("/template-set/list",
+                {}
+                , function (response) {
+                    //获取回调数据
+                    console.log(response.data);
+                    _this.templateSetList = response.data.data;
+                }, {
                 });
         },
         openDialog: function (type,id) {
