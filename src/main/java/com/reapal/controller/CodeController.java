@@ -344,7 +344,7 @@ public class CodeController extends BaseController{
 			mpg.setTemplateEngine(new CustomerVelocityTemplateEngine());
 			//在tmp下生成临时文件当模板
 			List<Template> templates = templateDao.findByTemplateSetId(tableStrategyConfig.getTemplateSetId());
-			String path = System.getProperty("java.io.tmpdir");
+			String path = request.getSession().getServletContext().getRealPath("/");
 			for (Template t : templates) {
 				String fpath = path + t.getTemplateSetId()+ File.separator + t.getTemplateName();
 				if(FileUtil.exist(fpath)){
