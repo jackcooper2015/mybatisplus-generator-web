@@ -70,4 +70,10 @@ public class ToolsController extends BaseController {
     }
 
 
+    @GetMapping(value = "/to-jsonsfmt")
+    public String toJsonFormat(){
+        return "/views/tools/jsonformat";
+    }
+
+
 }

@@ -1,0 +1,89 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorator="/layouts/default">
+<th:block layout:fragment="title">
+    json格式化
+</th:block>
+<!-- head -->
+<!---->
+<th:block layout:fragment="head">
+    <!--页面自定义样式-->
+    <style>
+
+    </style>
+</th:block>
+<!-- content -->
+<th:block layout:fragment="content">
+
+    <el-form>
+        <el-row :gutter="10">
+            <el-col :span="24">
+                <el-form-item label="请输入字符串：">
+                    <el-input
+                            v-model="oldStr"
+                            type="textarea"
+                            :autosize="{minRows: 20, maxRows: 15}"
+                            placeholder="请输入你的字符串"
+                    ></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row :gutter="10">
+            <el-col :span="12">
+                <el-button @click="formatJson">格式化</el-button>
+            </el-col>
+        </el-row>
+        <el-row :gutter="10">
+            <el-col :span="24">
+                <el-form-item label="异常信息：">
+                    <el-input
+                            readonly
+                            v-model="errMsg"
+                            type="textarea"
+                            :autosize="{minRows: 5, maxRows: 15}"
+                            placeholder=""
+                    ></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+    </el-form>
+</th:block>
+
+<!-- js -->
+<th:block layout:fragment="js">
+    <script type="text/javascript" th:src="@{/js/plugins/code-diff/vue-code-diff.js}"></script>
+    <script type="text/javascript" th:src="@{/js/util/json-str-format.js}"></script>
+    <script type="text/javascript" th:src="@{/js/util/jsonUtils.js}"></script>
+    <script>
+        $UU.init({
+            data:{
+                loading:false,
+                oldStr:'',
+                errMsg:''
+            },
+            computed:{
+
+            },
+            watch:{
+                oldStr (v) {
+                    localStorage.setItem('json_cache', v)
+                }
+            },
+            created: function () {
+                this.oldStr = localStorage.getItem('json_cache') || ''
+            },
+            mounted: function () {
+            },
+            methods:{
+                formatJson () {
+                    try {
+                        this.oldStr = jsonFormat(JSON.stringify(evil(this.oldStr)))
+                        this.errMsg = 'SUCCESS'
+                    }catch (e){
+                        this.errMsg = e
+                    }
+                }
+            }
+        });
+    </script>
+
+</th:block>
+</html>
