@@ -1,8 +1,13 @@
 package com.reapal.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import com.reapal.utils.ToStringUtils;
+import lombok.Data;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.Serializable;
+import java.text.ParseException;
 
 /**
  * @author jack-cooper
@@ -73,6 +78,17 @@ public class ToolsController extends BaseController {
     @GetMapping(value = "/to-jsonsfmt")
     public String toJsonFormat(){
         return "/views/tools/jsonformat";
+    }
+
+    @PostMapping("/javastr2json")
+    @ResponseBody
+    public JSONObject java2Json(@RequestBody Commonmodel commonmodel) throws ParseException {
+        return respJson(0, "", ToStringUtils.toJSONString(commonmodel.getData()));
+    }
+
+    @Data
+    public static class Commonmodel implements Serializable {
+        private String data;
     }
 
 

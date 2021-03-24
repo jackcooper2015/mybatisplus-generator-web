@@ -205,7 +205,7 @@ public class CodeController extends BaseController{
 			listItem.add(item);
 		}
 		tableInfo.setListColumn(listItem);
-		codeService.saveComment(tableInfo,dbConfig);
+//		codeService.saveComment(tableInfo,dbConfig);
 		tableStrategyConfig.setDbId(id);
 		tableStrategyConfig.setTableName(tableName);
 		tableStrategyConfigDao.save(tableStrategyConfig);

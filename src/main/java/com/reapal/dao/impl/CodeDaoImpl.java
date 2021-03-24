@@ -73,6 +73,7 @@ public class CodeDaoImpl implements CodeDao {
 		    		stmt.executeUpdate(strSql);
 		    	}
 	    	}
+			log.info("=====> {}",strSql);
 	    	if(stmt != null){   // 关闭声明
 		        try{
 		            stmt.close() ;

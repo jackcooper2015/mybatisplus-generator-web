@@ -3,6 +3,11 @@ server:
   display-name: code-generator
 
 spring:
+  http:
+    encoding:
+      force: true
+      charset: utf-8
+      enabled: true
   datasource:
     url: jdbc:h2:file:~/.h2/mybatisplus-gen;MODE=MYSQL
     driver-class-name: org.h2.Driver
@@ -30,6 +35,7 @@ spring:
     prefix: classpath:/templates
     mode: LEGACYHTML5
     suffix: .html
+    encoding: UTF-8
 logging:
   level:
     com.reapal: info

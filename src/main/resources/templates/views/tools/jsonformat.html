@@ -28,7 +28,8 @@
         </el-row>
         <el-row :gutter="10">
             <el-col :span="12">
-                <el-button @click="formatJson">格式化</el-button>
+                <el-button @click="formatJson" type="primary">格式化</el-button>
+                <el-button @click="java2Json" type="warning">java toString转JSON</el-button>
             </el-col>
         </el-row>
         <el-row :gutter="10">
@@ -80,6 +81,18 @@
                     }catch (e){
                         this.errMsg = e
                     }
+                },
+                java2Json(){
+                    let _this = this;
+                    $UU.http.post("/tools/javastr2json",
+                        {data:_this.oldStr}
+                        , function (response) {
+                            //获取回调数据
+                            console.log(response.data)
+                            _this.oldStr = jsonFormat(response.data.data);
+                        }, {
+                            requestBody:true
+                        });
                 }
             }
         });
