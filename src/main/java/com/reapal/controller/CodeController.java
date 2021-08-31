@@ -370,6 +370,9 @@ public class CodeController extends BaseController{
 					case "page.html.vm":
 						tcc.setPageHtmlPath(fpath);
 						break;
+					case "page.vue.vm":
+						tcc.setPageVuePath(fpath);
+						break;
 					case "page.js.vm":
 						tcc.setPageJsPath(fpath);
 						break;
@@ -397,6 +400,14 @@ public class CodeController extends BaseController{
 						return outPutDir + File.separator + "resource" + File.separator + "templates" + File.separator + "views" + File.separator + fname + ".html";
 					}
 				};
+				FileOutConfig vuePage = new FileOutConfig(tcc.getPageVuePath()) {
+					@Override
+					public String outputFile(com.baomidou.mybatisplus.generator.config.po.TableInfo tableInfo) {
+						//设置文件名
+						final String fname = tableInfo.getName().replaceAll("_", "-" ).toLowerCase();
+						return outPutDir + File.separator + "resource" + File.separator + "templates" + File.separator + "views" + File.separator + fname + ".vue";
+					}
+				};
 				FileOutConfig fjs = new FileOutConfig(tcc.getPageJsPath()) {
 					@Override
 					public String outputFile(com.baomidou.mybatisplus.generator.config.po.TableInfo tableInfo) {
@@ -408,6 +419,7 @@ public class CodeController extends BaseController{
 				List<FileOutConfig> list = new ArrayList<>(Collections.emptyList());
 				list.add(fpage);
 				list.add(fjs);
+				list.add(vuePage);
 				this.setFileOutConfigList(list);
 			}
 

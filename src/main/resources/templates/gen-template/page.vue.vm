@@ -1,0 +1,415 @@
+<template>
+  <div class="main">
+    <page-head :title="'${table.comment}'" :noBack="false"/>
+
+    <li-card class="box-card">
+      <!--搜索区域-->
+      <li-row :gutter="120">
+        <li-form class="ui-container-search2" :model="search_group" ref="search_group" label-width="130px" label-position="left">
+        <li-col :span="12">
+            #if($table.fields.size()%2==0)
+                #set($middle = $table.fields.size()/2)
+            #else
+                #set($middle = $table.fields.size()/2+1)
+            #end
+            #foreach($field in ${table.fields})
+                #if($foreach.index == $middle )
+                </li-col>
+                <li-col :span="12">
+                #end
+                #if(${field.propertyType} == 'OffsetDateTime' || ${field.propertyType} == 'DateTime' || ${field.propertyType} == 'Date' )
+                  <li-form-item label="${field.comment}：" prop="${field.propertyName}List">
+                    <li-date-picker
+                        clearable
+                        v-model="search_group.${field.propertyName}List"
+                        type="datetimerange"
+                        placeholder="选择起止时间"
+                        :default-time="['00:00:00', '23:59:59']"
+                        value-format="yyyy-MM-dd HH:mm:ss"
+                        style="width:100%;"
+                        :editable="false"
+                    >
+                    </li-date-picker>
+                  </li-form-item>
+                #else
+                  <li-form-item label="${field.comment}：" prop="${field.propertyName}">
+                    <li-input v-model="search_group.${field.propertyName}" placeholder="${field.comment}" clearable></li-input>
+                  </li-form-item>
+                #end
+            #end
+        </li-col>
+        </li-form>
+      </li-row>
+      <!--按钮区域-->
+      <li-row class="fn-mt10 fn-tal">
+        <li-col>
+          <li-button @click="query(1)"  type="primary" plain>搜 索</li-button>
+          <li-button @click="resetForm('search_group')"  plain>重 置</li-button>
+        </li-col>
+      </li-row>
+    </li-card>
+
+    <li-card class="box-card fn-mt10">
+      <!--数据区域-->
+      <li-row class="fn-clear">
+        <li-col class="fn-tal" :span="18">
+          <li-button @click="openDialog('new')" type="primary" plain>添加</li-button>
+          <!--                     <li-button @click="openDialog('edit')" :disabled="data_group.multipleSelection.length != 1" type="primary" plain>编辑</li-button> -->
+          <!--                     <li-button @click="openDialog('delete')" :disabled="data_group.multipleSelection.length <= 0" type="primary" plain>删除</li-button> -->
+        </li-col>
+      </li-row>
+
+      <li-table fixed class="fn-mt10" :data="data_group.list" border highlight-current-row @selection-change="onSelectionChange">
+        <!--                 <li-table-column align="center" type="selection" width="55"></li-table-column> -->
+          #foreach($field in ${table.fields})
+              #if(${field.propertyName} !='id' && ${field.propertyName} !='isDelete')
+                  #if(${field.propertyType} == 'OffsetDateTime' || ${field.propertyType} == 'DateTime' || ${field.propertyType} == 'Date' )
+                    <li-table-column sortable prop="${field.propertyName}" label="${field.comment}" align="center" min-width="180" show-overflow-tooltip="true">
+                      <template scope="scope">
+                        <span v-html="format.dateToString(scope.row.$!{field.propertyName})"></span>
+                      </template>
+                    </li-table-column>
+                  #else
+                    <li-table-column sortable prop="${field.propertyName}" label="${field.comment}" align="center" min-width="180" show-overflow-tooltip="true"></li-table-column>
+                  #end
+              #end
+          #end
+        <li-table-column
+            fixed="right"
+            label="操作"
+            width="100">
+          <template slot-scope="scope">
+            <li-button @click="handleEditClick(scope.row.id)" type="text" size="small">编辑</li-button>
+            <li-popconfirm
+                title="确定删除吗？"
+                @confirm="handleDeleteClick(scope.row.id)"
+            >
+              <li-button slot="reference" type="text" size="small">删除</li-button>
+            </li-popconfirm>
+          </template>
+        </li-table-column>
+      </li-table>
+      <!-- 分页区域 -->
+      <li-pagination class="fn-mt25" :total="data_group.pagination.total" :current-page="data_group.pagination.index" :page-sizes="[10, 30, 50, 100]"
+                     :page-size="data_group.pagination.size" layout="->,total, sizes, prev, pager, next, jumper" @current-change="onCurrentPageChange" @size-change="onPageSizeChange">
+      </li-pagination>
+    </li-card>
+
+
+    <!-- 新建/编辑弹出框start -->
+    <li-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" width="50%">
+      <li-form label-width="150px" :model="form" :rules="rules" ref="form" label-position="right">
+          #foreach($field in ${table.fields})
+              #if(${field.propertyName} !='id' && ${field.propertyName} !='isDelete')
+                  #if(${field.propertyType} == 'OffsetDateTime' || ${field.propertyType} == 'DateTime' || ${field.propertyType} == 'Date' )
+                    <li-form-item class="fn-ml30" label="${field.comment}：" prop="${field.propertyName}">
+                      <li-date-picker style="width:100%;" v-model="form.${field.propertyName}" type="date" placeholder="选择日期" :disabled="false"></li-date-picker>
+                    </li-form-item>
+                  #else
+                    <li-form-item class="fn-ml30" label="${field.comment}：" prop="${field.propertyName}">
+                      <li-input v-model="form.${field.propertyName}" maxlength="" prop="${field.propertyName}"></li-input>
+                    </li-form-item>
+                  #end
+              #end
+          #end
+      </li-form>
+      <div slot="footer" class="dialog-footer">
+        <li-button @click="dialogFormVisible = false">取 消</li-button>
+        <li-button type="primary" @click="submitForm('form')">确 定</li-button>
+      </div>
+    </li-dialog>
+    <!-- 新建/编辑弹出框end   -->
+
+  </div>
+</template>
+<!--
+<script>
+import Index from './index.js'
+export default Index
+</script>
+
+<style lang="scss" scoped>
+@import "index";
+</style> -->
+
+
+<script>
+  import format from '@/utils/format'
+  import request from '@/utils/request'
+      ## 您可以用#[[ ... ]]#包装您的javascript，告诉Velocity不要解析封闭的块
+      #set($kebabName = $table.name.replace('_','-'))
+  #[[
+  export default {
+    name: 'Index',
+    data(){
+      return  {
+        format:format,
+        dialogFormVisible: false,
+        importFormVisible: false,
+        dialogTitle: "",
+        search_group: {
+          active: 'active',
+          btn_disabled: false,
+    ]]#
+      #foreach($field in ${table.fields})
+      #if(${field.propertyType} == 'OffsetDateTime' || ${field.propertyType} == 'DateTime' || ${field.propertyType} == 'Date' )
+      ${field.propertyName}List:[], // ${field.comment}
+          #else
+      ${field.propertyName}:null, // ${field.comment}
+          #end
+      #end
+      #[[
+        pageUrl:""
+    },
+      data_group: {
+        active: 'active',
+            list: [{}, {}, {}],
+            multipleSelection: [],
+            multipleTable: [],
+            //分页
+            pagination: {
+          index: 1, //当前页码
+              size: 10, //每页记录数
+              total: 100 //记录总数
+        }
+      },
+      form: {
+      ]]#
+        #foreach($field in ${table.fields})
+        ${field.propertyName}:null, // ${field.comment}
+            #end
+        #[[
+      },
+      rules: {
+      ]]#
+        #foreach($field in ${table.fields})
+        ${field.propertyName}:[
+          { required: true, message: '请输入${field.comment}', trigger: 'blur' }
+        ],
+            #end
+        #[[
+      }
+    }
+    },
+    created(){
+      console.log("vue created");
+      this.query();
+    },
+    mounted(){
+
+    },
+    methods:{
+      resetForm (formName) {
+        var _this = this;
+        _this.$refs[formName].resetFields();
+      },
+      onCurrentPageChange (index) {
+        var _this = this;
+        _this.data_group.pagination.index=index;
+        this.query();
+      },
+      onPageSizeChange (size) {
+        var _this = this;
+        _this.data_group.pagination.size=size;
+        this.query();
+      },
+      query (pageNo) {
+        var _this = this;
+        //清空选中的数据
+        _this.data_group.multipleSelection="";
+        if(!!pageNo){
+          _this.data_group.pagination.index = pageNo;
+        }
+        //请求参数
+        var req = {
+          pageNo: _this.data_group.pagination.index,
+          pageSize: _this.data_group.pagination.size,
+          param: _this.search_group
+        };
+        request.post("]]#/${kebabName}#[[/page",req).then(response =>  {
+          //获取回调数据
+          console.log(response);
+          if (response.code === 0) {
+            _this.data_group.list = response.data.results;
+            _this.data_group.pagination.total = response.data.totalCount;
+          } else {
+            _this.$message.error(response.msg);
+          }
+        }).catch(err => {
+          _this.$message.error(err.msg)
+        });
+      },
+      openDialog (type) {
+        var _this = this;
+        if (type === 'new') {
+          _this.dialogFormVisible = true;
+          _this.dialogTitle = "新增";
+          _this.form = {
+        ]]#
+          #foreach($field in ${table.fields})
+          ${field.propertyName}:null, // ${field.comment}
+              #end
+          #[[
+        }
+        } else if (type === 'edit') {
+          if (_this.data_group.multipleSelection.length != 1) {
+            _this.$message.warning("请选择一条数据！");
+          }else {
+            _this.dialogFormVisible = true;
+            _this.dialogTitle = "编辑";
+            var id = _this.data_group.multipleSelection[0].id;
+            _this.getById(id);
+          }
+        } else if (type === 'delete') {
+          if (_this.data_group.multipleSelection.length === 0) {
+            _this.$message.warning("请选择一条数据！");
+          }else {
+            var ids = '';
+            for(var i=0;i<_this.data_group.multipleSelection.length;i++){
+              if(i==0){
+                ids = _this.data_group.multipleSelection[i].id;
+              }else{
+                ids += ","+_this.data_group.multipleSelection[i].id;
+              }
+            }
+            _this.deleteById(ids);
+          }
+        }
+      },
+      handleDeleteClick(id){
+        let _this = this;
+        _this.deleteById([id]);
+      },
+      handleEditClick(id){
+        let _this = this;
+        _this.dialogFormVisible = true;
+        _this.dialogTitle = "编辑";
+        var id = id;
+        _this.getById(id);
+      },
+      submitForm (formName) {
+        var _this = this;
+        _this.$refs[formName].validate(function (valid) {
+          if (valid) {
+            _this.$confirm('确定操作吗?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(function () {
+              if (_this.dialogTitle === "新增") {
+                _this.save();
+              } else if (_this.dialogTitle === "编辑") {
+                _this.update();
+              }
+            }).catch(function () {
+            });
+          }
+        });
+      },
+      onSelectionChange (val) {
+        this.data_group.multipleSelection = val;
+      },
+      getById (id) {
+        var _this = this;
+        //请求参数
+        var req = {};
+        request.get("/]]#${kebabName}#[[/get-by-id/" + id,req).then( response => {
+          //获取回调数据
+          console.log(response);
+          if (response.code === 0) {
+            _this.form = response.data;
+          } else {
+            _this.$message.error(response.msg);
+          }
+        }).catch(err => {
+          _this.loading = false
+          _this.$message.error(err.msg)
+        });
+      },
+      deleteById (id) {
+        var _this = this;
+        _this.$confirm('确定操作吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(function () {
+          //请求参数
+          var req = {};
+          request.del("/]]#${kebabName}#[[/delete-by-id/" + id,req).then(response =>{
+            //获取回调数据
+            console.log(response);
+            if (response.code === 0) {
+              _this.query();
+            } else {
+              _this.$message.error(response.msg);
+            }
+          }).catch(err => {
+            _this.loading = false
+            _this.$message.error(err.msg)
+          });
+        }).catch(function () {
+        });
+      },
+      setData () {
+        var _this = this;
+      },
+      save () {
+        var _this = this;
+        console.info(_this.form);
+        request.post("/]]#${kebabName}#[[/save",_this.form).then(response => {
+          //获取回调数据
+          console.log(response);
+          if (response.code === 0) {
+            _this.$message.success(response.msg);
+            _this.dialogFormVisible = false;
+            _this.query();
+          } else {
+            _this.$message.error(response.msg);
+          }
+        }).catch(err => {
+          _this.loading = false
+          _this.$message.error(err.msg)
+        });
+      },
+      update () {
+        var _this = this;
+        _this.setData();
+        request.put("/]]#${kebabName}#[[/update",_this.form).then(response => {
+          //获取回调数据
+          console.log(response);
+          if (response.code === 0) {
+            _this.$message.success(response.msg);
+            _this.dialogFormVisible = false;
+            _this.query();
+          } else {
+            _this.$message.error(response.msg);
+          }
+        }).catch(err => {
+          _this.loading = false
+          _this.$message.error(err.msg)
+        });
+      },
+      handleCurrentChange (val) {
+        if (null !== val) {
+          this.data_group.multipleSelection = val.id;
+        }
+      },
+    }
+  }
+  ]]#
+</script>
+<style lang="scss">
+  .fn-mt10{
+    margin-top:10px;
+  }
+  .fn-ml20{
+    margin-left:20px;
+  }
+  .fn-mt25{
+    margin-top:25px;
+  }
+  .fn-tal{
+    text-align:left;
+  }
+</style>
+

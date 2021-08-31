@@ -16,6 +16,7 @@ public class TemplateCusConf {
     String mapperJavaPath = "/templates/gen-template/mapper.java.vm";
     String mapperXmlPath = "/templates/gen-template/mapper.xml.vm";
     String pageHtmlPath = "/templates/gen-template/page.html.vm";
+    String pageVuePath = "/templates/gen-template/page.vue.vm";
     String pageJsPath = "/templates/gen-template/page.js.vm";
     String servicePath = "/templates/gen-template/service.java.vm";
     String serviceImplPath = "/templates/gen-template/serviceImpl.java.vm";
