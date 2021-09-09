@@ -235,9 +235,7 @@ export default Index
           } else {
             _this.$message.error(response.msg);
           }
-        }).catch(err => {
-          _this.$message.error(err.msg)
-        });
+        })
       },
       openDialog (type) {
         var _this = this;
@@ -321,10 +319,7 @@ export default Index
           } else {
             _this.$message.error(response.msg);
           }
-        }).catch(err => {
-          _this.loading = false
-          _this.$message.error(err.msg)
-        });
+        })
       },
       deleteById (id) {
         var _this = this;
@@ -343,10 +338,7 @@ export default Index
             } else {
               _this.$message.error(response.msg);
             }
-          }).catch(err => {
-            _this.loading = false
-            _this.$message.error(err.msg)
-          });
+          })
         }).catch(function () {
         });
       },
@@ -366,10 +358,7 @@ export default Index
           } else {
             _this.$message.error(response.msg);
           }
-        }).catch(err => {
-          _this.loading = false
-          _this.$message.error(err.msg)
-        });
+        })
       },
       update () {
         var _this = this;
@@ -384,10 +373,7 @@ export default Index
           } else {
             _this.$message.error(response.msg);
           }
-        }).catch(err => {
-          _this.loading = false
-          _this.$message.error(err.msg)
-        });
+        })
       },
       handleCurrentChange (val) {
         if (null !== val) {
