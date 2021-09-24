@@ -136,6 +136,8 @@ export default Index
 <script>
   import format from '@/utils/format'
   import request from '@/utils/request'
+  import apis from "@/api/api";
+  import $UD from "@/utils/util-data";
       ## 您可以用#[[ ... ]]#包装您的javascript，告诉Velocity不要解析封闭的块
       #set($kebabName = $table.name.replace('_','-'))
   #[[
@@ -188,6 +190,13 @@ export default Index
         ],
             #end
         #[[
+      },
+      apis:{
+          pageUrl:"]]#/${kebabName}#[[/page",
+          getByIdUrl:"/]]#${kebabName}#[[/get-by-id/",
+          deleteByIdUrl:"/]]#${kebabName}#[[/delete-by-id/",
+          saveUrl:"/]]#${kebabName}#[[/save",
+          updateUrl:"/]]#${kebabName}#[[/update"
       }
     }
     },
@@ -226,7 +235,7 @@ export default Index
           pageSize: _this.data_group.pagination.size,
           param: _this.search_group
         };
-        request.post("]]#/${kebabName}#[[/page",req).then(response =>  {
+        request.post(_this.apis.pageUrl,req).then(response =>  {
           //获取回调数据
           console.log(response);
           if (response.code === 0) {
@@ -311,7 +320,7 @@ export default Index
         var _this = this;
         //请求参数
         var req = {};
-        request.get("/]]#${kebabName}#[[/get-by-id/" + id,req).then( response => {
+        request.get(_this.apis.getByIdUrl + id,req).then( response => {
           //获取回调数据
           console.log(response);
           if (response.code === 0) {
@@ -330,7 +339,7 @@ export default Index
         }).then(function () {
           //请求参数
           var req = {};
-          request.del("/]]#${kebabName}#[[/delete-by-id/" + id,req).then(response =>{
+          request.del(_this.apis.deleteByIdUrl + id,req).then(response =>{
             //获取回调数据
             console.log(response);
             if (response.code === 0) {
@@ -348,7 +357,7 @@ export default Index
       save () {
         var _this = this;
         console.info(_this.form);
-        request.post("/]]#${kebabName}#[[/save",_this.form).then(response => {
+        request.post(_this.apis.saveUrl,_this.form).then(response => {
           //获取回调数据
           console.log(response);
           if (response.code === 0) {
@@ -363,7 +372,7 @@ export default Index
       update () {
         var _this = this;
         _this.setData();
-        request.put("/]]#${kebabName}#[[/update",_this.form).then(response => {
+        request.put(_this.apis.updateUrl,_this.form).then(response => {
           //获取回调数据
           console.log(response);
           if (response.code === 0) {
