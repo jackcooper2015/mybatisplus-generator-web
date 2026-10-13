@@ -6,9 +6,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 /**
  * Created by jack-cooper on 2017/1/14.
@@ -33,6 +33,11 @@ public abstract class BaseController {
     @ModelAttribute
     private void initResponse(HttpServletResponse response){
         this.responseContainer.set(response);
+    }
+
+    @ModelAttribute("contextPath")
+    public String contextPath() {
+        return request.getContextPath();
     }
 
     /**

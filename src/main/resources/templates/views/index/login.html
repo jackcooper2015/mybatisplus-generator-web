@@ -78,8 +78,8 @@
 
 <script th:inline="javascript">
     $UC = {
-        ctxPath: /*[[${#httpServletRequest.getContextPath()}]]*/ null,
-        ctxStatic: /*[[${#httpServletRequest.getContextPath()}]]*/ null
+        ctxPath: /*[[${contextPath}]]*/ null,
+        ctxStatic: /*[[${contextPath}]]*/ null
     };
 </script>
 
@@ -92,7 +92,7 @@
     var data = {
         form: {
             username:'admin',
-            password:'admin'
+            password:''
         }
     };
     new Vue({
@@ -101,7 +101,6 @@
         methods: {
             onSubmit: function () {
                 var _this = this;
-                console.log(_this.form)
                 $UU.http.post("/login", {"username":_this.form.username,"password":_this.form.password}, function (data) {
                         //获取回调数据
                         if (data) {

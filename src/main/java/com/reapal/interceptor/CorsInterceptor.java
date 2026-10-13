@@ -1,9 +1,9 @@
 package com.reapal.interceptor;
 
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * @author jack-cooper
@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
  * @Description 处理跨域
  * @createTime 2019年03月28日 11:03:00
  */
-public class CorsInterceptor extends HandlerInterceptorAdapter {
+public class CorsInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
@@ -23,7 +23,7 @@ public class CorsInterceptor extends HandlerInterceptorAdapter {
         response.setHeader("Access-Control-Max-Age", "3600");
         response.setHeader("Access-Control-Allow-Headers",
                 "Origin, X-Requested-With, Content-Type, Accept");
-        return super.preHandle(request, response, handler);
+        return true;
     }
 
 }

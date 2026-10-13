@@ -3,8 +3,8 @@ package com.reapal.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import java.io.Serializable;
 
 /**
@@ -20,6 +20,7 @@ public class TableStrategyConfig implements Serializable {
 
     private static final long serialVersionUID = 2560431775903963939L;
     @Id
+    @jakarta.persistence.GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
     private Long dbId;
     private String tableName;

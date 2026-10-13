@@ -1,9 +1,9 @@
 package com.reapal.utils;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 import java.lang.reflect.Field;
 import java.net.InetSocketAddress;
-import javax.websocket.RemoteEndpoint.Async;
+import jakarta.websocket.RemoteEndpoint.Async;
 
 /**
  * @author jack-cooper

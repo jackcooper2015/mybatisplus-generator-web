@@ -1,42 +1,51 @@
 server:
-  port: 8088
-  display-name: code-generator
-
-spring:
-  http:
+  address: ${GENERATOR_SERVER_ADDRESS:127.0.0.1}
+  port: ${GENERATOR_SERVER_PORT:8088}
+  servlet:
     encoding:
       force: true
-      charset: utf-8
+      charset: UTF-8
       enabled: true
-  datasource:
-    url: jdbc:h2:file:~/.h2/mybatisplus-gen;MODE=MYSQL
-    driver-class-name: org.h2.Driver
-    username: root
-    password: root
-    schema: classpath:sql/schema.sql
-    data: classpath:sql/data.sql
-  h2:
-    console:
-      # http://ip:port/h2-console
-      enabled: true
-      settings:
-        web-allow-others: true
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: update
-#      naming:
-#        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-    open-in-view: true
+    session:
+      cookie:
+        http-only: true
+        same-site: strict
+
+spring:
   application:
     name: mybatisplus-generator-web
+  datasource:
+    url: ${GENERATOR_DB_URL:jdbc:h2:file:~/.h2/mybatisplus-gen-v4;MODE=MYSQL}
+    driver-class-name: org.h2.Driver
+    username: ${GENERATOR_DB_USERNAME:sa}
+    password: ${GENERATOR_DB_PASSWORD:}
+  sql:
+    init:
+      mode: never
+  h2:
+    console:
+      enabled: false
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
   thymeleaf:
     cache: false
     prefix: classpath:/templates
-    mode: LEGACYHTML5
+    mode: HTML
     suffix: .html
     encoding: UTF-8
+
+generator:
+  # Legacy chat is unauthenticated; enable only in a trusted local environment.
+  chat-enabled: ${GENERATOR_CHAT_ENABLED:false}
+  # Enables arbitrary server-side code execution. Keep disabled unless explicitly needed locally.
+  god-mode-enabled: ${GENERATOR_GOD_MODE_ENABLED:false}
+  admin:
+    username: ${GENERATOR_ADMIN_USERNAME:admin}
+    password: ${GENERATOR_ADMIN_PASSWORD}
+
 logging:
   level:
     com.reapal: info
-    com.com.baomidou: debug

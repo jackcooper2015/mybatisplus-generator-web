@@ -1,120 +1,67 @@
 package com.reapal.conf;
 
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.baomidou.mybatisplus.generator.config.ConstVal;
 import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
 import com.baomidou.mybatisplus.generator.engine.AbstractTemplateEngine;
-import com.baomidou.mybatisplus.generator.engine.VelocityTemplateEngine;
-import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Map;
-import java.util.Properties;
 
-public class CustomerVelocityTemplateEngine  extends AbstractTemplateEngine {
-    private static final String DOT_VM = ".vm";
-    private VelocityEngine velocityEngine;
+/** Renders built-in and saved templates without writing executable templates to the web root. */
+public class CustomerVelocityTemplateEngine extends AbstractTemplateEngine {
+    private final Map<String, String> templates;
+    private final java.util.Set<java.nio.file.Path> outputPaths = new java.util.HashSet<>();
+    private final VelocityEngine velocity = new VelocityEngine();
 
-    public CustomerVelocityTemplateEngine() {
+    public CustomerVelocityTemplateEngine(Map<String, String> templates) {
+        this.templates = Map.copyOf(templates);
+        velocity.setProperty("introspector.uberspect.class", "org.apache.velocity.util.introspection.SecureUberspector");
+        velocity.init();
     }
 
     @Override
     public CustomerVelocityTemplateEngine init(ConfigBuilder configBuilder) {
-        super.init(configBuilder);
-        if (null == this.velocityEngine) {
-            Properties p = new Properties();
-            p.setProperty("file.resource.loader.class", "org.apache.velocity.runtime.resource.loader.FileResourceLoader");
-            p.setProperty("file.resource.loader.path", "");
-            p.setProperty("UTF-8", ConstVal.UTF8);
-            p.setProperty("input.encoding", ConstVal.UTF8);
-            p.setProperty("file.resource.loader.unicode", "true");
-            this.velocityEngine = new VelocityEngine(p);
-        }
-
         return this;
     }
 
     @Override
-    public void writer(Map<String, Object> objectMap, String templatePath, String outputFile) throws Exception {
-        if (!StringUtils.isEmpty(templatePath)) {
-            Template template = this.velocityEngine.getTemplate(templatePath, ConstVal.UTF8);
-            FileOutputStream fos = new FileOutputStream(outputFile);
-            Throwable var6 = null;
+    public String writer(Map<String, Object> objectMap, String templateName, String templateString) {
+        StringWriter writer = new StringWriter();
+        velocity.evaluate(new VelocityContext(objectMap), writer, templateName, templateString);
+        return writer.toString();
+    }
 
-            try {
-                OutputStreamWriter ow = new OutputStreamWriter(fos, ConstVal.UTF8);
-                Throwable var8 = null;
-
-                try {
-                    BufferedWriter writer = new BufferedWriter(ow);
-                    Throwable var10 = null;
-
-                    try {
-                        template.merge(new VelocityContext(objectMap), writer);
-                    } catch (Throwable var54) {
-                        var10 = var54;
-                        throw var54;
-                    } finally {
-                        if (writer != null) {
-                            if (var10 != null) {
-                                try {
-                                    writer.close();
-                                } catch (Throwable var53) {
-                                    var10.addSuppressed(var53);
-                                }
-                            } else {
-                                writer.close();
-                            }
-                        }
-
-                    }
-                } catch (Throwable var56) {
-                    var8 = var56;
-                    throw var56;
-                } finally {
-                    if (ow != null) {
-                        if (var8 != null) {
-                            try {
-                                ow.close();
-                            } catch (Throwable var52) {
-                                var8.addSuppressed(var52);
-                            }
-                        } else {
-                            ow.close();
-                        }
-                    }
-
+    @Override
+    public void writer(Map<String, Object> objectMap, String templatePath, File outputFile) throws IOException {
+        String name = templatePath.substring(templatePath.lastIndexOf('/') + 1);
+        String content = templates.get(name);
+        if (content == null) {
+            try (InputStream input = getClass().getResourceAsStream("/templates/gen-template/" + name)) {
+                if (input == null) {
+                    throw new IOException("Missing generation template: " + name);
                 }
-            } catch (Throwable var58) {
-                var6 = var58;
-                throw var58;
-            } finally {
-                if (fos != null) {
-                    if (var6 != null) {
-                        try {
-                            fos.close();
-                        } catch (Throwable var51) {
-                            var6.addSuppressed(var51);
-                        }
-                    } else {
-                        fos.close();
-                    }
-                }
-
+                content = new String(input.readAllBytes(), StandardCharsets.UTF_8);
             }
-
-            logger.debug("模板:" + templatePath + ";  文件:" + outputFile);
         }
+        Files.writeString(outputFile.toPath(), writer(objectMap, name, content), StandardCharsets.UTF_8);
+    }
+
+    @Override
+    protected void outputFile(File file, Map<String, Object> values, String template, boolean override) {
+        if (!outputPaths.add(file.toPath().toAbsolutePath().normalize())) {
+            throw new IllegalArgumentException("Selected tables produce duplicate output paths; change the naming strategy");
+        }
+        super.outputFile(file, values, template, override);
     }
 
     @Override
     public String templateFilePath(String filePath) {
-        return null != filePath && !filePath.contains(".vm") ? filePath + ".vm" : filePath;
+        return filePath.endsWith(".vm") ? filePath : filePath + ".vm";
     }
-
-
 }

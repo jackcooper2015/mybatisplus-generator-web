@@ -52,7 +52,7 @@ public class TemplateSetController extends BaseController {
     @GetMapping("/get-by-id/{id}")
     @ResponseBody
     public JSONObject getById(@PathVariable(value = "id") Long id){
-        return respJson(0,"",templateSetDao.getOne(id));
+        return respJson(0,"",templateSetDao.findById(id).orElseThrow());
     }
 
     /**
@@ -72,7 +72,7 @@ public class TemplateSetController extends BaseController {
             InputStream inputStream = rr.getInputStream();
             templates.add(Template.builder().templateSetId(templateSet.getId()).templateName(getFileNameFromPath(fieldValue)).content(IoUtil.read(inputStream, Charset.defaultCharset())).build());
         }
-        templateDao.save(templates);
+        templateDao.saveAll(templates);
         return respJson(0, "", templateSet);
     }
 
@@ -88,7 +88,7 @@ public class TemplateSetController extends BaseController {
     public JSONObject delete(@PathVariable(value = "id") String ids){
         String[] idsStrs = ids.split(",");
         for (String id:idsStrs){
-            templateSetDao.delete(Long.parseLong(id));
+            templateSetDao.deleteById(Long.parseLong(id));
         }
         return respJson(0, "",null);
     }

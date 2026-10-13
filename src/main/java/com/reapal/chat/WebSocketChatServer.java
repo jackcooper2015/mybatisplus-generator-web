@@ -4,8 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.reapal.utils.WebsocketUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import javax.websocket.*;
-import javax.websocket.server.ServerEndpoint;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import jakarta.websocket.*;
+import jakarta.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
+@ConditionalOnProperty(name = "generator.chat-enabled", havingValue = "true")
 @ServerEndpoint("/chat")
 public class WebSocketChatServer {
 
