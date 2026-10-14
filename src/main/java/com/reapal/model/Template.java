@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 
 
@@ -22,10 +22,11 @@ public class Template  implements Serializable {
     private static final long serialVersionUID = 7912547981585291572L;
     /** 数据库 */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long templateSetId;
     private String templateName;
+    @Lob
     private String content;
     private String createUser;
     private String remark;

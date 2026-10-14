@@ -5,8 +5,8 @@ import com.reapal.model.ColumnInfo;
 import com.reapal.model.DbConfig;
 import com.reapal.model.TableInfo;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;

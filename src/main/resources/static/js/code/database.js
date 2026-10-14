@@ -40,7 +40,7 @@ $UU.init({
             dbType:null
         },
         options:[{
-            value:'com.mysql.jdbc.Driver',
+            value:'com.mysql.cj.jdbc.Driver',
             label:'Mysql'
         },{
             value:'oracle.jdbc.driver.OracleDriver',

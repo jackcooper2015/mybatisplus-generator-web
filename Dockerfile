@@ -1,7 +1,6 @@
-FROM java:8
-
-RUN mkdir /app
+FROM eclipse-temurin:17-jre
 WORKDIR /app
-ADD build/libs/code-generator-0.0.1-SNAPSHOT.jar /app
-RUN ln -sf code-generator-0.0.1-SNAPSHOT.jar code-generator-latest.jar
-ENTRYPOINT ["java","-jar","/app/code-generator-latest.jar"]
+COPY target/code-generator-3.0.1.jar /app/code-generator.jar
+ENV GENERATOR_SERVER_ADDRESS=0.0.0.0
+EXPOSE 8088
+ENTRYPOINT ["java", "-jar", "/app/code-generator.jar"]

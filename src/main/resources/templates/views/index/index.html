@@ -69,8 +69,8 @@
 
 <script th:inline="javascript">
     $UC = {
-        ctxPath: /*[[${#httpServletRequest.getContextPath()}]]*/ null,
-        ctxStatic: /*[[${#httpServletRequest.getContextPath()}]]*/ null
+        ctxPath: /*[[${contextPath}]]*/ null,
+        ctxStatic: /*[[${contextPath}]]*/ null
     };
     var userName = /*[[${userName}]]*/ null;
 </script>

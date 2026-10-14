@@ -1,6 +1,6 @@
 package ${package.Entity};
 
-#foreach($pkg in ${table.importPackages})
+#foreach($pkg in ${importEntityPackages})
 import ${pkg};
 #end
 #if(${cfg.entityLombokModel})
@@ -54,7 +54,7 @@ public class ${entity} implements Serializable {
 ## 主键
 #if(${field.keyIdentityFlag})
     @TableId(value = "${field.name}", type = IdType.AUTO)
-#elseif(!$null.isNull(${idType}) && "$!idType" != "")
+#elseif($idType)
     @TableId(value = "${field.name}", type = IdType.${idType})
 #elseif(${field.convert})
     @TableId("${field.name}")
@@ -115,7 +115,7 @@ public class ${entity} implements Serializable {
 #end
 #if(${activeRecord})
     @Override
-    protected Serializable pkVal() {
+    public Serializable pkVal() {
 #if(${keyPropertyName})
         return this.${keyPropertyName};
 #else
@@ -129,7 +129,7 @@ public class ${entity} implements Serializable {
     public String toString() {
         return "${entity}{" +
 #foreach($field in ${table.fields})
-#if($!{velocityCount}==1)
+#if($!{foreach.count}==1)
         "${field.propertyName}=" + ${field.propertyName} +
 #else
         ", ${field.propertyName}=" + ${field.propertyName} +

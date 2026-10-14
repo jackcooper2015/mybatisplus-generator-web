@@ -23,7 +23,7 @@ public class TemplateController extends BaseController {
     @GetMapping("/get-by-id/{id}")
     @ResponseBody
     public JSONObject getById(@PathVariable(value = "id") Long id){
-        return respJson(0,"",templateDao.getOne(id));
+        return respJson(0,"",templateDao.findById(id).orElseThrow());
     }
 
     /**
@@ -44,7 +44,7 @@ public class TemplateController extends BaseController {
     public JSONObject delete(@PathVariable(value = "id") String ids){
         String[] idsStrs = ids.split(",");
         for (String id:idsStrs){
-            templateDao.delete(Long.parseLong(id));
+            templateDao.deleteById(Long.parseLong(id));
         }
         return respJson(0, "",null);
     }

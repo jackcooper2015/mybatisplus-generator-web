@@ -1,7 +1,7 @@
 package com.reapal.utils;
 
 import com.alibaba.fastjson.JSON;
-import javafx.util.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.ParseException;
@@ -177,7 +177,7 @@ public class ToStringUtils {
          */
         static Pair<String, String> parseToken(String token) {
             int index = indexOfSplitToken(token, '=');
-            return new Pair<>(token.substring(0, index), token.substring(index + 1));
+            return Pair.of(token.substring(0, index), token.substring(index + 1));
         }
 
         /**

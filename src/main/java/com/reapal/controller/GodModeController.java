@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Method;
@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
  * @createTime 2020年06月19日 14:25:00
  */
 @RequestMapping("/god")
+@org.springframework.boot.autoconfigure.condition.ConditionalOnProperty(name = "generator.god-mode-enabled", havingValue = "true")
 @RestController
 public class GodModeController {
 

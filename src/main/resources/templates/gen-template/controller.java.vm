@@ -1,15 +1,12 @@
 package ${package.Controller};
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.chehejia.framework.beans.model.Response;
-import com.chehejia.framework.beans.model.page.PageParam;
-import com.chehejia.framework.beans.model.page.PageResult;
 import org.springframework.util.CollectionUtils;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -62,7 +59,7 @@ public class ${table.controllerName} {
     * 通过id查询
     */
     @GetMapping("/get-by-id/{id}")
-    public Response getById(@PathVariable(value = "id") Integer id){
+    public Response getById(@PathVariable(value = "id") String id){
         return Response.success(${lowerCaseServiceName}.getById(id));
     }
 
@@ -82,7 +79,7 @@ public class ${table.controllerName} {
     public Response delete(@PathVariable(value = "id") String ids){
         String[] idsStrs = ids.split(",");
         for (String id:idsStrs){
-            ${lowerCaseServiceName}.removeById(Integer.parseInt(id));
+            ${lowerCaseServiceName}.removeById(id);
         }
         return Response.success();
     }
@@ -116,10 +113,10 @@ public class ${table.controllerName} {
         final LambdaQueryWrapper<${table.entityName}> lambda = new QueryWrapper<${table.entityName}>().lambda();
         this.buildCondition(lambda,param);
         final IPage<${table.entityName}> page = ${lowerCaseServiceName}.page(new Page<>(pageParam.getPageNo(), pageParam.getPageSize()), lambda);
-        PageResult<${table.entityName}> pr = new PageResult();
+        PageResult<${table.entityName}> pr = new PageResult<>();
         pr.setPageCount(page.getPages());
         pr.setTotalCount(page.getTotal());
-        pr.setPageNo(new Long(page.getCurrent()).intValue());
+        pr.setPageNo(Math.toIntExact(page.getCurrent()));
         pr.setPageSize((int) page.getSize());
         pr.setResults(page.getRecords());
         return Response.success(pr);
@@ -132,20 +129,25 @@ public class ${table.controllerName} {
         * @param param
         */
         private void buildCondition(LambdaQueryWrapper<${table.entityName}> lambda, ${table.entityName}ReqVo param){
+            if (param == null) return;
 #foreach($field in ${table.fields})
 #set($upperFieldName = $field.propertyName.substring(0,1).toUpperCase() + $field.propertyName.substring(1,$field.propertyName.length()))
 #if(${field.propertyType} == 'OffsetDateTime' || ${field.propertyType} == 'DateTime' || ${field.propertyType} == 'Date' )
-            if(!CollectionUtils.isEmpty(param.get${upperFieldName}List())){
+            if(param.get${upperFieldName}List() != null && param.get${upperFieldName}List().size() == 2){
                 lambda.ge(${table.entityName}::get${upperFieldName}, param.get${upperFieldName}List().get(0));
                 lambda.le(${table.entityName}::get${upperFieldName}, param.get${upperFieldName}List().get(1));
             }
 #else
-            if(!StringUtils.isEmpty(param.get${upperFieldName}())){
+            if(!ObjectUtils.isEmpty(param.get${upperFieldName}())){
                 lambda.eq(${table.entityName}::get${upperFieldName}, param.get${upperFieldName}());
             }
 #end
 #end
-            lambda.orderBy(true,false, ${table.entityName}::getId);
+#foreach($field in ${table.fields})
+#if(${field.keyFlag})
+            lambda.orderByDesc(${table.entityName}::get${field.capitalName});
+#end
+#end
         }
 
 
@@ -154,8 +156,7 @@ public class ${table.controllerName} {
          */
         @Data
         @NoArgsConstructor
-        @AllArgsConstructor
-        private static class ${table.entityName}ReqVo extends ${table.entityName} {
+        public static class ${table.entityName}ReqVo extends ${table.entityName} {
 #foreach($field in ${table.fields})
 #if(${field.propertyType} == 'OffsetDateTime' || ${field.propertyType} == 'DateTime' || ${field.propertyType} == 'Date' )
             private List<String> ${field.propertyName}List; // ${field.comment}起止
@@ -163,6 +164,34 @@ public class ${table.controllerName} {
 #end
         }
 
+    /** Portable response types; adapt these to the target application's API conventions. */
+    @Data
+    public static class Response {
+        private int code;
+        private String msg = "success";
+        private Object data;
+        public static Response success() { return success(null); }
+        public static Response success(Object data) {
+            Response result = new Response();
+            result.setData(data);
+            return result;
+        }
+    }
 
+    @Data
+    public static class PageParam<T> {
+        private long pageNo = 1;
+        private long pageSize = 20;
+        private T param;
+    }
+
+    @Data
+    public static class PageResult<T> {
+        private long pageCount;
+        private long totalCount;
+        private int pageNo;
+        private int pageSize;
+        private List<T> results;
+    }
 }
 #end
